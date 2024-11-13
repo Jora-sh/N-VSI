@@ -1,0 +1,110 @@
+{
+  "identifier" : "1F5D5506",
+  "nonRenewingSubscriptions" : [
+
+  ],
+  "products" : [
+    {
+      "displayPrice" : "10.99",
+      "familyShareable" : false,
+      "internalID" : "1140DD2E",
+      "localizations" : [
+        {
+          "description" : "",
+          "displayName" : "30 Video Credits",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "prod_1",
+      "referenceName" : "Products",
+      "type" : "Consumable"
+    },
+    {
+      "displayPrice" : "30.99",
+      "familyShareable" : false,
+      "internalID" : "192BB6A2",
+      "localizations" : [
+        {
+          "description" : "",
+          "displayName" : "100 Video Credits",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "prod_2",
+      "referenceName" : "Product 2",
+      "type" : "Consumable"
+    },
+    {
+      "displayPrice" : "50.99",
+      "familyShareable" : false,
+      "internalID" : "98143D21",
+      "localizations" : [
+        {
+          "description" : "",
+          "displayName" : "200 Video Credits",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "prod_3",
+      "referenceName" : "Product 3",
+      "type" : "Consumable"
+    }
+  ],
+  "settings" : {
+    "_failTransactionsEnabled" : false,
+    "_storeKitErrors" : [
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Load Products"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Purchase"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Verification"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "App Store Sync"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Subscription Status"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "App Transaction"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Manage Subscriptions Sheet"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Refund Request Sheet"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Offer Code Redeem Sheet"
+      }
+    ]
+  },
+  "subscriptionGroups" : [
+
+  ],
+  "version" : {
+    "major" : 3,
+    "minor" : 0
+  }
+}
