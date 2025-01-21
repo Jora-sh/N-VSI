@@ -144,5 +144,5 @@ struct OnBoardingScreen: View {
     }
 }
 
-let privacyPolicyLink = "https://meet.google.com/landing"
-let termsOfServiceLink = "https://meet.google.com/landing"
+let privacyPolicyLink = "https://shaya-creative-app.vercel.app/faceSwapIosPrivacy/privacy"
+let termsOfServiceLink = "https://shaya-creative-app.vercel.app/faceSwapIosPrivacy/terms"

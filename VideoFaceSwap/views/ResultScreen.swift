@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Photos
+import _AVKit_SwiftUI
 
 struct ResultScreen: View {
     
@@ -18,6 +19,8 @@ struct ResultScreen: View {
     @State var saveState : SaveState = .Idle
     
     @State var showContactUsBottomSheet = false
+    
+    @State var player : AVPlayer = AVPlayer()
     
     var header: some View {
         HStack {
@@ -49,6 +52,13 @@ struct ResultScreen: View {
             
             
         }
+        .overlay {
+            
+            Text("Result")
+                .font(.system(size: 18, weight: .bold))
+                .foregroundStyle(.white)
+            
+        }
         .frame(width: UIScreen.screenWidth - 32)
     }
     
@@ -59,11 +69,26 @@ struct ResultScreen: View {
             
             ZStack {
                 
-                LoopingVideoPlayer(videoURL: URL(string: swapViewModel.resultModel?.vidUrl ?? "")!)
+                VideoPlayer(player: player)
                     .disabled(true) // Hides iOS video controls
                     .aspectRatio(contentMode: .fill)
                     .frame(width: (UIScreen.screenWidth - 32))
                     .clipShape(RoundedRectangle(cornerRadius: 8))
+                    .onAppear {
+                        
+                        player = AVPlayer(url: URL(string: swapViewModel.resultModel?.vidUrl ?? "")!)
+                        player.play()
+                    }
+                    .onReceive(NotificationCenter
+                        .default
+                        .publisher(
+                            for: .AVPlayerItemDidPlayToEndTime,
+                            object: player.currentItem),
+                               perform: { _ in
+                                    player.seek(to: .zero)
+                                    player.play()
+                                }
+                    )
                 
             }
             

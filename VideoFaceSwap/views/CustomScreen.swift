@@ -23,6 +23,8 @@ struct CustomScreen: View {
     @State var creditsNeeded : Int = 0
     
     @State var showErrorDialog: Bool = false
+    @State var showNoCreditDialog: Bool = true
+    
     
     var body: some View {
         ZStack {
@@ -39,7 +41,15 @@ struct CustomScreen: View {
                         }
                     }
                     .onAppear(perform: {
+                        if let videoURL = swapViewModel.videoUrl {
+                            player = AVPlayer(url: videoURL)
+                            player?.volume = 0.0
+                            player?.play()
+                        }
                         mainViewModel.getMe()
+                        if mainViewModel.userModel?.credits ?? 0 > 0 {
+                            showNoCreditDialog = false
+                        }
                     })
                 
                 ZStack{
@@ -73,7 +83,7 @@ struct CustomScreen: View {
                                   ZStack {
                                       Image(uiImage: swapViewModel.imageSelected!)
                                           .resizable()
-                                          .aspectRatio( contentMode: .fill)
+                                          .aspectRatio( contentMode: .fit)
                                           .frame(width: UIScreen.screenWidth - 120 , height: UIScreen.screenWidth - 192)
                                           .cornerRadius(10)
                                           .padding()
@@ -228,14 +238,17 @@ struct CustomScreen: View {
                             
                             if swapViewModel.imageSelected != nil && swapViewModel.videoSelection != nil {
                                 
-                                if (Int(self.player?.currentItem?.asset.duration.seconds ?? 10.0) < 10 && (mainViewModel.userModel?.credits ?? 0) < 10) || (mainViewModel.userModel?.credits ?? 0) - Int(self.player?.currentItem?.asset.duration.seconds ?? 10.0) <= 0 {
+                                if creditsNeeded >= (mainViewModel.userModel?.credits ?? 0) {
                                     
+                                    swapViewModel.goLoadingWithoutCredits = true
+                                    swapViewModel.creditsNeededForCustomSwap = creditsNeeded
                                     withAnimation {
-                                        self.showNoCreditsLeftDialog.toggle()
+//                                        self.showNoCreditsLeftDialog.toggle()
+                                        mainViewModel.SCREEN_VIEW = .Loading
                                     }
                                     
                                 } else {
-                                    
+                                    swapViewModel.goLoadingWithoutCredits = false
                                     withAnimation {
                                         mainViewModel.SCREEN_VIEW = .Loading
                                     }
@@ -289,6 +302,7 @@ struct CustomScreen: View {
                 }
             }
             
+//            NoCreditDialog(shown:$showNoCreditDialog)
         }
     }
 }

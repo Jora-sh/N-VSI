@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import OneSignalFramework
 
 struct ContentView: View {
     
@@ -27,7 +28,7 @@ struct ContentView: View {
                         mainViewModel.signupUser { err in }
                     }
                     print(UserSettings.username)
-                    mainViewModel.getHomeConfig()
+                    
                 }
             
             

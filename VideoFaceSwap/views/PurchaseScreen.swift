@@ -20,10 +20,10 @@ struct PurchaseScreen: View {
     
     let texts = [
 //        "Instant and unlimited insect identify",
-        "Unlock All video templates",
-        "High Quality Result",
-        "Custom Face Swap Videos",
-        "Unlock All video templates",
+        "Access Exclusive Video Templates",
+        "Personalized Face Swap Features",
+        "Create Stunning HD Videos",
+        "Unlock Premium AI Model",
     ]
     
     var links : some View {
@@ -50,61 +50,141 @@ struct PurchaseScreen: View {
     
     func getProductNumberFromId(id:String) -> String {
         switch id {
-            case "prod_1": return "30"
-            case "prod_2": return "100"
-            case "prod_3": return "200"
-            default : return "2000"
+            case "30_video_credits": return "30"
+            case "200_video_credits": return "200"
+            case "offer_faceswap_video": return "500"
+            default : return "500"
         }
     }
     
     var purchaseItemView : some View {
         ForEach(subscriptionsManager.products, id: \.id) { purchaseItem in
             
-            Spacer()
-                .frame(height: 16)
-            
-            Button {
-                selectedItemIndex = purchaseItem
-            } label: {
-                ZStack {
-                    
-                    Color(hex: selectedItemIndex == purchaseItem ? "#1B1B1E" : "#2D2D31" )
-                        .opacity(selectedItemIndex == purchaseItem ? 1.0 : 0.8)
-                    
-                    HStack {
+            if purchaseItem.id == "offer_faceswap_video" {
+                Spacer()
+                    .frame(height: 16)
+                
+                Button {
+                    selectedItemIndex = purchaseItem
+                } label: {
+                    ZStack {
                         
-                        Image(selectedItemIndex == purchaseItem ? .iconCheckChecked : .iconCheckUnChecked)
-                            .resizable()
-                            .frame(width: 24, height: 24)
+                        Color(hex: "#231C0B")
+                            .opacity(0.8)
                         
-                        Spacer()
-                            .frame(width: 8)
-                        
-                        Group {
+                        HStack {
                             
-                            Text(getProductNumberFromId(id: purchaseItem.id))
-                                .foregroundStyle(Color(hex: "#34A5F2"))
+                            Image(selectedItemIndex == purchaseItem ? .iconCheckCheckedOffer : .iconCheckUnCheckedOffer)
+                                
+                                .resizable()
+                                .frame(width: 24, height: 24)
                             
-                            Text("Video Credits")
+                            Spacer()
+                                .frame(width: 8)
+                            
+                            Group {
+                                
+                                Text(getProductNumberFromId(id: purchaseItem.id))
+                                    .foregroundStyle(Color(hex: "#FFC700"))
+                                
+                                Text("Video Credits")
+                                    .foregroundStyle(.white)
+                                
+                            }.font(.system(size: 16))
+                                .bold()
+                            
+                            Spacer()
+                            
+                            Text("\(purchaseItem.displayPrice)")
+                                .font(.system(size: 16))
                                 .foregroundStyle(.white)
+                                .bold()
+                        }
+                        .padding(.vertical, 20)
+                        .padding(.horizontal, 20)
+                        
+                        VStack {
+                            HStack {
+                                
+                                Spacer()
+                                
+                                Text("Special Offer")
+                                    .font(.system(size: 12, weight: .semibold))
+                                    .foregroundStyle(.white)
+                                    .frame(width: 88, height: 24)
+                                    .background(content: {
+                                        LinearGradient(colors: [Color(hex: "#FFC700"),Color(hex: "#FDDC00")], startPoint: .leading, endPoint: .trailing)
+                                    })
+                                    .clipShape(
+                                        .rect(
+                                            topLeadingRadius: 0,
+                                            bottomLeadingRadius: 8,
+                                            bottomTrailingRadius: 8,
+                                            topTrailingRadius: 0
+                                        )
+                                    )
+                                
+                                Spacer()
+                                    .frame(width: 70)
+                            }
                             
-                        }.font(.system(size: 16))
-                            .bold()
+                            Spacer()
+                        }
                         
-                        Spacer()
-                        
-                        Text("\(purchaseItem.displayPrice)")
-                            .font(.system(size: 16))
-                            .foregroundStyle(.white)
-                            .bold()
                     }
-                    .padding(.vertical, 20)
-                    .padding(.horizontal, 20)
-                    
+                    .frame(width: UIScreen.screenWidth - 32, height: 56)
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    .overlay {
+                        ButtonGradient()
+                    }
                 }
-                .frame(width: UIScreen.screenWidth - 32, height: 56)
-                .clipShape(RoundedRectangle(cornerRadius: 12))
-                .roundedCornerWithBorder(lineWidth: 2, borderColor: Color(hex: "#34A5F2"), radius: 8, corners: .allCorners)
+            } else {
+                Spacer()
+                    .frame(height: 16)
+                
+                Button {
+                    selectedItemIndex = purchaseItem
+                } label: {
+                    ZStack {
+                        
+                        Color(hex: selectedItemIndex == purchaseItem ? "#1B1B1E" : "#2D2D31" )
+                            .opacity(selectedItemIndex == purchaseItem ? 1.0 : 0.8)
+                        
+                        HStack {
+                            
+                            Image(selectedItemIndex == purchaseItem ? .iconCheckChecked : .iconCheckUnChecked)
+                                .resizable()
+                                .frame(width: 24, height: 24)
+                            
+                            Spacer()
+                                .frame(width: 8)
+                            
+                            Group {
+                                
+                                Text(getProductNumberFromId(id: purchaseItem.id))
+                                    .foregroundStyle(Color(hex: "#34A5F2"))
+                                
+                                Text("Video Credits")
+                                    .foregroundStyle(.white)
+                                
+                            }.font(.system(size: 16))
+                                .bold()
+                            
+                            Spacer()
+                            
+                            Text("\(purchaseItem.displayPrice)")
+                                .font(.system(size: 16))
+                                .foregroundStyle(.white)
+                                .bold()
+                        }
+                        .padding(.vertical, 20)
+                        .padding(.horizontal, 20)
+                        
+                    }
+                    .frame(width: UIScreen.screenWidth - 32, height: 56)
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    .roundedCornerWithBorder(lineWidth: 2, borderColor: Color(hex: "#34A5F2"), radius: 8, corners: .allCorners)
+                }
             }
 
         }
@@ -153,20 +233,21 @@ struct PurchaseScreen: View {
                     .font(.system(size: 20 , weight: .medium))
             }
             .frame(width: UIScreen.screenWidth - 32 , height: 48)
-            .background(
-                selectedItemIndex != nil ?
-                LinearGradient(
-                    colors: gradientColor,
-                    startPoint: .leading,
-                    endPoint: .trailing
-                ) : LinearGradient(
-                    stops: [
-                        Gradient.Stop(color: Color.white.opacity(0.5), location: 0.00),
-                    ],
-                    startPoint: UnitPoint(x: 0, y: 0.5),
-                    endPoint: UnitPoint(x: 1, y: 0.5)
+            .background {
+                
+                if selectedItemIndex?.id != "offer_faceswap_video" {
+                    LinearGradient(
+                        colors: selectedItemIndex != nil ? gradientColor : [Color.white.opacity(0.5)],
+                        startPoint: .leading,
+                        endPoint: .trailing
                     )
-            )
+                } else {
+                    EllipticalGradient(colors:colorGradient,
+                                           center: .topLeading,
+                                           startRadiusFraction: 0.0,
+                                           endRadiusFraction: 1.0)
+                }
+            }
             .cornerRadius(10)
         }
     }
@@ -181,7 +262,7 @@ struct PurchaseScreen: View {
                     
                     Text(item)
                         .bold()
-                        .font(.system(size: 14))
+                        .font(.system(size: 13))
                         .foregroundStyle(.white)
                     
                     Spacer()
@@ -196,7 +277,9 @@ struct PurchaseScreen: View {
         ZStack {
             
             Image(.imgPurchase)
+                .resizable()
                 .ignoresSafeArea()
+                .frame(width: UIScreen.screenWidth, height: UIScreen.screenHeight)
                 .task {
                     print("in purchase")
                     await subscriptionsManager.updatePurchasedProducts()
@@ -263,3 +346,19 @@ struct PurchaseScreen: View {
     }
 }
 
+var colorGradient = [Color(hex: "#FFC700"),Color(hex: "#FAFF00")]
+
+
+struct ButtonGradient: View{
+    var body: some View {
+        RoundedRectangle(cornerRadius: 8)
+            .stroke(
+                
+                EllipticalGradient(colors:colorGradient,
+                                                  center: .topLeading,
+                                                  startRadiusFraction: 0.0,
+                                                  endRadiusFraction: 1.0),
+                lineWidth: 2
+            )
+    }
+}

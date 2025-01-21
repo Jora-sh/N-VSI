@@ -22,6 +22,8 @@ class SwapViewModel : ObservableObject {
     @Published var imageSelected: UIImage? = nil
     @Published var videoSelection: PhotosPickerItem? = nil
     @Published var videoUrl : URL? = nil
+    @Published var goLoadingWithoutCredits : Bool = false
+    @Published var creditsNeededForCustomSwap : Int = 0
     
     @Published var resultModel : CheckForVideoResponseModel? = nil
     
@@ -40,7 +42,7 @@ class SwapViewModel : ObservableObject {
         if let image = image {
             AF.upload( multipartFormData: { multipartFormData in
                 
-                multipartFormData.append((image.pngData())!, withName: "image", fileName: "image.jpg", mimeType: "image/jpeg")
+                multipartFormData.append(((image.resizeToMaxSize(maxSize: CGSize(width: 1000, height: 1000)) ?? image).jpegData(compressionQuality: 0.5))!, withName: "image", fileName: "image.jpg", mimeType: "image/jpeg")
                 multipartFormData.append(templateId.data(using: .utf8)!, withName: "templateName")
                 
                 
@@ -103,7 +105,7 @@ class SwapViewModel : ObservableObject {
         if let videoPath = videoPath {
             AF.upload( multipartFormData: { multipartFormData in
                 
-                multipartFormData.append((image.pngData())!, withName: "image", fileName: "image.jpg", mimeType: "image/jpeg")
+                multipartFormData.append(((image.resizeToMaxSize(maxSize: CGSize(width: 1000, height: 1000)) ?? image).jpegData(compressionQuality: 0.5))!, withName: "image", fileName: "image.jpg", mimeType: "image/jpeg")
                 multipartFormData.append(videoPath, withName: "video")
                 
             },
@@ -177,7 +179,7 @@ class SwapViewModel : ObservableObject {
                         
                         if data?.success == true{
                             if data?.isLoading == true {
-                                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
                                     self.checkForVideo(jobId: jobId, onResponse: onResponse)
                                 }
                             } else {
@@ -215,4 +217,32 @@ struct CheckForVideoResponseModel : Codable {
     let isLoading: Bool
     let vidUrl:String?
     let message:String
+}
+
+extension UIImage {
+    func resizeToMaxSize(maxSize: CGSize) -> UIImage? {
+        let size = self.size
+        let widthRatio = maxSize.width / size.width
+        let heightRatio = maxSize.height / size.height
+        
+        // Check if the current image size exceeds the maximum size
+        if widthRatio >= 1.0 && heightRatio >= 1.0 {
+            // The image is smaller than the maximum size, so no resizing needed
+            return self
+        }
+        
+        // Determine the scale factor that will ensure the image fits within maxSize
+        let scaleFactor = min(widthRatio, heightRatio)
+        
+        // Calculate the new size based on the scale factor
+        let newSize = CGSize(width: size.width * scaleFactor, height: size.height * scaleFactor)
+        
+        // Create a new image context with the new size
+        UIGraphicsBeginImageContextWithOptions(newSize, false, 0.0)
+        self.draw(in: CGRect(origin: .zero, size: newSize))
+        let resizedImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        
+        return resizedImage
+    }
 }

@@ -21,6 +21,36 @@
 		3F3186652CD80795001697F1 /* URL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F3186602CD80795001697F1 /* URL.swift */; };
 		3F3186662CD80795001697F1 /* VideoKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F3186612CD80795001697F1 /* VideoKit.swift */; };
 		3F4879602CDFD47900DA0E6B /* NoCreditsLeftDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F48795F2CDFD47900DA0E6B /* NoCreditsLeftDialog.swift */; };
+		3F4AEA882CE7278100BA1E82 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3F4AEA872CE7278100BA1E82 /* GoogleService-Info.plist */; };
+		3F4AEA8B2CE7289C00BA1E82 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 3F4AEA8A2CE7289C00BA1E82 /* FirebaseAnalytics */; };
+		3F4AEA8D2CE7289C00BA1E82 /* FirebaseAnalyticsOnDeviceConversion in Frameworks */ = {isa = PBXBuildFile; productRef = 3F4AEA8C2CE7289C00BA1E82 /* FirebaseAnalyticsOnDeviceConversion */; };
+		3F4AEA8F2CE7289C00BA1E82 /* FirebaseAnalyticsWithoutAdIdSupport in Frameworks */ = {isa = PBXBuildFile; productRef = 3F4AEA8E2CE7289C00BA1E82 /* FirebaseAnalyticsWithoutAdIdSupport */; };
+		3F4AEA912CE7289C00BA1E82 /* FirebaseAppCheck in Frameworks */ = {isa = PBXBuildFile; productRef = 3F4AEA902CE7289C00BA1E82 /* FirebaseAppCheck */; };
+		3F4AEA932CE7289C00BA1E82 /* FirebaseAppDistribution-Beta in Frameworks */ = {isa = PBXBuildFile; productRef = 3F4AEA922CE7289C00BA1E82 /* FirebaseAppDistribution-Beta */; };
+		3F4AEA952CE7289C00BA1E82 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 3F4AEA942CE7289C00BA1E82 /* FirebaseAuth */; };
+		3F4AEA972CE7289C00BA1E82 /* FirebaseAuthCombine-Community in Frameworks */ = {isa = PBXBuildFile; productRef = 3F4AEA962CE7289C00BA1E82 /* FirebaseAuthCombine-Community */; };
+		3F4AEA992CE7289C00BA1E82 /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = 3F4AEA982CE7289C00BA1E82 /* FirebaseCore */; };
+		3F4AEA9B2CE7289C00BA1E82 /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = 3F4AEA9A2CE7289C00BA1E82 /* FirebaseCrashlytics */; };
+		3F4AEA9D2CE7289C00BA1E82 /* FirebaseDatabase in Frameworks */ = {isa = PBXBuildFile; productRef = 3F4AEA9C2CE7289C00BA1E82 /* FirebaseDatabase */; };
+		3F4AEA9F2CE7289C00BA1E82 /* FirebaseDynamicLinks in Frameworks */ = {isa = PBXBuildFile; productRef = 3F4AEA9E2CE7289C00BA1E82 /* FirebaseDynamicLinks */; };
+		3F4AEAA12CE7289C00BA1E82 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 3F4AEAA02CE7289C00BA1E82 /* FirebaseFirestore */; };
+		3F4AEAA32CE7289C00BA1E82 /* FirebaseFirestoreCombine-Community in Frameworks */ = {isa = PBXBuildFile; productRef = 3F4AEAA22CE7289C00BA1E82 /* FirebaseFirestoreCombine-Community */; };
+		3F4AEAA52CE7289C00BA1E82 /* FirebaseFunctions in Frameworks */ = {isa = PBXBuildFile; productRef = 3F4AEAA42CE7289C00BA1E82 /* FirebaseFunctions */; };
+		3F4AEAA72CE7289C00BA1E82 /* FirebaseFunctionsCombine-Community in Frameworks */ = {isa = PBXBuildFile; productRef = 3F4AEAA62CE7289C00BA1E82 /* FirebaseFunctionsCombine-Community */; };
+		3F4AEAA92CE7289C00BA1E82 /* FirebaseInAppMessaging-Beta in Frameworks */ = {isa = PBXBuildFile; productRef = 3F4AEAA82CE7289C00BA1E82 /* FirebaseInAppMessaging-Beta */; };
+		3F4AEAAB2CE7289C00BA1E82 /* FirebaseInstallations in Frameworks */ = {isa = PBXBuildFile; productRef = 3F4AEAAA2CE7289C00BA1E82 /* FirebaseInstallations */; };
+		3F4AEAAD2CE7289C00BA1E82 /* FirebaseMLModelDownloader in Frameworks */ = {isa = PBXBuildFile; productRef = 3F4AEAAC2CE7289C00BA1E82 /* FirebaseMLModelDownloader */; };
+		3F4AEAAF2CE7289C00BA1E82 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 3F4AEAAE2CE7289C00BA1E82 /* FirebaseMessaging */; };
+		3F4AEAB12CE7289C00BA1E82 /* FirebasePerformance in Frameworks */ = {isa = PBXBuildFile; productRef = 3F4AEAB02CE7289C00BA1E82 /* FirebasePerformance */; };
+		3F4AEAB32CE7289C00BA1E82 /* FirebaseRemoteConfig in Frameworks */ = {isa = PBXBuildFile; productRef = 3F4AEAB22CE7289C00BA1E82 /* FirebaseRemoteConfig */; };
+		3F4AEAB52CE7289C00BA1E82 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 3F4AEAB42CE7289C00BA1E82 /* FirebaseStorage */; };
+		3F4AEAB72CE7289C00BA1E82 /* FirebaseStorageCombine-Community in Frameworks */ = {isa = PBXBuildFile; productRef = 3F4AEAB62CE7289C00BA1E82 /* FirebaseStorageCombine-Community */; };
+		3F4AEAB92CE7289C00BA1E82 /* FirebaseVertexAI in Frameworks */ = {isa = PBXBuildFile; productRef = 3F4AEAB82CE7289C00BA1E82 /* FirebaseVertexAI */; };
+		3F539D902CF89512000FCEBB /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F539D8F2CF89512000FCEBB /* NotificationService.swift */; };
+		3F539D942CF89512000FCEBB /* OneSignalNotificationServiceExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 3F539D8D2CF89512000FCEBB /* OneSignalNotificationServiceExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		3F539D9C2CF89742000FCEBB /* OneSignalExtension in Frameworks */ = {isa = PBXBuildFile; productRef = 3F539D9B2CF89742000FCEBB /* OneSignalExtension */; };
+		3F539D9E2CF89742000FCEBB /* OneSignalFramework in Frameworks */ = {isa = PBXBuildFile; productRef = 3F539D9D2CF89742000FCEBB /* OneSignalFramework */; };
+		3F539DA02CF89742000FCEBB /* OneSignalInAppMessages in Frameworks */ = {isa = PBXBuildFile; productRef = 3F539D9F2CF89742000FCEBB /* OneSignalInAppMessages */; };
 		3F663D7B2CD7D9EF005DB1C6 /* VideoFaceSwapApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F663D7A2CD7D9EF005DB1C6 /* VideoFaceSwapApp.swift */; };
 		3F663D7D2CD7D9EF005DB1C6 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F663D7C2CD7D9EF005DB1C6 /* ContentView.swift */; };
 		3F663D7F2CD7D9F1005DB1C6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3F663D7E2CD7D9F1005DB1C6 /* Assets.xcassets */; };
@@ -41,7 +71,28 @@
 		3FA469A72CDA9E6700D5A496 /* ErrorDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FA469A62CDA9E6700D5A496 /* ErrorDialog.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		3F539D922CF89512000FCEBB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3F663D6F2CD7D9EF005DB1C6 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 3F539D8C2CF89512000FCEBB;
+			remoteInfo = OneSignalNotificationServiceExtension;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXCopyFilesBuildPhase section */
+		3F539D982CF89512000FCEBB /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				3F539D942CF89512000FCEBB /* OneSignalNotificationServiceExtension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		3FD215CA2CE4E89E00A6AB92 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -69,6 +120,12 @@
 		3F3186602CD80795001697F1 /* URL.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URL.swift; sourceTree = "<group>"; };
 		3F3186612CD80795001697F1 /* VideoKit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoKit.swift; sourceTree = "<group>"; };
 		3F48795F2CDFD47900DA0E6B /* NoCreditsLeftDialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoCreditsLeftDialog.swift; sourceTree = "<group>"; };
+		3F4AEA872CE7278100BA1E82 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		3F539D882CF89473000FCEBB /* VideoFaceSwap.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = VideoFaceSwap.entitlements; sourceTree = "<group>"; };
+		3F539D8D2CF89512000FCEBB /* OneSignalNotificationServiceExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = OneSignalNotificationServiceExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		3F539D8F2CF89512000FCEBB /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
+		3F539D912CF89512000FCEBB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		3F539D992CF8952E000FCEBB /* OneSignalNotificationServiceExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = OneSignalNotificationServiceExtension.entitlements; sourceTree = "<group>"; };
 		3F663D772CD7D9EF005DB1C6 /* VideoFaceSwap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VideoFaceSwap.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3F663D7A2CD7D9EF005DB1C6 /* VideoFaceSwapApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoFaceSwapApp.swift; sourceTree = "<group>"; };
 		3F663D7C2CD7D9EF005DB1C6 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -89,13 +146,47 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		3F539D8A2CF89512000FCEBB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3F539D9C2CF89742000FCEBB /* OneSignalExtension in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		3F663D742CD7D9EF005DB1C6 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3F4AEAA52CE7289C00BA1E82 /* FirebaseFunctions in Frameworks */,
+				3F4AEA9D2CE7289C00BA1E82 /* FirebaseDatabase in Frameworks */,
 				3F663D972CD7E21B005DB1C6 /* SwiftyJSON in Frameworks */,
+				3F4AEAB52CE7289C00BA1E82 /* FirebaseStorage in Frameworks */,
+				3F4AEA8F2CE7289C00BA1E82 /* FirebaseAnalyticsWithoutAdIdSupport in Frameworks */,
+				3F4AEA992CE7289C00BA1E82 /* FirebaseCore in Frameworks */,
 				3FA469A12CDA6C2D00D5A496 /* LottieSwiftUI in Frameworks */,
+				3F4AEAAD2CE7289C00BA1E82 /* FirebaseMLModelDownloader in Frameworks */,
+				3F4AEA9F2CE7289C00BA1E82 /* FirebaseDynamicLinks in Frameworks */,
+				3F4AEA8D2CE7289C00BA1E82 /* FirebaseAnalyticsOnDeviceConversion in Frameworks */,
+				3F4AEA952CE7289C00BA1E82 /* FirebaseAuth in Frameworks */,
+				3F4AEAA12CE7289C00BA1E82 /* FirebaseFirestore in Frameworks */,
+				3F4AEAA32CE7289C00BA1E82 /* FirebaseFirestoreCombine-Community in Frameworks */,
+				3F4AEAB92CE7289C00BA1E82 /* FirebaseVertexAI in Frameworks */,
+				3F539DA02CF89742000FCEBB /* OneSignalInAppMessages in Frameworks */,
+				3F4AEAA92CE7289C00BA1E82 /* FirebaseInAppMessaging-Beta in Frameworks */,
+				3F4AEAA72CE7289C00BA1E82 /* FirebaseFunctionsCombine-Community in Frameworks */,
+				3F539D9E2CF89742000FCEBB /* OneSignalFramework in Frameworks */,
+				3F4AEA912CE7289C00BA1E82 /* FirebaseAppCheck in Frameworks */,
+				3F4AEAB72CE7289C00BA1E82 /* FirebaseStorageCombine-Community in Frameworks */,
+				3F4AEAB32CE7289C00BA1E82 /* FirebaseRemoteConfig in Frameworks */,
+				3F4AEA8B2CE7289C00BA1E82 /* FirebaseAnalytics in Frameworks */,
 				3F663D922CD7E20B005DB1C6 /* Alamofire in Frameworks */,
+				3F4AEAB12CE7289C00BA1E82 /* FirebasePerformance in Frameworks */,
+				3F4AEA9B2CE7289C00BA1E82 /* FirebaseCrashlytics in Frameworks */,
+				3F4AEA932CE7289C00BA1E82 /* FirebaseAppDistribution-Beta in Frameworks */,
+				3F4AEA972CE7289C00BA1E82 /* FirebaseAuthCombine-Community in Frameworks */,
+				3F4AEAAF2CE7289C00BA1E82 /* FirebaseMessaging in Frameworks */,
+				3F4AEAAB2CE7289C00BA1E82 /* FirebaseInstallations in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -115,6 +206,7 @@
 		3F1E6A792CE528BF00AB39EB /* utils */ = {
 			isa = PBXGroup;
 			children = (
+				3F31865B2CD80795001697F1 /* VideoKit */,
 				3F663D982CD7E24F005DB1C6 /* Decoder.swift */,
 				3F663D992CD7E24F005DB1C6 /* UserSettings.swift */,
 				3F663D8C2CD7DEB7005DB1C6 /* Colors.swift */,
@@ -163,10 +255,21 @@
 			path = Extensions;
 			sourceTree = "<group>";
 		};
+		3F539D8E2CF89512000FCEBB /* OneSignalNotificationServiceExtension */ = {
+			isa = PBXGroup;
+			children = (
+				3F539D992CF8952E000FCEBB /* OneSignalNotificationServiceExtension.entitlements */,
+				3F539D8F2CF89512000FCEBB /* NotificationService.swift */,
+				3F539D912CF89512000FCEBB /* Info.plist */,
+			);
+			path = OneSignalNotificationServiceExtension;
+			sourceTree = "<group>";
+		};
 		3F663D6E2CD7D9EF005DB1C6 = {
 			isa = PBXGroup;
 			children = (
 				3F663D792CD7D9EF005DB1C6 /* VideoFaceSwap */,
+				3F539D8E2CF89512000FCEBB /* OneSignalNotificationServiceExtension */,
 				3F663D782CD7D9EF005DB1C6 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -175,6 +278,7 @@
 			isa = PBXGroup;
 			children = (
 				3F663D772CD7D9EF005DB1C6 /* VideoFaceSwap.app */,
+				3F539D8D2CF89512000FCEBB /* OneSignalNotificationServiceExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -182,15 +286,16 @@
 		3F663D792CD7D9EF005DB1C6 /* VideoFaceSwap */ = {
 			isa = PBXGroup;
 			children = (
+				3F539D882CF89473000FCEBB /* VideoFaceSwap.entitlements */,
+				3F4AEA872CE7278100BA1E82 /* GoogleService-Info.plist */,
 				3F663D9E2CD7EA83005DB1C6 /* Info.plist */,
-				3F1E6A782CE528AB00AB39EB /* viewmodels */,
 				3F1E6A792CE528BF00AB39EB /* utils */,
+				3F1E6A782CE528AB00AB39EB /* viewmodels */,
 				3F1E6A7A2CE528D500AB39EB /* views */,
 				3F663D7A2CD7D9EF005DB1C6 /* VideoFaceSwapApp.swift */,
 				3F663D7C2CD7D9EF005DB1C6 /* ContentView.swift */,
 				3F663D7E2CD7D9F1005DB1C6 /* Assets.xcassets */,
 				3F663D802CD7D9F1005DB1C6 /* Preview Content */,
-				3F31865B2CD80795001697F1 /* VideoKit */,
 			);
 			path = VideoFaceSwap;
 			sourceTree = "<group>";
@@ -206,6 +311,26 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		3F539D8C2CF89512000FCEBB /* OneSignalNotificationServiceExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3F539D952CF89512000FCEBB /* Build configuration list for PBXNativeTarget "OneSignalNotificationServiceExtension" */;
+			buildPhases = (
+				3F539D892CF89512000FCEBB /* Sources */,
+				3F539D8A2CF89512000FCEBB /* Frameworks */,
+				3F539D8B2CF89512000FCEBB /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = OneSignalNotificationServiceExtension;
+			packageProductDependencies = (
+				3F539D9B2CF89742000FCEBB /* OneSignalExtension */,
+			);
+			productName = OneSignalNotificationServiceExtension;
+			productReference = 3F539D8D2CF89512000FCEBB /* OneSignalNotificationServiceExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 		3F663D762CD7D9EF005DB1C6 /* VideoFaceSwap */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 3F663D852CD7D9F1005DB1C6 /* Build configuration list for PBXNativeTarget "VideoFaceSwap" */;
@@ -214,16 +339,44 @@
 				3F663D742CD7D9EF005DB1C6 /* Frameworks */,
 				3F663D752CD7D9EF005DB1C6 /* Resources */,
 				3FD215CA2CE4E89E00A6AB92 /* Embed Frameworks */,
+				3F539D982CF89512000FCEBB /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				3F539D932CF89512000FCEBB /* PBXTargetDependency */,
 			);
 			name = VideoFaceSwap;
 			packageProductDependencies = (
 				3F663D912CD7E20B005DB1C6 /* Alamofire */,
 				3F663D962CD7E21B005DB1C6 /* SwiftyJSON */,
 				3FA469A02CDA6C2D00D5A496 /* LottieSwiftUI */,
+				3F4AEA8A2CE7289C00BA1E82 /* FirebaseAnalytics */,
+				3F4AEA8C2CE7289C00BA1E82 /* FirebaseAnalyticsOnDeviceConversion */,
+				3F4AEA8E2CE7289C00BA1E82 /* FirebaseAnalyticsWithoutAdIdSupport */,
+				3F4AEA902CE7289C00BA1E82 /* FirebaseAppCheck */,
+				3F4AEA922CE7289C00BA1E82 /* FirebaseAppDistribution-Beta */,
+				3F4AEA942CE7289C00BA1E82 /* FirebaseAuth */,
+				3F4AEA962CE7289C00BA1E82 /* FirebaseAuthCombine-Community */,
+				3F4AEA982CE7289C00BA1E82 /* FirebaseCore */,
+				3F4AEA9A2CE7289C00BA1E82 /* FirebaseCrashlytics */,
+				3F4AEA9C2CE7289C00BA1E82 /* FirebaseDatabase */,
+				3F4AEA9E2CE7289C00BA1E82 /* FirebaseDynamicLinks */,
+				3F4AEAA02CE7289C00BA1E82 /* FirebaseFirestore */,
+				3F4AEAA22CE7289C00BA1E82 /* FirebaseFirestoreCombine-Community */,
+				3F4AEAA42CE7289C00BA1E82 /* FirebaseFunctions */,
+				3F4AEAA62CE7289C00BA1E82 /* FirebaseFunctionsCombine-Community */,
+				3F4AEAA82CE7289C00BA1E82 /* FirebaseInAppMessaging-Beta */,
+				3F4AEAAA2CE7289C00BA1E82 /* FirebaseInstallations */,
+				3F4AEAAC2CE7289C00BA1E82 /* FirebaseMLModelDownloader */,
+				3F4AEAAE2CE7289C00BA1E82 /* FirebaseMessaging */,
+				3F4AEAB02CE7289C00BA1E82 /* FirebasePerformance */,
+				3F4AEAB22CE7289C00BA1E82 /* FirebaseRemoteConfig */,
+				3F4AEAB42CE7289C00BA1E82 /* FirebaseStorage */,
+				3F4AEAB62CE7289C00BA1E82 /* FirebaseStorageCombine-Community */,
+				3F4AEAB82CE7289C00BA1E82 /* FirebaseVertexAI */,
+				3F539D9D2CF89742000FCEBB /* OneSignalFramework */,
+				3F539D9F2CF89742000FCEBB /* OneSignalInAppMessages */,
 			);
 			productName = VideoFaceSwap;
 			productReference = 3F663D772CD7D9EF005DB1C6 /* VideoFaceSwap.app */;
@@ -239,6 +392,9 @@
 				LastSwiftUpdateCheck = 1500;
 				LastUpgradeCheck = 1500;
 				TargetAttributes = {
+					3F539D8C2CF89512000FCEBB = {
+						CreatedOnToolsVersion = 15.0;
+					};
 					3F663D762CD7D9EF005DB1C6 = {
 						CreatedOnToolsVersion = 15.0;
 					};
@@ -257,17 +413,27 @@
 				3F663D902CD7E20B005DB1C6 /* XCRemoteSwiftPackageReference "Alamofire" */,
 				3F663D952CD7E21B005DB1C6 /* XCRemoteSwiftPackageReference "SwiftyJSON" */,
 				3FA4699F2CDA6C2D00D5A496 /* XCRemoteSwiftPackageReference "Lottie-SwiftUI" */,
+				3F4AEA892CE7289C00BA1E82 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				3F539D9A2CF89742000FCEBB /* XCRemoteSwiftPackageReference "OneSignal-XCFramework" */,
 			);
 			productRefGroup = 3F663D782CD7D9EF005DB1C6 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
 				3F663D762CD7D9EF005DB1C6 /* VideoFaceSwap */,
+				3F539D8C2CF89512000FCEBB /* OneSignalNotificationServiceExtension */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		3F539D8B2CF89512000FCEBB /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		3F663D752CD7D9EF005DB1C6 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -275,6 +441,7 @@
 				3F663D822CD7D9F1005DB1C6 /* Preview Assets.xcassets in Resources */,
 				3F18FE562CE128EF00D2A741 /* storekit.storekit in Resources */,
 				3F663D7F2CD7D9F1005DB1C6 /* Assets.xcassets in Resources */,
+				3F4AEA882CE7278100BA1E82 /* GoogleService-Info.plist in Resources */,
 				3FA469A32CDA6C6500D5A496 /* loading2.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -282,6 +449,14 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		3F539D892CF89512000FCEBB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3F539D902CF89512000FCEBB /* NotificationService.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		3F663D732CD7D9EF005DB1C6 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -316,7 +491,67 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		3F539D932CF89512000FCEBB /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 3F539D8C2CF89512000FCEBB /* OneSignalNotificationServiceExtension */;
+			targetProxy = 3F539D922CF89512000FCEBB /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
+		3F539D962CF89512000FCEBB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = OneSignalNotificationServiceExtension/OneSignalNotificationServiceExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 87588AW22L;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = OneSignalNotificationServiceExtension/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = OneSignalNotificationServiceExtension;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ssss.VideoFaceSwap.OneSignalNotificationServiceExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		3F539D972CF89512000FCEBB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = OneSignalNotificationServiceExtension/OneSignalNotificationServiceExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 87588AW22L;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = OneSignalNotificationServiceExtension/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = OneSignalNotificationServiceExtension;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ssss.VideoFaceSwap.OneSignalNotificationServiceExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 		3F663D832CD7D9F1005DB1C6 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -439,27 +674,31 @@
 		3F663D862CD7D9F1005DB1C6 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
+				CODE_SIGN_ENTITLEMENTS = VideoFaceSwap/VideoFaceSwap.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 8;
 				DEVELOPMENT_ASSET_PATHS = "\"VideoFaceSwap/Preview Content\"";
-				DEVELOPMENT_TEAM = M2RP89S8N2;
+				DEVELOPMENT_TEAM = 87588AW22L;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = VideoFaceSwap/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = nnnnnn;
+				INFOPLIST_KEY_CFBundleDisplayName = "Video Face Swap";
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "We need this permission to save video.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UIStatusBarHidden = NO;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.2;
+				MARKETING_VERSION = 1.8;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ssss.VideoFaceSwap;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -474,27 +713,31 @@
 		3F663D872CD7D9F1005DB1C6 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
+				CODE_SIGN_ENTITLEMENTS = VideoFaceSwap/VideoFaceSwap.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 8;
 				DEVELOPMENT_ASSET_PATHS = "\"VideoFaceSwap/Preview Content\"";
-				DEVELOPMENT_TEAM = M2RP89S8N2;
+				DEVELOPMENT_TEAM = 87588AW22L;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = VideoFaceSwap/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = nnnnnn;
+				INFOPLIST_KEY_CFBundleDisplayName = "Video Face Swap";
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "We need this permission to save video.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UIStatusBarHidden = NO;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.2;
+				MARKETING_VERSION = 1.8;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ssss.VideoFaceSwap;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -509,6 +752,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		3F539D952CF89512000FCEBB /* Build configuration list for PBXNativeTarget "OneSignalNotificationServiceExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3F539D962CF89512000FCEBB /* Debug */,
+				3F539D972CF89512000FCEBB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		3F663D722CD7D9EF005DB1C6 /* Build configuration list for PBXProject "VideoFaceSwap" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -530,6 +782,22 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		3F4AEA892CE7289C00BA1E82 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 11.5.0;
+			};
+		};
+		3F539D9A2CF89742000FCEBB /* XCRemoteSwiftPackageReference "OneSignal-XCFramework" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/OneSignal/OneSignal-XCFramework";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.2.8;
+			};
+		};
 		3F663D902CD7E20B005DB1C6 /* XCRemoteSwiftPackageReference "Alamofire" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Alamofire/Alamofire.git";
@@ -557,6 +825,141 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		3F4AEA8A2CE7289C00BA1E82 /* FirebaseAnalytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3F4AEA892CE7289C00BA1E82 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalytics;
+		};
+		3F4AEA8C2CE7289C00BA1E82 /* FirebaseAnalyticsOnDeviceConversion */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3F4AEA892CE7289C00BA1E82 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalyticsOnDeviceConversion;
+		};
+		3F4AEA8E2CE7289C00BA1E82 /* FirebaseAnalyticsWithoutAdIdSupport */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3F4AEA892CE7289C00BA1E82 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalyticsWithoutAdIdSupport;
+		};
+		3F4AEA902CE7289C00BA1E82 /* FirebaseAppCheck */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3F4AEA892CE7289C00BA1E82 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAppCheck;
+		};
+		3F4AEA922CE7289C00BA1E82 /* FirebaseAppDistribution-Beta */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3F4AEA892CE7289C00BA1E82 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = "FirebaseAppDistribution-Beta";
+		};
+		3F4AEA942CE7289C00BA1E82 /* FirebaseAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3F4AEA892CE7289C00BA1E82 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAuth;
+		};
+		3F4AEA962CE7289C00BA1E82 /* FirebaseAuthCombine-Community */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3F4AEA892CE7289C00BA1E82 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = "FirebaseAuthCombine-Community";
+		};
+		3F4AEA982CE7289C00BA1E82 /* FirebaseCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3F4AEA892CE7289C00BA1E82 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCore;
+		};
+		3F4AEA9A2CE7289C00BA1E82 /* FirebaseCrashlytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3F4AEA892CE7289C00BA1E82 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCrashlytics;
+		};
+		3F4AEA9C2CE7289C00BA1E82 /* FirebaseDatabase */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3F4AEA892CE7289C00BA1E82 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseDatabase;
+		};
+		3F4AEA9E2CE7289C00BA1E82 /* FirebaseDynamicLinks */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3F4AEA892CE7289C00BA1E82 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseDynamicLinks;
+		};
+		3F4AEAA02CE7289C00BA1E82 /* FirebaseFirestore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3F4AEA892CE7289C00BA1E82 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFirestore;
+		};
+		3F4AEAA22CE7289C00BA1E82 /* FirebaseFirestoreCombine-Community */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3F4AEA892CE7289C00BA1E82 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = "FirebaseFirestoreCombine-Community";
+		};
+		3F4AEAA42CE7289C00BA1E82 /* FirebaseFunctions */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3F4AEA892CE7289C00BA1E82 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFunctions;
+		};
+		3F4AEAA62CE7289C00BA1E82 /* FirebaseFunctionsCombine-Community */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3F4AEA892CE7289C00BA1E82 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = "FirebaseFunctionsCombine-Community";
+		};
+		3F4AEAA82CE7289C00BA1E82 /* FirebaseInAppMessaging-Beta */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3F4AEA892CE7289C00BA1E82 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = "FirebaseInAppMessaging-Beta";
+		};
+		3F4AEAAA2CE7289C00BA1E82 /* FirebaseInstallations */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3F4AEA892CE7289C00BA1E82 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseInstallations;
+		};
+		3F4AEAAC2CE7289C00BA1E82 /* FirebaseMLModelDownloader */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3F4AEA892CE7289C00BA1E82 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseMLModelDownloader;
+		};
+		3F4AEAAE2CE7289C00BA1E82 /* FirebaseMessaging */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3F4AEA892CE7289C00BA1E82 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseMessaging;
+		};
+		3F4AEAB02CE7289C00BA1E82 /* FirebasePerformance */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3F4AEA892CE7289C00BA1E82 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebasePerformance;
+		};
+		3F4AEAB22CE7289C00BA1E82 /* FirebaseRemoteConfig */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3F4AEA892CE7289C00BA1E82 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseRemoteConfig;
+		};
+		3F4AEAB42CE7289C00BA1E82 /* FirebaseStorage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3F4AEA892CE7289C00BA1E82 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseStorage;
+		};
+		3F4AEAB62CE7289C00BA1E82 /* FirebaseStorageCombine-Community */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3F4AEA892CE7289C00BA1E82 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = "FirebaseStorageCombine-Community";
+		};
+		3F4AEAB82CE7289C00BA1E82 /* FirebaseVertexAI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3F4AEA892CE7289C00BA1E82 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseVertexAI;
+		};
+		3F539D9B2CF89742000FCEBB /* OneSignalExtension */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3F539D9A2CF89742000FCEBB /* XCRemoteSwiftPackageReference "OneSignal-XCFramework" */;
+			productName = OneSignalExtension;
+		};
+		3F539D9D2CF89742000FCEBB /* OneSignalFramework */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3F539D9A2CF89742000FCEBB /* XCRemoteSwiftPackageReference "OneSignal-XCFramework" */;
+			productName = OneSignalFramework;
+		};
+		3F539D9F2CF89742000FCEBB /* OneSignalInAppMessages */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3F539D9A2CF89742000FCEBB /* XCRemoteSwiftPackageReference "OneSignal-XCFramework" */;
+			productName = OneSignalInAppMessages;
+		};
 		3F663D912CD7E20B005DB1C6 /* Alamofire */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 3F663D902CD7E20B005DB1C6 /* XCRemoteSwiftPackageReference "Alamofire" */;

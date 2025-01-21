@@ -9,8 +9,10 @@ import Foundation
 import SwiftUI
 import Alamofire
 import SwiftyJSON
+import OneSignalFramework
 
-let base_url = "http://89.22.239.26/nexora-swap-ios-stage/api/"
+//let base_url = "http://89.22.239.26/nexora-swap-ios-stage/api/"
+let base_url = "https://swp.yagorai.com/nexora-swap-ios/api/"
 
 class MainViewModel : ObservableObject {
     
@@ -118,6 +120,8 @@ class MainViewModel : ObservableObject {
     
     func getMe() {
         
+        self.getHomeConfig()
+        
         let headers : HTTPHeaders = [
             "Authorization" : "Bearer \(UserSettings.token)",
             "x-api-key" : "ae6a1d02bde6a2e299e2e2033e6a2e20310686"
@@ -146,7 +150,7 @@ class MainViewModel : ObservableObject {
                         print(data ?? "")
                         
                         self.userModel = data?.user
-                        
+                        OneSignal.login(self.userModel?.id ?? "NO_ID")
                         
                     case .failure(let error):
                         print(error?.localizedDescription ?? "")

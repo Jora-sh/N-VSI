@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import OneSignalFramework
 
 struct HomeScreen: View {
     
@@ -22,19 +23,23 @@ struct HomeScreen: View {
                     mainViewModel.SCREEN_VIEW = .Purchase
                 }
             } label: {
-                AsyncImage(url: URL(string: mainViewModel.homeConfig?.homeConfig?.icons?.bannerImage ?? "http://89.22.239.26/nexora-swap-ios-stage/public/home/5a7f7f0e-2c69-4d94-b833-77a6e13fbd1d.png")!, scale: 1.0) { img in
+                AsyncImage(url: URL(string: mainViewModel.homeConfig?.homeConfig?.icons?.bannerImage ?? "http://89.22.239.26/nexora-swap-ios-stage/public/home/3e294587-97d8-4405-97d9-5fcd9b8fd4b3.png")!, scale: 1.0) { img in
                     img.resizable()
                         .frame(width: UIScreen.screenWidth - 32, height: 120)
-                        .scaledToFill()
+                        .scaledToFit()
                         .clipShape(RoundedRectangle(cornerRadius: 8))
                 } placeholder: {
                     Image(.background)
                         .frame(width: UIScreen.screenWidth - 32, height: 120)
-                        .scaledToFill()
+                        .scaledToFit()
                         .clipShape(RoundedRectangle(cornerRadius: 8))
                 }
             }
                 .onAppear {
+                    
+                    OneSignal.Notifications.requestPermission({ accepted in
+                      print("User accepted notifications: \(accepted)")
+                    }, fallbackToSettings: true)
                     if mainViewModel.categories.count > 0 {
                         selectedCategory = mainViewModel.categories[0].id
                     }
@@ -47,6 +52,9 @@ struct HomeScreen: View {
                 }
             
             VStack {
+                
+                Spacer()
+                    .frame(height: 16)
                 
                 ScrollView(.horizontal, showsIndicators: false) {
                     
@@ -76,6 +84,9 @@ struct HomeScreen: View {
                     }
                     
                 }
+                
+                Spacer()
+                    .frame(height: 16)
                 
                 TabView(selection: $selectedCategory) {
                     

@@ -6,13 +6,14 @@
 //
 
 import StoreKit
+import FirebaseAnalytics
 
 @MainActor
 class SubscriptionsManager: NSObject, ObservableObject {
     let productIDs: [String] = [
-        "prod_3",
-        "prod_2",
-        "prod_1"
+        "30_video_credits",
+        "200_video_credits",
+        "offer_faceswap_video"
     ]
     var purchasedProductIDs: Set<String> = []
 
@@ -46,7 +47,7 @@ extension SubscriptionsManager {
     func loadProducts() async {
         do {
             self.products = try await Product.products(for: productIDs)
-                .sorted(by: { $0.price > $1.price })
+                .sorted(by: { $0.price < $1.price })
         } catch {
             print("Failed to fetch products!")
         }
@@ -79,13 +80,16 @@ extension SubscriptionsManager {
                 break
             case .userCancelled:
                 print("User cancelled!")
+                Analytics.logEvent("User_cancel", parameters: ["product" : product])
                 break
             @unknown default:
                 print("Failed to purchase the product!")
+                Analytics.logEvent("Failed_purchase", parameters: ["product" : product])
                 break
             }
         } catch {
             print("Failed to purchase the product!")
+            Analytics.logEvent("Failed_purchase_catch", parameters: ["product" : product])
         }
     }
     

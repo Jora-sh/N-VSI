@@ -14,6 +14,8 @@ struct SettingsScreen: View {
     
     @State var showContactUsBottomSheet = false
     
+    @Environment(\.requestReview) var requestReview
+    
     
     var header: some View {
         HStack {
@@ -54,15 +56,15 @@ struct SettingsScreen: View {
                     mainViewModel.SCREEN_VIEW = .Purchase
                 }
             } label: {
-                AsyncImage(url: URL(string: mainViewModel.homeConfig?.homeConfig?.icons?.bannerImage ?? "http://89.22.239.26/nexora-swap-ios-stage/public/home/5a7f7f0e-2c69-4d94-b833-77a6e13fbd1d.png")!, scale: 1.0) { img in
+                AsyncImage(url: URL(string: mainViewModel.homeConfig?.homeConfig?.icons?.bannerImage ?? "http://89.22.239.26/nexora-swap-ios-stage/public/home/3e294587-97d8-4405-97d9-5fcd9b8fd4b3.png")!, scale: 1.0) { img in
                     img.resizable()
                         .frame(width: UIScreen.screenWidth - 32, height: 120)
-                        .scaledToFill()
+                        .scaledToFit()
                         .clipShape(RoundedRectangle(cornerRadius: 8))
                 } placeholder: {
                     Image(.background)
                         .frame(width: UIScreen.screenWidth - 32, height: 120)
-                        .scaledToFill()
+                        .scaledToFit()
                         .clipShape(RoundedRectangle(cornerRadius: 8))
                 }
             }
@@ -111,9 +113,7 @@ struct SettingsScreen: View {
                         }.frame(height: 48)
                     })
                     
-                    Button(action: {
-                        
-                    }, label: {
+                    ShareLink(item: "Check out AI Video Face Swap for incredible face swap videos!\nIt’s easy and fun—just choose a video, swap faces, and watch the magic happen. 🥰\n\n\n🔥Download AI Video Face Swap now and start creating your own amazing videos to share with everyone!🔥", label: {
                         HStack {
                             
                             Image(.iconShare)
@@ -179,7 +179,7 @@ struct SettingsScreen: View {
                     })
                     
                     Button(action: {
-                        
+                        requestReview()
                     }, label: {
                         HStack {
                             
@@ -220,9 +220,7 @@ struct SettingsScreen: View {
                     Spacer()
                         .frame(height: 6)
                     
-                    Button(action: {
-                        
-                    }, label: {
+                    Link(destination: URL(string: termsOfServiceLink)!, label: {
                         HStack {
                             
                             Image(.iconTerms)
@@ -243,9 +241,7 @@ struct SettingsScreen: View {
                         }.frame(height: 48)
                     })
                     
-                    Button(action: {
-                        
-                    }, label: {
+                    Link(destination: URL(string: privacyPolicyLink)!) {
                         HStack {
                             
                             Image(.iconPrivacy)
@@ -264,7 +260,7 @@ struct SettingsScreen: View {
                                 .frame(width: 24, height: 24)
                             
                         }.frame(height: 48)
-                    })
+                    }
                     
                 }.padding(.horizontal, 16)
             }
@@ -295,13 +291,6 @@ struct ContactUsView : View {
                     
                     
                     Divider()
-                    
-                    
-                    Text("We're Here to Support You!")
-                        .font(.system(size: 16))
-                        .bold()
-                        .foregroundStyle(Color.white)
-                    
                     
                     Text("If you need assistance or have questions while using our app, feel free to reach out. Our support team is dedicated to helping you every step of the way, ensuring a seamless and enjoyable experience.")
                         .multilineTextAlignment(.center)

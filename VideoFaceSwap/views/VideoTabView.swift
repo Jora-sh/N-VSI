@@ -12,6 +12,8 @@ struct VideoTabView: View {
     
     @State var templates : [TemplateModel] = []
     
+    
+    
     @EnvironmentObject var mainViewModel : MainViewModel
     
     let category : CategoryModel
@@ -22,43 +24,17 @@ struct VideoTabView: View {
             
             VStack {
                 
-                
             }.onAppear {
-                
                 mainViewModel.getTemplateForCategoryById(id: category.id) { templates, err in
                     self.templates = templates ?? []
                 }
-                
-                
             }
             
             ScrollView(showsIndicators: false) {
                 LazyVGrid(columns: gridItems, content: {
                     ForEach(templates, id: \.id) { item in
                         
-                        Button {
-                            
-                            var tempos = templates
-                            let first = tempos.first!
-                            tempos.removeFirst()
-                            var list = [TemplateModel]()
-                            list.append(first)
-                            tempos.forEach { temp in
-                                list.append(temp)
-                            }
-                            
-                            mainViewModel.templateItems = list
-                            withAnimation {
-                                mainViewModel.SCREEN_VIEW = .Templates
-                            }
-                        } label: {
-                            LoopingVideoPlayer(videoURL: URL(string: item.templateLowResolutionUrl)!)
-                                .disabled(true) // Hides iOS video controls
-                                .aspectRatio(contentMode: .fill)
-                                .frame(width: (UIScreen.screenWidth - 40)/2, height: 220)
-                                .clipShape(RoundedRectangle(cornerRadius: 8))
-                        }
-
+                        eachItem(templates: $templates,item: item)
                         
                     }
                 }).padding(.horizontal, 16)
@@ -79,6 +55,68 @@ struct VideoTabView: View {
             return toReturn
         }
     
+}
+
+struct eachItem : View {
+    
+    @EnvironmentObject var mainViewModel : MainViewModel
+    
+    @Binding var templates : [TemplateModel]
+    
+    @State var player = AVPlayer()
+    
+    let item : TemplateModel
+    
+    var body: some View {
+        VStack {
+            Button {
+                
+                var tempos = templates
+                print(tempos.count)
+                
+                let first = tempos.remove(at: tempos.firstIndex(where: { it in
+                    return it.id == item.id
+                })!)
+                
+                var list = [TemplateModel]()
+                list.append(first)
+                tempos.forEach { temp in
+                    list.append(temp)
+                }
+                mainViewModel.templateItems = list
+                withAnimation {
+                    mainViewModel.SCREEN_VIEW = .Templates
+                }
+            } label: {
+                VideoPlayer(player: player)
+                    .onAppear {
+                        print(item.templateLowResolutionUrl)
+                        player = AVPlayer(url: URL(string: item.templateLowResolutionUrl)!)
+                        player.play()
+                        player.volume = 0.0
+                    }
+                    .onReceive(NotificationCenter
+                        .default
+                        .publisher(
+                            for: .AVPlayerItemDidPlayToEndTime,
+                            object: player.currentItem),
+                               perform: { _ in
+                                    player.seek(to: .zero)
+                                    player.play()
+                                }
+                    )
+                    .frame(width: (UIScreen.screenWidth - 40)/2, height: 220)
+                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                    .overlay(alignment: .topTrailing) {
+                        if item.isFree == false {
+                            Image(.iconPremiumAccent)
+                                .padding(8)
+                        }
+                    }
+                    
+            }
+        }
+    }
 }
 
 struct LoopingVideoPlayer: UIViewControllerRepresentable {

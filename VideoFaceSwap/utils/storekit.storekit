@@ -15,7 +15,7 @@
           "locale" : "en_US"
         }
       ],
-      "productID" : "prod_1",
+      "productID" : "30_video_credits",
       "referenceName" : "Products",
       "type" : "Consumable"
     },
@@ -30,12 +30,12 @@
           "locale" : "en_US"
         }
       ],
-      "productID" : "prod_2",
+      "productID" : "100_video_credits",
       "referenceName" : "Product 2",
       "type" : "Consumable"
     },
     {
-      "displayPrice" : "50.99",
+      "displayPrice" : "30.99",
       "familyShareable" : false,
       "internalID" : "98143D21",
       "localizations" : [
@@ -45,13 +45,45 @@
           "locale" : "en_US"
         }
       ],
-      "productID" : "prod_3",
+      "productID" : "200_video_credits",
       "referenceName" : "Product 3",
+      "type" : "Consumable"
+    },
+    {
+      "displayPrice" : "40.99",
+      "familyShareable" : false,
+      "internalID" : "FADA529A",
+      "localizations" : [
+        {
+          "description" : "",
+          "displayName" : "",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "christmas_offer_faceswap_video",
+      "referenceName" : "Cristmas Offer",
+      "type" : "Consumable"
+    },
+    {
+      "displayPrice" : "40.99",
+      "familyShareable" : false,
+      "internalID" : "91A8B223",
+      "localizations" : [
+        {
+          "description" : "",
+          "displayName" : "",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "offer_faceswap_video",
+      "referenceName" : "Special Offer",
       "type" : "Consumable"
     }
   ],
   "settings" : {
     "_failTransactionsEnabled" : false,
+    "_locale" : "en_US",
+    "_storefront" : "USA",
     "_storeKitErrors" : [
       {
         "current" : null,

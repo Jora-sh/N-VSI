@@ -27,6 +27,11 @@ struct TemplateScreen: View {
     
     @State var showContactUsBottomSheet = false
     
+    @State var selectedTemplate : TemplateModel? = nil
+    @State var player : AVPlayer = AVPlayer()
+
+    
+    
     var header: some View {
         HStack {
             
@@ -85,6 +90,19 @@ struct TemplateScreen: View {
             VStack {
                 
                 header
+                    .onAppear(perform: {
+                        selected = mainViewModel.templateItems[0].id
+                        print(selected)
+                        selectedTemplate = mainViewModel.templateItems[0]
+                    })
+                    .onDisappear(perform: {
+                        player.volume = 0.0
+                    })
+                    .onChange(of: selected, { oldValue, newValue in
+                        selectedTemplate = mainViewModel.templateItems.first(where: { item in
+                            return item.id == selected
+                        })
+                    })
                     .onChange(of: imageSelection) { item in
                         Task {
                             print(selected)
@@ -98,7 +116,7 @@ struct TemplateScreen: View {
                                     
                                     self.creditsNeeded = Int(swapViewModel.templateToSwapWithTemplate?.duration ?? 10.0)
                                     
-                                    if (mainViewModel.userModel?.credits ?? 0) - Int(swapViewModel.templateToSwapWithTemplate?.duration ?? 10.0) <= 0 {
+                                    if ((mainViewModel.userModel?.credits ?? 0) - Int(swapViewModel.templateToSwapWithTemplate?.duration ?? 10.0) <= 0) && selectedTemplate?.isFree == false {
                                         
                                         withAnimation {
                                             self.showNoCreditsLeftDialog.toggle()
@@ -125,11 +143,42 @@ struct TemplateScreen: View {
                     ForEach(mainViewModel.templateItems, id: \.id) { item in
                         
                         ZStack {
-                            LoopingVideoPlayer(videoURL: URL(string: item.templateUrl)!)
-                                .disabled(true) // Hides iOS video controls
-                                .aspectRatio(contentMode: .fill)
-                                .frame(width: (UIScreen.screenWidth - 32))
-                                .clipShape(RoundedRectangle(cornerRadius: 8))
+                            if item.id == selected {
+                                VideoPlayer(player: player)
+                                    .disabled(true) // Hides iOS video controls
+                                    .aspectRatio(contentMode: .fill)
+                                    .onAppear {
+                                        
+                                        player = AVPlayer(url: URL(string: item.templateUrl)!)
+                                        player.play()
+                                        player.volume = 0.7
+                                    }
+                                    .onReceive(NotificationCenter
+                                        .default
+                                        .publisher(
+                                            for: .AVPlayerItemDidPlayToEndTime,
+                                            object: player.currentItem),
+                                               perform: { _ in
+                                                    player.seek(to: .zero)
+                                                    player.play()
+                                                }
+                                    )
+                                    .frame(width: (UIScreen.screenWidth - 32))
+                                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                            } else {
+                                AsyncImage(
+                                    url: URL(string: item.thumbnailUrl),
+                                    content: { image in
+                                        image.resizable()
+                                            .aspectRatio(contentMode: .fit)
+                                            .clipShape(RoundedRectangle(cornerRadius: 8))
+                                            .frame(width: UIScreen.screenWidth - 32)
+                                    },
+                                    placeholder: {
+                                        ProgressView()
+                                    }
+                                )
+                            }
 //                            if isShowing {
 //                                AsyncImage(
 //                                    url: URL(string: item.thumbnailUrl),
@@ -144,13 +193,13 @@ struct TemplateScreen: View {
 //                                    }
 //                                )
 //                            }
-                        }.onAppear(perform: {
-                            selected = item.id
+                        }.onAppear{
+//                            selected = item.id
 //                            isShowing = true
 //                            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
 //                                isShowing = false
 //                            }
-                        })
+                        }
                         .tag(item.id)
                     }
                     
@@ -165,10 +214,12 @@ struct TemplateScreen: View {
                       matching: .images,
                       photoLibrary: .shared()) {
                           HStack {
-                              Image(.iconPremium)
-                              Spacer()
-                                  .frame(width: 6)
-                              Text("Premium Swap")
+                              if selectedTemplate?.isFree == false {
+                                  Image(.iconPremium)
+                                  Spacer()
+                                      .frame(width: 6)
+                              }
+                              Text(selectedTemplate?.isFree == true ? "Choose Face" : "Premium Swap")
                                   .font(.system(size: 16, weight: .bold))
                                   .foregroundStyle(.white)
                           }

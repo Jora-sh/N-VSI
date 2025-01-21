@@ -18,6 +18,7 @@ struct LoadingScreen: View {
     @State var showErrorDialog = false
     
     @State var showContactUsBottomSheet = false
+    @State var showNoCreditsLeftDialog = false
     
     var header: some View {
         HStack {
@@ -61,50 +62,78 @@ struct LoadingScreen: View {
                 
                 header
                     .onAppear{
-                        if swapViewModel.templateToSwapWithTemplate != nil {
-                            swapViewModel.swapWithTemplate(image: swapViewModel.imageToSwapWithTemplate, templateId : swapViewModel.templateToSwapWithTemplate?.templateName ?? "") { isSuccess, msg in
-                                
-                                if isSuccess {
-                                    swapViewModel.checkForVideo(jobId: msg ?? "") { isSuccess, videoUrl in
-                                        if isSuccess {
-                                            withAnimation {
-                                                mainViewModel.SCREEN_VIEW = .Result
-                                            }
-                                        } else {
-                                            self.showErrorDialog = true
-                                        }
-                                    }
-                                } else {
-                                    self.showErrorDialog = true
+                        if swapViewModel.goLoadingWithoutCredits {
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 6) {
+                                withAnimation {
+                                    self.showNoCreditsLeftDialog = true
                                 }
-                                swapViewModel.templateToSwapWithTemplate = nil
                             }
                         } else {
-                            swapViewModel.uploadMedia(videoPath: swapViewModel.videoUrl, image: swapViewModel.imageSelected!) { isSuccess, msg in
-                                
-                                if isSuccess {
-                                    swapViewModel.checkForVideo(jobId: msg ?? "") { isSuccess, videoUrl in
-                                        if isSuccess {
-                                            withAnimation {
-                                                mainViewModel.SCREEN_VIEW = .Result
+                            if swapViewModel.templateToSwapWithTemplate != nil {
+                                swapViewModel.swapWithTemplate(image: swapViewModel.imageToSwapWithTemplate, templateId : swapViewModel.templateToSwapWithTemplate?.templateName ?? "") { isSuccess, msg in
+                                    
+                                    if isSuccess {
+                                        swapViewModel.checkForVideo(jobId: msg ?? "") { isSuccess, videoUrl in
+                                            if isSuccess {
+                                                withAnimation {
+                                                    mainViewModel.SCREEN_VIEW = .Result
+                                                }
+                                            } else {
+                                                self.showErrorDialog = true
                                             }
-                                        } else {
-                                            self.showErrorDialog = true
                                         }
+                                    } else {
+                                        self.showErrorDialog = true
                                     }
-                                } else {
-                                    self.showErrorDialog = true
+                                    swapViewModel.templateToSwapWithTemplate = nil
                                 }
-                                swapViewModel.templateToSwapWithTemplate = nil
+                            } else {
+                                swapViewModel.uploadMedia(videoPath: swapViewModel.videoUrl, image: swapViewModel.imageSelected!) { isSuccess, msg in
+                                    
+                                    if isSuccess {
+                                        swapViewModel.checkForVideo(jobId: msg ?? "") { isSuccess, videoUrl in
+                                            if isSuccess {
+                                                withAnimation {
+                                                    mainViewModel.SCREEN_VIEW = .Result
+                                                }
+                                            } else {
+                                                self.showErrorDialog = true
+                                            }
+                                        }
+                                    } else {
+                                        self.showErrorDialog = true
+                                    }
+                                    swapViewModel.templateToSwapWithTemplate = nil
+                                }
                             }
                         }
                     }
                 
                 Spacer()
                 
-                LottieView(name: "loading2.json", play: .constant(true))
-                    .lottieLoopMode(.loop)
-                    .frame(width: 200, height: 200)
+                VStack {
+                    
+                    LottieView(name: "loading2.json", play: .constant(true))
+                        .lottieLoopMode(.loop)
+                        .frame(width: 200, height: 200)
+                    
+                    Spacer()
+                        .frame(height: 24)
+                    
+                    Text("Please wait, Processing...")
+                        .bold()
+                        .foregroundStyle(.white)
+                        .font(.system(size: 16))
+                    
+                    Spacer()
+                        .frame(height: 24)
+                    
+                    Text("Please wait patiently for your result to be\ngenerated; rushing may affect the outcome and\nconsume credits without providing results.")
+                        .multilineTextAlignment(.center)
+                        .foregroundStyle(.white)
+                        .font(.system(size: 14))
+                    
+                }
                 
                 Spacer()
                 
@@ -122,6 +151,20 @@ struct LoadingScreen: View {
             ErrorDialog(errorType: .Sorry, showDialog: $showErrorDialog) {
                 withAnimation {
                     mainViewModel.SCREEN_VIEW = .Main
+                }
+            }
+            
+            NoCreditsLeftDialog(shown: $showNoCreditsLeftDialog,
+                                creditsOwned: .constant(mainViewModel.userModel?.credits ?? 0),
+                                creditsNeeded: $swapViewModel.creditsNeededForCustomSwap) {
+                withAnimation {
+                    mainViewModel.SCREEN_VIEW = .Purchase
+                }
+            }.onChange(of: showNoCreditsLeftDialog) { old, new in
+                if !showNoCreditsLeftDialog {
+                    withAnimation {
+                        mainViewModel.SCREEN_VIEW = .Purchase
+                    }
                 }
             }
             
