@@ -232,34 +232,36 @@ struct CustomScreen: View {
                 Spacer()
                 //MARK: START SWAPING BUTTON
                 Button {
-                    if UserSettings.videoIsWorking {
+                    if swapViewModel.imageSelected != nil && swapViewModel.videoSelection != nil {
+                        creditsNeeded =  Int(self.player?.currentItem?.asset.duration.seconds ?? 10.0)
+                        
                         if swapViewModel.imageSelected != nil && swapViewModel.videoSelection != nil {
-                            creditsNeeded =  Int(self.player?.currentItem?.asset.duration.seconds ?? 10.0)
                             
-                            if swapViewModel.imageSelected != nil && swapViewModel.videoSelection != nil {
+                            if creditsNeeded >= (mainViewModel.userModel?.credits ?? 0) {
                                 
-                                if creditsNeeded >= (mainViewModel.userModel?.credits ?? 0) {
-                                    
-                                    swapViewModel.goLoadingWithoutCredits = true
-                                    swapViewModel.creditsNeededForCustomSwap = creditsNeeded
-                                    withAnimation {
+                                swapViewModel.goLoadingWithoutCredits = true
+                                swapViewModel.creditsNeededForCustomSwap = creditsNeeded
+                                withAnimation {
 //                                        self.showNoCreditsLeftDialog.toggle()
-                                        mainViewModel.SCREEN_VIEW = .Loading
-                                    }
-                                    
-                                } else {
+                                    mainViewModel.SCREEN_VIEW = .Loading
+                                }
+                                
+                            } else {
+                                if UserSettings.videoIsWorking {
                                     swapViewModel.goLoadingWithoutCredits = false
                                     withAnimation {
                                         mainViewModel.SCREEN_VIEW = .Loading
                                     }
+                                } else {
+                                    withAnimation {
+                                        showErrorDialog = true
+                                    }
                                 }
+                                
                             }
                         }
-                    } else {
-                        withAnimation {
-                            showErrorDialog = true
-                        }
                     }
+                    
                 } label: {
                     HStack{
                         Text("Start Swapping")

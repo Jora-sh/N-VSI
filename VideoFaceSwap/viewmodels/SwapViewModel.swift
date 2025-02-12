@@ -54,6 +54,8 @@ class SwapViewModel : ObservableObject {
                 }).responseData { result in
                     
                     let json = JSON(result.data)
+                    print(json)
+                    print(result.response?.statusCode)
                     
                     switch result.result{
                         
@@ -72,14 +74,29 @@ class SwapViewModel : ObservableObject {
                             }
                         case .failure(let error):
                             print(error?.localizedDescription ?? "")
-                            onResponse(false, nil)
                             break
                         }
                         
                         
                     case .failure(let err):
+                        let data = try? MyDecoder<FaceSwapResponseModel>().decodeJSON(json: json.rawData())
+                        if let data = data {
+                            switch data {
+                            case .success(let data):
+                                if data?.success == true {
+                                    onResponse(true, data?.jobId ?? "")
+                                } else {
+                                    print(data?.message)
+                                    onResponse(false, data?.message)
+                                }
+                            case .failure(let error):
+                                print(error?.localizedDescription ?? "")
+                                onResponse(false, nil)
+                                break
+                            }
+                        }
                         print(err.localizedDescription)
-                        onResponse(false, nil)
+                        
                     }
                 }
             
@@ -216,7 +233,7 @@ struct CheckForVideoResponseModel : Codable {
     let success:Bool
     let isLoading: Bool
     let vidUrl:String?
-    let message:String
+    let message:String?
 }
 
 extension UIImage {

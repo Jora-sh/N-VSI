@@ -13,6 +13,7 @@ struct SettingsScreen: View {
     
     
     @State var showContactUsBottomSheet = false
+    @State var isAutoSaveOn = true
     
     @Environment(\.requestReview) var requestReview
     
@@ -47,6 +48,12 @@ struct SettingsScreen: View {
     var body: some View {
         VStack {
             header
+                .onAppear {
+                    isAutoSaveOn = UserSettings.autoAddToHistory
+                }
+                .onChange(of: isAutoSaveOn) { oldValue, newValue in
+                    mainViewModel.toggleAddToHistory()
+                }
             
             Spacer()
                 .frame(height: 16)
@@ -130,6 +137,27 @@ struct SettingsScreen: View {
                                 .resizable()
                                 .rotationEffect(.degrees(180))
                                 .frame(width: 24, height: 24)
+                            
+                        }.frame(height: 48)
+                    })
+                    
+                    Button(action: {
+                        isAutoSaveOn.toggle()
+                    }, label: {
+                        HStack {
+                            
+                            Image(.iconHistoryUnselected)
+                                .resizable()
+                                .frame(width: 24, height: 24)
+                            
+                            Text("  Auto Add to History")
+                                .font(.system(size: 16, weight: .semibold))
+                                .foregroundStyle(Color(hex: textColor))
+                            
+                            Spacer()
+                            
+                             Toggle("", isOn: $isAutoSaveOn)
+                                .tint(Color.init(hex: "#00C6FF"))
                             
                         }.frame(height: 48)
                     })

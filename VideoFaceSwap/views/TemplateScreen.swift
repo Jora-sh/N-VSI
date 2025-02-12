@@ -106,37 +106,39 @@ struct TemplateScreen: View {
                     .onChange(of: imageSelection) { item in
                         Task {
                             print(selected)
-                            if UserSettings.videoIsWorking {
-                                if let loaded = try? await imageSelection?.loadTransferable(type: Image.self) {
-                                    swapViewModel.imageToSwapWithTemplate = loaded.asUIImage()
-                                    swapViewModel.templateToSwapWithTemplate = mainViewModel.templateItems.first(where: { item in
-                                        return item.id == selected
-                                    })
-                                    print(selected)
+                            if let loaded = try? await imageSelection?.loadTransferable(type: Image.self) {
+                                swapViewModel.imageToSwapWithTemplate = loaded.asUIImage()
+                                swapViewModel.templateToSwapWithTemplate = mainViewModel.templateItems.first(where: { item in
+                                    return item.id == selected
+                                })
+                                print(selected)
+                                
+                                self.creditsNeeded = Int(swapViewModel.templateToSwapWithTemplate?.duration ?? 10.0)
+                                
+                                if ((mainViewModel.userModel?.credits ?? 0) - Int(swapViewModel.templateToSwapWithTemplate?.duration ?? 10.0) <= 0) && selectedTemplate?.isFree == false {
                                     
-                                    self.creditsNeeded = Int(swapViewModel.templateToSwapWithTemplate?.duration ?? 10.0)
-                                    
-                                    if ((mainViewModel.userModel?.credits ?? 0) - Int(swapViewModel.templateToSwapWithTemplate?.duration ?? 10.0) <= 0) && selectedTemplate?.isFree == false {
-                                        
-                                        withAnimation {
-                                            self.showNoCreditsLeftDialog.toggle()
-                                        }
-                                        
-                                    } else {
-                                        
-                                        withAnimation {
-                                            mainViewModel.SCREEN_VIEW = .Loading
-                                        }
+                                    withAnimation {
+                                        self.showNoCreditsLeftDialog.toggle()
                                     }
                                     
                                 } else {
-                                    print("Failed")
+                                    
+                                    if UserSettings.videoIsWorking {
+                                        withAnimation {
+                                            mainViewModel.SCREEN_VIEW = .Loading
+                                        }
+                                    } else {
+                                        withAnimation {
+                                            showErrorDialog = true
+                                        }
+                                    }
+                                    
                                 }
+                                
                             } else {
-                                withAnimation {
-                                    showErrorDialog = true
-                                }
+                                print("Failed")
                             }
+                            
                         }
                     }
                 TabView(selection: $selected) {

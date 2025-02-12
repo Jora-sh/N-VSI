@@ -7,6 +7,8 @@
 
 import SwiftUI
 import StoreKit
+import AVFoundation
+import _AVKit_SwiftUI
 
 struct PurchaseScreen: View {
     
@@ -17,6 +19,8 @@ struct PurchaseScreen: View {
     @State var selectedItemIndex : Product? = nil
     
     @State var isLoading: Bool = false
+    @State var showSuccessDialog: Bool = false
+    @State var player : AVPlayer = AVPlayer(url: URL(string: "http://89.22.239.26/nexora-swap-ios-stage/public/uploads/video_facefusion-20250211154123-3630817-7e464-357966868480.mp4")!)
     
     let texts = [
 //        "Instant and unlimited insect identify",
@@ -221,7 +225,9 @@ struct PurchaseScreen: View {
                            "purchasedQuantity" : Int(1),
                            "environment" : it4,
                            "id" : it5,
-                        ])
+                        ]) {
+                            self.showSuccessDialog = true
+                        }
                     }
                 }
                 isLoading = false
@@ -275,6 +281,27 @@ struct PurchaseScreen: View {
     
     var body: some View {
         ZStack {
+            
+//            VideoView(player: player)
+//                .disabled(true) // Hides iOS video controls
+//                .aspectRatio(contentMode: .fill)
+//                .onAppear {
+//
+//                    player.play()
+//                    player.volume = 0
+//                }
+//                .onReceive(NotificationCenter
+//                    .default
+//                    .publisher(
+//                        for: .AVPlayerItemDidPlayToEndTime,
+//                        object: player.currentItem),
+//                           perform: { _ in
+//                                player.seek(to: .zero)
+//                                player.play()
+//                            }
+//                )
+//                .frame(width: (UIScreen.screenWidth), height: UIScreen.screenHeight/2)
+//                
             
             Image(.imgPurchase)
                 .resizable()
@@ -333,6 +360,16 @@ struct PurchaseScreen: View {
                 Spacer()
                     .frame(height: 32)
             }
+            .alert("Success!", isPresented: $showSuccessDialog) {
+                Button("ok") {
+                    withAnimation {
+                        mainViewModel.SCREEN_VIEW = .Main
+                    }
+                }
+            } message: {
+                Text("Credits have been added to your account. Enjoy!")
+            }
+
             
             
             ZStack {
@@ -361,4 +398,18 @@ struct ButtonGradient: View{
                 lineWidth: 2
             )
     }
+}
+
+struct VideoView: UIViewControllerRepresentable {
+    let player: AVPlayer
+
+    func makeUIViewController(context: Context) -> AVPlayerViewController {
+        let controller = AVPlayerViewController()
+        controller.player = player
+        controller.showsPlaybackControls = false
+        controller.videoGravity = .resizeAspectFill // Center Crop Effect
+        return controller
+    }
+
+    func updateUIViewController(_ uiViewController: AVPlayerViewController, context: Context) {}
 }

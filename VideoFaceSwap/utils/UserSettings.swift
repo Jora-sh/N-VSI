@@ -76,4 +76,13 @@ class UserSettings : NSObject {
     static func setShowWarning(title:String) {
         UserSettings.defaults.set(true, forKey: "\(title.trimmingPrefix("_"))_warn")
     }
+    
+    static var autoAddToHistory : Bool{
+        get{
+            return UserSettings.defaults.bool(forKey: "autoAddToHistory")
+        }
+        set{
+            UserSettings.defaults.set(newValue , forKey: "autoAddToHistory")
+        }
+    }
 }

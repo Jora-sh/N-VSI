@@ -260,3 +260,95 @@ struct NoCreditDialog: View {
     }
 }
 
+struct NoFreeCreditsLeftDialog: View {
+    
+    @EnvironmentObject var mainviewmodel: MainViewModel
+    
+    @Binding var shown : Bool
+    
+    var body: some View {
+        ZStack(alignment:.center) {
+            
+            Color.init(hex: "#222222")
+                .opacity(shown ? 0.90 : 0.0)
+                .blur(radius: 5.0)
+                .ignoresSafeArea()
+            
+            
+            ZStack(alignment: .center) {
+                
+                VStack {
+                    
+                    Image(.iconHeaderNoCreditsDialog)
+                        .resizable()
+                        .frame(width: 164 * 1.8, height: 146 * 1.8)
+                        .offset(y: 20)
+                    
+                    VStack {
+                        
+                        Text("Your free attempts for today are over.\nTry again tomorrow\nor upgrade for more access.")
+                            .lineSpacing(14)
+                            .multilineTextAlignment(.center)
+                            .foregroundStyle(.white.opacity(0.8))
+                            .font(.system(size: 16))
+                        
+                        Spacer()
+                            .frame(height: 24)
+                        
+                        Button {
+                            withAnimation {
+                                mainviewmodel.SCREEN_VIEW = .Purchase
+                            }
+                            
+                        } label: {
+                            
+                            HStack {
+                                
+                                Image(.iconDiamond)
+                                    .resizable()
+                                    .frame(width: 24, height: 24)
+                                
+                                Text("Get More Video Credit")
+                                    .font(.system(size: 18 , weight: .semibold))
+                                    .foregroundColor(.white)
+                            }
+                            
+                            .padding(.vertical, 16)
+                            .frame(width: UIScreen.screenWidth - 110, height: 55)
+                            .background(
+                                LinearGradient(
+                                    colors: [
+                                        Color(hex: "#3ECCF8"),
+                                        Color(hex: "#34A5F2")
+                                    ],
+                                    startPoint: UnitPoint(x: 0, y: 0.5),
+                                    endPoint: UnitPoint(x: 1, y: 0.5)
+                                )
+                            )
+                            .cornerRadius(10)
+                        }
+                        
+                    }.frame(width: UIScreen.screenWidth - 64, height: 200)
+                        .background {
+                            Color(hex: "#1D1B20")
+                                .frame(width: UIScreen.screenWidth - 64, height: 200)
+                        }
+                        .roundedCornerWithBorder(lineWidth: 1, borderColor: Color(hex: "#34A5F2"), radius: 10, corners: .allCorners)
+                    
+                    Spacer()
+                        .frame(height: 110)
+                    
+                }
+                
+                
+
+            }
+            
+            
+        }.opacity(shown ? 1.00 : 0.0)
+            .offset(y: shown ? 0 : UIScreen.screenHeight)
+    }
+}
+
+
+

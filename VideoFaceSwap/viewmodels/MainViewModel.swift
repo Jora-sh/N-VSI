@@ -10,6 +10,7 @@ import SwiftUI
 import Alamofire
 import SwiftyJSON
 import OneSignalFramework
+import AVFoundation
 
 //let base_url = "http://89.22.239.26/nexora-swap-ios-stage/api/"
 let base_url = "https://swp.yagorai.com/nexora-swap-ios/api/"
@@ -21,6 +22,22 @@ class MainViewModel : ObservableObject {
     @Published var templateItems : [TemplateModel] = []
     @Published var userModel : UserModel? = nil
     @Published var homeConfig : GetHomeResponseModel? = nil
+    @Published var isHistoryLoading = false
+    @Published var historyList : [CreationModel] = []
+    
+    
+    @Published var templatePlayers: [TemplateModel: AVPlayer] = [:]
+        
+        func player(for template: TemplateModel) -> AVPlayer {
+            if let existingPlayer = templatePlayers[template] {
+                return existingPlayer
+            }
+            
+            let newPlayer = AVPlayer(url: URL(string: template.templateLowResolutionUrl)!)
+            newPlayer.volume = 0.0
+            templatePlayers[template] = newPlayer
+            return newPlayer
+        }
     
     func signupUser(onResponse : @escaping (Error?) -> Void) {
         
@@ -148,6 +165,7 @@ class MainViewModel : ObservableObject {
                     switch data {
                     case .success(let data):
                         print(data ?? "")
+                        UserSettings.autoAddToHistory = data?.user?.autoAddToHistory ?? false
                         
                         self.userModel = data?.user
                         OneSignal.login(self.userModel?.id ?? "NO_ID")
@@ -242,7 +260,7 @@ class MainViewModel : ObservableObject {
             }
     }
     
-    func sendPurchaseToServer(parameters : [String:Any]) {
+    func sendPurchaseToServer(parameters : [String:Any], onResponse: @escaping () -> Void) {
         
         let url = "\(base_url)users/verifyPurchase"
         
@@ -271,7 +289,7 @@ class MainViewModel : ObservableObject {
                         print(data ?? "")
                         
                         self.userModel = data?.user
-                        
+                        onResponse()
                         
                     case .failure(let error):
                         print(error?.localizedDescription ?? "")
@@ -328,6 +346,84 @@ class MainViewModel : ObservableObject {
                 }
             }
     }
+    
+    func getMyCreations() {
+        
+        
+        let headers : HTTPHeaders = [
+            "Authorization" : "Bearer \(UserSettings.token)",
+            "x-api-key" : "ae6a1d02bde6a2e299e2e2033e6a2e20310686"
+        ]
+        
+        print(headers)
+        
+        let url = URL(string: "\(base_url)users/swap-history")!
+
+        withAnimation {
+            isHistoryLoading = true
+        }
+        
+        print(url)
+        
+        AF.request(url,method: .get,headers: headers)
+            .validate()
+            .response { result in
+                
+                
+                switch result.result{
+                    
+                case .success(let value):
+                    let json = JSON(value ?? "{}")
+                    print(json)
+                    
+                    let data = MyDecoder<GetCreationsResponseModel>().decodeJSON(json: value!)
+                    
+                    switch data {
+                    case .success(let data):
+                        print(data ?? "")
+                        withAnimation {
+                            self.isHistoryLoading = false
+                        }
+                        self.historyList = data?.videoSwaps ?? []
+                        
+                        
+                    case .failure(let error):
+                        print(error?.localizedDescription ?? "")
+                        withAnimation {
+                            self.isHistoryLoading = false
+                        }
+                    }
+                    
+                    
+                case .failure(let err):
+                    print(err.localizedDescription)
+                    withAnimation {
+                        self.isHistoryLoading = false
+                    }
+                    
+                }
+            }
+    }
+    
+    func toggleAddToHistory() {
+        let url = "\(base_url)users/toggle-add-to-history"
+        
+        let headers : HTTPHeaders = [
+            "Authorization" : "Bearer \(UserSettings.token)",
+            "x-api-key" : "ae6a1d02bde6a2e299e2e2033e6a2e20310686"
+        ]
+        
+        
+        AF.request(url,method: .post, headers: headers)
+            .validate()
+            .response { result in
+                
+                print(JSON(result.data))
+                
+                self.getMe()
+                
+            }
+    }
 
 }
 
@@ -342,6 +438,7 @@ struct UserModel : Codable {
     let id:String?
     let token: TokenModel?
     let credits:Int?
+    let autoAddToHistory: Bool?
 }
 
 struct TokenModel : Codable {
@@ -365,7 +462,7 @@ struct GetCategoryByIdResponseModel : Codable {
     let templates:[TemplateModel]?
 }
 
-struct TemplateModel : Codable {
+struct TemplateModel : Codable, Hashable {
     let id : String
     let templateName : String
     let isActive : Bool
@@ -396,4 +493,16 @@ struct ImageConfigModel : Codable {
 struct FeatureModel  :Codable {
     let videoWorking:Bool?
     let testFeature:Bool?
+}
+
+struct GetCreationsResponseModel : Codable {
+    let success:Bool
+    let videoSwaps: [CreationModel]?
+}
+
+struct CreationModel : Codable {
+    let isLoading : Bool
+    let vidUrl:String?
+    let jobId:String?
+    let videoName:String?
 }

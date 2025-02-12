@@ -17,8 +17,9 @@ struct LoadingScreen: View {
     
     @State var showErrorDialog = false
     
-    @State var showContactUsBottomSheet = false
     @State var showNoCreditsLeftDialog = false
+    @State var showContactUsBottomSheet = false
+    @State var showNoFreeCreditsLeftDialog = false
     
     var header: some View {
         HStack {
@@ -83,7 +84,13 @@ struct LoadingScreen: View {
                                             }
                                         }
                                     } else {
-                                        self.showErrorDialog = true
+                                        if msg == "not enough credits" {
+                                            self.showNoCreditsLeftDialog = true
+                                        } else if msg == "not enough free credits" {
+                                            self.showNoFreeCreditsLeftDialog = true
+                                        } else {
+                                            self.showErrorDialog = true
+                                        }
                                     }
                                     swapViewModel.templateToSwapWithTemplate = nil
                                 }
@@ -153,6 +160,8 @@ struct LoadingScreen: View {
                     mainViewModel.SCREEN_VIEW = .Main
                 }
             }
+            
+            NoFreeCreditsLeftDialog(shown: $showNoFreeCreditsLeftDialog)
             
             NoCreditsLeftDialog(shown: $showNoCreditsLeftDialog,
                                 creditsOwned: .constant(mainViewModel.userModel?.credits ?? 0),

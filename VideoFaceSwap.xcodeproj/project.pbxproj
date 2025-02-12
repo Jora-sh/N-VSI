@@ -65,6 +65,7 @@
 		3F663D9B2CD7E24F005DB1C6 /* UserSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F663D992CD7E24F005DB1C6 /* UserSettings.swift */; };
 		3F663D9D2CD7E60E005DB1C6 /* CustomScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F663D9C2CD7E60E005DB1C6 /* CustomScreen.swift */; };
 		3F663DA02CD7ED56005DB1C6 /* VideoTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F663D9F2CD7ED56005DB1C6 /* VideoTabView.swift */; };
+		3F8505C02D4A864A00DBB6D0 /* HistoryScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F8505BF2D4A864A00DBB6D0 /* HistoryScreen.swift */; };
 		3FA469A12CDA6C2D00D5A496 /* LottieSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 3FA469A02CDA6C2D00D5A496 /* LottieSwiftUI */; };
 		3FA469A32CDA6C6500D5A496 /* loading2.json in Resources */ = {isa = PBXBuildFile; fileRef = 3FA469A22CDA6C6500D5A496 /* loading2.json */; };
 		3FA469A52CDA819100D5A496 /* OnBoardingScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FA469A42CDA819100D5A496 /* OnBoardingScreen.swift */; };
@@ -140,6 +141,7 @@
 		3F663D9C2CD7E60E005DB1C6 /* CustomScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomScreen.swift; sourceTree = "<group>"; };
 		3F663D9E2CD7EA83005DB1C6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		3F663D9F2CD7ED56005DB1C6 /* VideoTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoTabView.swift; sourceTree = "<group>"; };
+		3F8505BF2D4A864A00DBB6D0 /* HistoryScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryScreen.swift; sourceTree = "<group>"; };
 		3FA469A22CDA6C6500D5A496 /* loading2.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = loading2.json; sourceTree = "<group>"; };
 		3FA469A42CDA819100D5A496 /* OnBoardingScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnBoardingScreen.swift; sourceTree = "<group>"; };
 		3FA469A62CDA9E6700D5A496 /* ErrorDialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorDialog.swift; sourceTree = "<group>"; };
@@ -231,6 +233,7 @@
 				3F05D1F72CD961A300C027AC /* LoadingScreen.swift */,
 				3F05D1F32CD9532900C027AC /* ResultScreen.swift */,
 				3F18FE512CE1228A00D2A741 /* PurchaseScreen.swift */,
+				3F8505BF2D4A864A00DBB6D0 /* HistoryScreen.swift */,
 			);
 			path = views;
 			sourceTree = "<group>";
@@ -465,6 +468,7 @@
 				3F18FE542CE1249200D2A741 /* SubscriptionManager.swift in Sources */,
 				3F663DA02CD7ED56005DB1C6 /* VideoTabView.swift in Sources */,
 				3F18FE522CE1228A00D2A741 /* PurchaseScreen.swift in Sources */,
+				3F8505C02D4A864A00DBB6D0 /* HistoryScreen.swift in Sources */,
 				3F663D8B2CD7DB99005DB1C6 /* MainScreen.swift in Sources */,
 				3F663D8D2CD7DEB7005DB1C6 /* Colors.swift in Sources */,
 				3FA469A72CDA9E6700D5A496 /* ErrorDialog.swift in Sources */,
@@ -680,7 +684,7 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_ENTITLEMENTS = VideoFaceSwap/VideoFaceSwap.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 8;
+				CURRENT_PROJECT_VERSION = 11;
 				DEVELOPMENT_ASSET_PATHS = "\"VideoFaceSwap/Preview Content\"";
 				DEVELOPMENT_TEAM = 87588AW22L;
 				ENABLE_PREVIEWS = YES;
@@ -698,7 +702,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.8;
+				MARKETING_VERSION = 2.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ssss.VideoFaceSwap;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -719,7 +723,7 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_ENTITLEMENTS = VideoFaceSwap/VideoFaceSwap.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 8;
+				CURRENT_PROJECT_VERSION = 11;
 				DEVELOPMENT_ASSET_PATHS = "\"VideoFaceSwap/Preview Content\"";
 				DEVELOPMENT_TEAM = 87588AW22L;
 				ENABLE_PREVIEWS = YES;
@@ -737,7 +741,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.8;
+				MARKETING_VERSION = 2.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ssss.VideoFaceSwap;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";

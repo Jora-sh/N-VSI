@@ -73,6 +73,13 @@ struct MainScreen: View {
                         .gradientForeground(colors: [Color(hex: accentColorLight), Color(hex: accentColorDark)])
                         
                 }
+            case .History:
+                HStack {
+                    Text("History")
+                        .foregroundStyle(.white)
+                        .font(.system(size: 20, weight: .heavy))
+                        
+                }
             }
             
         }
@@ -99,6 +106,8 @@ struct MainScreen: View {
                     HomeScreen()
                 case .Upload:
                     CustomScreen()
+                case .History:
+                    HistoryScreen(homeBottomBarSelected: $mainBottomBar)
                 }
                 
                 appBottomBar
@@ -111,6 +120,7 @@ struct MainScreen: View {
     
     var appBottomBar : some View {
         HStack {
+            Spacer()
             Button(action: {
                 withAnimation {
                     mainBottomBar = .Home
@@ -125,7 +135,6 @@ struct MainScreen: View {
                 }.frame(width: 120, height: 64)
             })
             Spacer()
-                .frame(width: 50)
             Button(action: {
                 withAnimation {
                     mainBottomBar = .Upload
@@ -139,6 +148,21 @@ struct MainScreen: View {
                         .gradientForeground(colors: mainBottomBar == .Upload ? gradientColor : [.white])
                 }.frame(width: 120, height: 64)
             })
+            Spacer()
+            Button(action: {
+                withAnimation {
+                    mainBottomBar = .History
+                }
+            }, label: {
+                VStack {
+                    Image(mainBottomBar == .History ? .iconHistorySelected : .iconHistoryUnselected)
+                    
+                    Text("History")
+                        .font(.system(size:12))
+                        .gradientForeground(colors: mainBottomBar == .History ? gradientColor : [.white])
+                }.frame(width: 120, height: 64)
+            })
+            Spacer()
         }.frame(width: UIScreen.screenWidth, height: 84)
             .background {
                 Color(hex: "#1B1B1E")
@@ -159,6 +183,7 @@ struct BackgroundView : View {
 enum BottomBar {
     case Home
     case Upload
+    case History
 }
 
 extension Color {

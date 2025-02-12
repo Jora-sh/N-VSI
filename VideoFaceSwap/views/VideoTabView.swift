@@ -63,8 +63,6 @@ struct eachItem : View {
     
     @Binding var templates : [TemplateModel]
     
-    @State var player = AVPlayer()
-    
     let item : TemplateModel
     
     var body: some View {
@@ -88,12 +86,16 @@ struct eachItem : View {
                     mainViewModel.SCREEN_VIEW = .Templates
                 }
             } label: {
+                let player = mainViewModel.player(for: item)
                 VideoPlayer(player: player)
+                    .disabled(true)
                     .onAppear {
-                        print(item.templateLowResolutionUrl)
-                        player = AVPlayer(url: URL(string: item.templateLowResolutionUrl)!)
+                        // Start playback when the view appears
                         player.play()
-                        player.volume = 0.0
+                    }
+                    .onDisappear {
+                        // Pause playback when the view disappears
+                        player.pause()
                     }
                     .onReceive(NotificationCenter
                         .default
@@ -105,7 +107,7 @@ struct eachItem : View {
                                     player.play()
                                 }
                     )
-                    .frame(width: (UIScreen.screenWidth - 40)/2, height: 220)
+                    .frame(width: (UIScreen.screenWidth - 40)/2, height: (((UIScreen.screenWidth - 40)/2)/9)*16)
                     .clipShape(RoundedRectangle(cornerRadius: 8))
                     .overlay(alignment: .topTrailing) {
                         if item.isFree == false {
