@@ -10,6 +10,7 @@ import AVFoundation
 import CoreTransferable
 import _AVKit_SwiftUI
 import _PhotosUI_SwiftUI
+import Vision
 
 struct CustomScreen: View {
     
@@ -24,6 +25,8 @@ struct CustomScreen: View {
     
     @State var showErrorDialog: Bool = false
     @State var showNoCreditDialog: Bool = true
+    
+    @State private var showNoFaceDetected: Bool = false
     
     
     var body: some View {
@@ -40,6 +43,9 @@ struct CustomScreen: View {
                             }
                         }
                     }
+                    .onChange(of: swapViewModel.imageSelected, { oldValue, newValue in
+                        selectImage()
+                    })
                     .onAppear(perform: {
                         if let videoURL = swapViewModel.videoUrl {
                             player = AVPlayer(url: videoURL)
@@ -296,6 +302,13 @@ struct CustomScreen: View {
                 
             }
             
+            ErrorDialog(errorType: .NoFace, showDialog: $showNoFaceDetected) {
+                withAnimation {
+                    swapViewModel.imageSelected = nil
+                    swapViewModel.imageSelection = nil
+                }
+            }
+            
             NoCreditsLeftDialog(shown: $showNoCreditsLeftDialog,
                                 creditsOwned: .constant(mainViewModel.userModel?.credits ?? 0),
                                 creditsNeeded: $creditsNeeded) {
@@ -305,6 +318,39 @@ struct CustomScreen: View {
             }
             
 //            NoCreditDialog(shown:$showNoCreditDialog)
+        }
+    }
+    
+    func selectImage() {
+        if let sampleImage = swapViewModel.imageSelected {
+            withAnimation {
+                showNoFaceDetected = !hasFace(in: sampleImage)
+            }
+        }
+    }
+    
+    func hasFace(in image: UIImage) -> Bool {
+        guard let cgImage = image.cgImage else {
+            print("Invalid CGImage")
+            return false
+        }
+
+        let request = VNDetectFaceRectanglesRequest()
+#if targetEnvironment(simulator)
+        request.usesCPUOnly = true
+#endif
+        let handler = VNImageRequestHandler(cgImage: cgImage, options: [:])
+
+        do {
+            try handler.perform([request])
+            if let results = request.results as? [VNFaceObservation] {
+                return !results.isEmpty
+            } else {
+                return false
+            }
+        } catch {
+            print("Face detection error: \(error.localizedDescription)")
+            return false
         }
     }
 }

@@ -8,6 +8,7 @@
 import SwiftUI
 import PhotosUI
 import AVKit
+import Vision
 
 struct TemplateScreen: View {
     
@@ -30,7 +31,9 @@ struct TemplateScreen: View {
     @State var selectedTemplate : TemplateModel? = nil
     @State var player : AVPlayer = AVPlayer()
 
+    @State var showVideo = true
     
+    @State private var showNoFaceDetected: Bool = false
     
     var header: some View {
         HStack {
@@ -99,9 +102,14 @@ struct TemplateScreen: View {
                         player.volume = 0.0
                     })
                     .onChange(of: selected, { oldValue, newValue in
+                        player.pause()
                         selectedTemplate = mainViewModel.templateItems.first(where: { item in
                             return item.id == selected
                         })
+                        showVideo = false
+                        DispatchQueue.main.asyncAfter(deadline: .now()+1.0) {
+                            showVideo = true
+                        }
                     })
                     .onChange(of: imageSelection) { item in
                         Task {
@@ -115,24 +123,30 @@ struct TemplateScreen: View {
                                 
                                 self.creditsNeeded = Int(swapViewModel.templateToSwapWithTemplate?.duration ?? 10.0)
                                 
-                                if ((mainViewModel.userModel?.credits ?? 0) - Int(swapViewModel.templateToSwapWithTemplate?.duration ?? 10.0) <= 0) && selectedTemplate?.isFree == false {
-                                    
-                                    withAnimation {
-                                        self.showNoCreditsLeftDialog.toggle()
-                                    }
-                                    
-                                } else {
-                                    
-                                    if UserSettings.videoIsWorking {
+                                if hasFace(in: swapViewModel.imageToSwapWithTemplate!) {
+                                    if ((mainViewModel.userModel?.credits ?? 0) - Int(swapViewModel.templateToSwapWithTemplate?.duration ?? 10.0) <= 0) && selectedTemplate?.isFree == false {
+                                        
                                         withAnimation {
-                                            mainViewModel.SCREEN_VIEW = .Loading
+                                            self.showNoCreditsLeftDialog.toggle()
                                         }
+                                        
                                     } else {
-                                        withAnimation {
-                                            showErrorDialog = true
+                                        
+                                        if UserSettings.videoIsWorking {
+                                            withAnimation {
+                                                mainViewModel.SCREEN_VIEW = .Loading
+                                            }
+                                        } else {
+                                            withAnimation {
+                                                showErrorDialog = true
+                                            }
                                         }
+                                        
                                     }
-                                    
+                                } else {
+                                    withAnimation {
+                                        showNoFaceDetected = true
+                                    }
                                 }
                                 
                             } else {
@@ -141,11 +155,11 @@ struct TemplateScreen: View {
                             
                         }
                     }
-                TabView(selection: $selected) {
+                VTabView(selection: $selected) {
                     ForEach(mainViewModel.templateItems, id: \.id) { item in
                         
                         ZStack {
-                            if item.id == selected {
+                            if item.id == selected && showVideo {
                                 VideoPlayer(player: player)
                                     .disabled(true) // Hides iOS video controls
                                     .aspectRatio(contentMode: .fill)
@@ -162,6 +176,7 @@ struct TemplateScreen: View {
                                             object: player.currentItem),
                                                perform: { _ in
                                                     player.seek(to: .zero)
+                                                    player.seek(to: .zero)
                                                     player.play()
                                                 }
                                     )
@@ -172,44 +187,33 @@ struct TemplateScreen: View {
                                     url: URL(string: item.thumbnailUrl),
                                     content: { image in
                                         image.resizable()
-                                            .aspectRatio(contentMode: .fit)
+                                            .aspectRatio(contentMode: .fill)
+                                            .frame(width: UIScreen.screenWidth - 32, height: UIScreen.screenHeight - 228)
                                             .clipShape(RoundedRectangle(cornerRadius: 8))
-                                            .frame(width: UIScreen.screenWidth - 32)
+                                            
                                     },
                                     placeholder: {
                                         ProgressView()
                                     }
                                 )
+                                .clipShape(RoundedRectangle(cornerRadius: 8))
                             }
-//                            if isShowing {
-//                                AsyncImage(
-//                                    url: URL(string: item.thumbnailUrl),
-//                                    content: { image in
-//                                        image.resizable()
-//                                            .aspectRatio(contentMode: .fit)
-//                                            .clipShape(RoundedRectangle(cornerRadius: 8))
-//                                            .frame(width: UIScreen.screenWidth - 32)
-//                                    },
-//                                    placeholder: {
-//                                        ProgressView()
-//                                    }
-//                                )
-//                            }
-                        }.onAppear{
-//                            selected = item.id
-//                            isShowing = true
-//                            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-//                                isShowing = false
-//                            }
                         }
+                        .background(content: {
+                            RoundedRectangle(cornerRadius: 8)
+                                .foregroundStyle(Color.black.opacity(0.7))
+                                .frame(width: UIScreen.screenWidth - 32, height: UIScreen.screenHeight - 228)
+                        })
                         .tag(item.id)
+                        
+                        
                     }
                     
                 }.tabViewStyle(.page(indexDisplayMode: .never))
                     
                 
                 Spacer()
-                    .frame(height: 24)
+                    .frame(height: 10)
                 
                 PhotosPicker(
                       selection: $imageSelection,
@@ -238,8 +242,49 @@ struct TemplateScreen: View {
             }
         }
         
+        ZStack {
+            
+            Color.black.opacity(0.5)
+                .ignoresSafeArea()
+            
+            
+            VStack {
+                
+                Spacer()
+                
+                Image(.iconOnBoardingSwapTemplates)
+                    .resizable()
+                    .frame(width: 236, height: 148)
+                    .offset(y: isOnboardingAnimating ? 20 : -20)
+                    .onAppear {
+                        startAnimateOnBoarding()
+                        isShowingOnBoardingTemplate = !UserSettings.didShowTemplateOnBoarding
+                    }
+                
+                Spacer()
+                    .frame(height: 64)
+                
+            }
+            
+            
+        }
+        .onTapGesture {
+            withAnimation {
+                isShowingOnBoardingTemplate = false
+            }
+            UserSettings.didShowTemplateOnBoarding = true
+        }.opacity(isShowingOnBoardingTemplate ? 1.0 : 0.0)
+            .offset(y: isShowingOnBoardingTemplate ? 0 : UIScreen.screenHeight)
+        
         ErrorDialog(errorType: .Sorry, showDialog: $showErrorDialog) {
             
+        }
+        
+        ErrorDialog(errorType: .NoFace, showDialog: $showNoFaceDetected) {
+            withAnimation {
+                swapViewModel.imageToSwapWithTemplate = nil
+                imageSelection = nil
+            }
         }
         
         NoCreditsLeftDialog(shown: $showNoCreditsLeftDialog,
@@ -254,6 +299,114 @@ struct TemplateScreen: View {
         })
     }
     
+    @State var isOnboardingAnimating = false
+    @State var isShowingOnBoardingTemplate = true
+    
+    func startAnimateOnBoarding() {
+        withAnimation {
+            isOnboardingAnimating = true
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+            withAnimation(.bouncy) {
+                isOnboardingAnimating = false
+            }
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
+            startAnimateOnBoarding()
+        }
+    }
+    
+    func selectImage() {
+        if let sampleImage = swapViewModel.imageSelected {
+            withAnimation {
+                showNoFaceDetected = !hasFace(in: sampleImage)
+            }
+        }
+    }
+    
+    func hasFace(in image: UIImage) -> Bool {
+        guard let cgImage = image.cgImage else {
+            print("Invalid CGImage")
+            return false
+        }
+
+        let request = VNDetectFaceRectanglesRequest()
+#if targetEnvironment(simulator)
+        request.usesCPUOnly = true
+#endif
+        let handler = VNImageRequestHandler(cgImage: cgImage, options: [:])
+
+        do {
+            try handler.perform([request])
+            if let results = request.results as? [VNFaceObservation] {
+                return !results.isEmpty
+            } else {
+                return false
+            }
+        } catch {
+            print("Face detection error: \(error.localizedDescription)")
+            return false
+        }
+    }
+    
 }
 
 
+@available(iOS 14.0, *)
+public struct VTabView<Content, SelectionValue>: View where Content: View, SelectionValue: Hashable {
+    
+    private var selection: Binding<SelectionValue>?
+    
+    private var indexPosition: IndexPosition
+    
+    private var content: () -> Content
+    
+    /// Creates an instance that selects from content associated with
+    /// `Selection` values.
+    public init(selection: Binding<SelectionValue>?, indexPosition: IndexPosition = .leading, @ViewBuilder content: @escaping () -> Content) {
+        self.selection = selection
+        self.indexPosition = indexPosition
+        self.content = content
+    }
+    
+    private var flippingAngle: Angle {
+        switch indexPosition {
+        case .leading:
+            return .degrees(0)
+        case .trailing:
+            return .degrees(180)
+        }
+    }
+    
+    public var body: some View {
+        GeometryReader { proxy in
+            TabView(selection: selection) {
+                Group {
+                    content()
+                }
+                .frame(width: proxy.size.width, height: proxy.size.height)
+                .rotationEffect(.degrees(-90))
+                .rotation3DEffect(flippingAngle, axis: (x: 1, y: 0, z: 0))
+            }
+            .frame(width: proxy.size.height, height: proxy.size.width)
+            .rotation3DEffect(flippingAngle, axis: (x: 1, y: 0, z: 0))
+            .rotationEffect(.degrees(90), anchor: .topLeading)
+            .offset(x: proxy.size.width)
+        }
+    }
+    
+    public enum IndexPosition {
+        case leading
+        case trailing
+    }
+}
+
+@available(iOS 14.0, *)
+extension VTabView where SelectionValue == Int {
+    
+    public init(indexPosition: IndexPosition = .leading, @ViewBuilder content: @escaping () -> Content) {
+        self.selection = nil
+        self.indexPosition = indexPosition
+        self.content = content
+    }
+}

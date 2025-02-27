@@ -98,7 +98,7 @@ struct HomeScreen: View {
                 }.tabViewStyle(.page(indexDisplayMode: .never))
                 
                 
-            }
+            }.offset(y: 10)
             
         }
     }

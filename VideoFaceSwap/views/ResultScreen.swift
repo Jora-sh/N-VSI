@@ -79,6 +79,9 @@ struct ResultScreen: View {
                         player = AVPlayer(url: URL(string: swapViewModel.resultModel?.vidUrl ?? "")!)
                         player.play()
                     }
+                    .onDisappear {
+                        player.volume = 0.0
+                    }
                     .onReceive(NotificationCenter
                         .default
                         .publisher(

@@ -69,6 +69,15 @@ class UserSettings : NSObject {
         }
     }
     
+    static var didShowTemplateOnBoarding : Bool{
+        get{
+            return UserSettings.defaults.bool(forKey: "isShowTemplateOnBoarding")
+        }
+        set{
+            UserSettings.defaults.set(newValue , forKey: "isShowTemplateOnBoarding")
+        }
+    }
+    
     static func didShowWarning(title:String) -> Bool {
         return UserSettings.defaults.bool(forKey: "\(title.trimmingPrefix("_"))_warn")
     }
