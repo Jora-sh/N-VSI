@@ -7,6 +7,7 @@
 
 import SwiftUI
 import AVKit
+import SDWebImageSwiftUI
 
 struct VideoTabView: View {
     
@@ -61,6 +62,8 @@ struct eachItem : View {
     
     @EnvironmentObject var mainViewModel : MainViewModel
     
+    @State var showVideo = false
+    
     @Binding var templates : [TemplateModel]
     
     let item : TemplateModel
@@ -86,35 +89,62 @@ struct eachItem : View {
                     mainViewModel.SCREEN_VIEW = .Templates
                 }
             } label: {
-                let player = mainViewModel.player(for: item)
-                VideoPlayer(player: player)
-                    .disabled(true)
-                    .onAppear {
-                        // Start playback when the view appears
-                        player.play()
-                    }
-                    .onDisappear {
-                        // Pause playback when the view disappears
-                        player.pause()
-                    }
-                    .onReceive(NotificationCenter
-                        .default
-                        .publisher(
-                            for: .AVPlayerItemDidPlayToEndTime,
-                            object: player.currentItem),
-                               perform: { _ in
-                                    player.seek(to: .zero)
-                                    player.play()
-                                }
-                    )
-                    .frame(width: (UIScreen.screenWidth - 40)/2, height: (((UIScreen.screenWidth - 40)/2)/9)*16)
-                    .clipShape(RoundedRectangle(cornerRadius: 8))
-                    .overlay(alignment: .topTrailing) {
-                        if item.isFree == false {
-                            Image(.iconPremiumAccent)
-                                .padding(8)
+                
+                ZStack {
+                    WebImage(url: URL(string: item.thumbnailUrl))
+                        .resizable()
+                        
+                        .onSuccess { image, data, cacheType in
+                            DispatchQueue.main.async {
+                                showVideo = true
+                            }
+                            print("Image loaded successfully from \(cacheType)")
                         }
+                        .scaledToFill()
+                        .frame(width: (UIScreen.screenWidth - 40)/2, height: (((UIScreen.screenWidth - 40)/2)/9)*16)
+                        .clipShape(RoundedRectangle(cornerRadius: 8))
+                        
+                    
+                    if showVideo {
+                        WebImage(url: URL(string: item.templateLowResUrlV2 ?? ""))
+                            .resizable()
+                            .scaledToFill()
+                            .frame(width: (UIScreen.screenWidth - 40)/2, height: (((UIScreen.screenWidth - 40)/2)/9)*16)
+                            .clipShape(RoundedRectangle(cornerRadius: 8))
+                            .opacity(showVideo ? 1.0 : 0.0)
                     }
+                    
+                }.overlay(alignment: .topTrailing) {
+                    if item.isFree == false {
+                        Image(.iconPremiumAccent)
+                            .padding(8)
+                    }
+                }
+                
+//                let player = mainViewModel.player(for: item)
+//                VideoPlayer(player: player)
+//                    .disabled(true)
+//                    .onAppear {
+//                        // Start playback when the view appears
+//                        player.play()
+//                    }
+//                    .onDisappear {
+//                        // Pause playback when the view disappears
+//                        player.pause()
+//                    }
+//                    .onReceive(NotificationCenter
+//                        .default
+//                        .publisher(
+//                            for: .AVPlayerItemDidPlayToEndTime,
+//                            object: player.currentItem),
+//                               perform: { _ in
+//                                    player.seek(to: .zero)
+//                                    player.play()
+//                                }
+//                    )
+//                    .frame(width: (UIScreen.screenWidth - 40)/2, height: (((UIScreen.screenWidth - 40)/2)/9)*16)
+//                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                    
                     
             }
         }

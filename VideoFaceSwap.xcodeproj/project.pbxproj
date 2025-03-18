@@ -70,6 +70,8 @@
 		3FA469A32CDA6C6500D5A496 /* loading2.json in Resources */ = {isa = PBXBuildFile; fileRef = 3FA469A22CDA6C6500D5A496 /* loading2.json */; };
 		3FA469A52CDA819100D5A496 /* OnBoardingScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FA469A42CDA819100D5A496 /* OnBoardingScreen.swift */; };
 		3FA469A72CDA9E6700D5A496 /* ErrorDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FA469A62CDA9E6700D5A496 /* ErrorDialog.swift */; };
+		3FA909CB2D89A38C0006A412 /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 3FA909CA2D89A38C0006A412 /* SDWebImageSwiftUI */; };
+		3FA909CE2D89A3BE0006A412 /* SDWebImageWebPCoder in Frameworks */ = {isa = PBXBuildFile; productRef = 3FA909CD2D89A3BE0006A412 /* SDWebImageWebPCoder */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -160,6 +162,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3FA909CB2D89A38C0006A412 /* SDWebImageSwiftUI in Frameworks */,
 				3F4AEAA52CE7289C00BA1E82 /* FirebaseFunctions in Frameworks */,
 				3F4AEA9D2CE7289C00BA1E82 /* FirebaseDatabase in Frameworks */,
 				3F663D972CD7E21B005DB1C6 /* SwiftyJSON in Frameworks */,
@@ -175,6 +178,7 @@
 				3F4AEAA32CE7289C00BA1E82 /* FirebaseFirestoreCombine-Community in Frameworks */,
 				3F4AEAB92CE7289C00BA1E82 /* FirebaseVertexAI in Frameworks */,
 				3F539DA02CF89742000FCEBB /* OneSignalInAppMessages in Frameworks */,
+				3FA909CE2D89A3BE0006A412 /* SDWebImageWebPCoder in Frameworks */,
 				3F4AEAA92CE7289C00BA1E82 /* FirebaseInAppMessaging-Beta in Frameworks */,
 				3F4AEAA72CE7289C00BA1E82 /* FirebaseFunctionsCombine-Community in Frameworks */,
 				3F539D9E2CF89742000FCEBB /* OneSignalFramework in Frameworks */,
@@ -380,6 +384,8 @@
 				3F4AEAB82CE7289C00BA1E82 /* FirebaseVertexAI */,
 				3F539D9D2CF89742000FCEBB /* OneSignalFramework */,
 				3F539D9F2CF89742000FCEBB /* OneSignalInAppMessages */,
+				3FA909CA2D89A38C0006A412 /* SDWebImageSwiftUI */,
+				3FA909CD2D89A3BE0006A412 /* SDWebImageWebPCoder */,
 			);
 			productName = VideoFaceSwap;
 			productReference = 3F663D772CD7D9EF005DB1C6 /* VideoFaceSwap.app */;
@@ -418,6 +424,8 @@
 				3FA4699F2CDA6C2D00D5A496 /* XCRemoteSwiftPackageReference "Lottie-SwiftUI" */,
 				3F4AEA892CE7289C00BA1E82 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				3F539D9A2CF89742000FCEBB /* XCRemoteSwiftPackageReference "OneSignal-XCFramework" */,
+				3FA909C92D89A38C0006A412 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */,
+				3FA909CC2D89A3BE0006A412 /* XCRemoteSwiftPackageReference "SDWebImageWebPCoder" */,
 			);
 			productRefGroup = 3F663D782CD7D9EF005DB1C6 /* Products */;
 			projectDirPath = "";
@@ -684,7 +692,7 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_ENTITLEMENTS = VideoFaceSwap/VideoFaceSwap.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 12;
+				CURRENT_PROJECT_VERSION = 13;
 				DEVELOPMENT_ASSET_PATHS = "\"VideoFaceSwap/Preview Content\"";
 				DEVELOPMENT_TEAM = 87588AW22L;
 				ENABLE_PREVIEWS = YES;
@@ -702,7 +710,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.2;
+				MARKETING_VERSION = 2.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ssss.VideoFaceSwap;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -723,7 +731,7 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_ENTITLEMENTS = VideoFaceSwap/VideoFaceSwap.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 12;
+				CURRENT_PROJECT_VERSION = 13;
 				DEVELOPMENT_ASSET_PATHS = "\"VideoFaceSwap/Preview Content\"";
 				DEVELOPMENT_TEAM = 87588AW22L;
 				ENABLE_PREVIEWS = YES;
@@ -741,7 +749,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.2;
+				MARKETING_VERSION = 2.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ssss.VideoFaceSwap;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -824,6 +832,22 @@
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 1.2.2;
+			};
+		};
+		3FA909C92D89A38C0006A412 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SDWebImage/SDWebImageSwiftUI.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.1.3;
+			};
+		};
+		3FA909CC2D89A3BE0006A412 /* XCRemoteSwiftPackageReference "SDWebImageWebPCoder" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SDWebImage/SDWebImageWebPCoder.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.14.6;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
@@ -978,6 +1002,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 3FA4699F2CDA6C2D00D5A496 /* XCRemoteSwiftPackageReference "Lottie-SwiftUI" */;
 			productName = LottieSwiftUI;
+		};
+		3FA909CA2D89A38C0006A412 /* SDWebImageSwiftUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3FA909C92D89A38C0006A412 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */;
+			productName = SDWebImageSwiftUI;
+		};
+		3FA909CD2D89A3BE0006A412 /* SDWebImageWebPCoder */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3FA909CC2D89A3BE0006A412 /* XCRemoteSwiftPackageReference "SDWebImageWebPCoder" */;
+			productName = SDWebImageWebPCoder;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

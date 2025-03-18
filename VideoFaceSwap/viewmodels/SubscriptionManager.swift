@@ -48,6 +48,7 @@ extension SubscriptionsManager {
         do {
             self.products = try await Product.products(for: productIDs)
                 .sorted(by: { $0.price < $1.price })
+            print(self.products)
         } catch {
             print("Failed to fetch products!")
         }

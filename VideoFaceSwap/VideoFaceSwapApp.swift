@@ -9,6 +9,7 @@ import SwiftUI
 import FirebaseCore
 import FirebaseAnalytics
 import OneSignalFramework
+import SDWebImageWebPCoder
 
 class AppDelegate: NSObject, UIApplicationDelegate {
   func application(_ application: UIApplication,
@@ -36,6 +37,11 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 
 @main
 struct VideoFaceSwapApp: App {
+    
+    init() {
+            let webPCoder = SDImageWebPCoder.shared
+            SDImageCodersManager.shared.addCoder(webPCoder) //  Enables WebP decoding
+        }
     
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
     @Environment(\.scenePhase) private var scenePhase

@@ -155,6 +155,8 @@ struct TemplateScreen: View {
                             
                         }
                     }
+                
+                
                 VTabView(selection: $selected) {
                     ForEach(mainViewModel.templateItems, id: \.id) { item in
                         

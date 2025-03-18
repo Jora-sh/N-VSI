@@ -12,7 +12,7 @@ import SwiftyJSON
 import OneSignalFramework
 import AVFoundation
 
-//let base_url = "http://89.22.239.26/nexora-swap-ios-stage/api/"
+//let base_url = "https://swp.yagorai.com/nexora-swap-ios-stage/api/"
 let base_url = "https://swp.yagorai.com/nexora-swap-ios/api/"
 
 class MainViewModel : ObservableObject {
@@ -470,6 +470,7 @@ struct TemplateModel : Codable, Hashable {
     let categoryId : String
     let templateUrl : String
     let templateLowResolutionUrl : String
+    let templateLowResUrlV2 : String?
     let thumbnailUrl : String
     let duration: Float?
 }

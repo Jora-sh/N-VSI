@@ -468,5 +468,180 @@
             </Locations>
          </BreakpointContent>
       </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "FC9C75C4-17CB-499F-BC23-8D3A7FA902C6"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "VideoFaceSwap/viewmodels/SubscriptionManager.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "52"
+            endingLineNumber = "52"
+            landmarkName = "loadProducts()"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "FC9C75C4-17CB-499F-BC23-8D3A7FA902C6 - 30de69ea9fbc8800"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(4) suspend resume partial function for VideoFaceSwap.SubscriptionsManager.loadProducts() async -&gt; ()"
+                  moduleName = "VideoFaceSwap"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/yaghoob/Documents/xcode%20projects/VideoFaceSwap/VideoFaceSwap/viewmodels/SubscriptionManager.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "52"
+                  endingLineNumber = "52"
+                  offsetFromSymbolStart = "144">
+               </Location>
+               <Location
+                  uuid = "FC9C75C4-17CB-499F-BC23-8D3A7FA902C6 - a812aa23d03c6ee1"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(3) suspend resume partial function for VideoFaceSwap.SubscriptionsManager.loadProducts() async -&gt; ()"
+                  moduleName = "VideoFaceSwap"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/yaghoob/Documents/xcode%20projects/VideoFaceSwap/VideoFaceSwap/viewmodels/SubscriptionManager.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "52"
+                  endingLineNumber = "52"
+                  offsetFromSymbolStart = "360">
+               </Location>
+               <Location
+                  uuid = "FC9C75C4-17CB-499F-BC23-8D3A7FA902C6 - 30de69ea9fbc8800"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(4) suspend resume partial function for VideoFaceSwap.SubscriptionsManager.loadProducts() async -&gt; ()"
+                  moduleName = "VideoFaceSwap"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/yaghoob/Documents/xcode%20projects/VideoFaceSwap/VideoFaceSwap/viewmodels/SubscriptionManager.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "52"
+                  endingLineNumber = "52"
+                  offsetFromSymbolStart = "84">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "64890FEE-D7EC-463A-A96E-3EA5ED8A4F3A"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "VideoFaceSwap/viewmodels/SubscriptionManager.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "51"
+            endingLineNumber = "51"
+            landmarkName = "loadProducts()"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "64890FEE-D7EC-463A-A96E-3EA5ED8A4F3A - 30de69ea9fbc88e1"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(4) suspend resume partial function for VideoFaceSwap.SubscriptionsManager.loadProducts() async -&gt; ()"
+                  moduleName = "VideoFaceSwap"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/yaghoob/Documents/xcode%20projects/VideoFaceSwap/VideoFaceSwap/viewmodels/SubscriptionManager.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "51"
+                  endingLineNumber = "51"
+                  offsetFromSymbolStart = "84">
+               </Location>
+               <Location
+                  uuid = "64890FEE-D7EC-463A-A96E-3EA5ED8A4F3A - a812aa23d03c6e00"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(3) suspend resume partial function for VideoFaceSwap.SubscriptionsManager.loadProducts() async -&gt; ()"
+                  moduleName = "VideoFaceSwap"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/yaghoob/Documents/xcode%20projects/VideoFaceSwap/VideoFaceSwap/viewmodels/SubscriptionManager.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "51"
+                  endingLineNumber = "51"
+                  offsetFromSymbolStart = "256">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "9DB0D143-02C9-4850-9FB5-97E5D5EB8057"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "VideoFaceSwap/viewmodels/SubscriptionManager.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "53"
+            endingLineNumber = "53"
+            landmarkName = "loadProducts()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "90DD7C76-22DB-42BE-9E30-97497A418A08"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "VideoFaceSwap/viewmodels/SubscriptionManager.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "54"
+            endingLineNumber = "54"
+            landmarkName = "loadProducts()"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "90DD7C76-22DB-42BE-9E30-97497A418A08 - a812aa23d03c6e84"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(3) suspend resume partial function for VideoFaceSwap.SubscriptionsManager.loadProducts() async -&gt; ()"
+                  moduleName = "VideoFaceSwap"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/yaghoob/Documents/xcode%20projects/VideoFaceSwap/VideoFaceSwap/viewmodels/SubscriptionManager.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "55"
+                  endingLineNumber = "55"
+                  offsetFromSymbolStart = "388">
+               </Location>
+               <Location
+                  uuid = "90DD7C76-22DB-42BE-9E30-97497A418A08 - 30de69ea9fbc8865"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(4) suspend resume partial function for VideoFaceSwap.SubscriptionsManager.loadProducts() async -&gt; ()"
+                  moduleName = "VideoFaceSwap"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/yaghoob/Documents/xcode%20projects/VideoFaceSwap/VideoFaceSwap/viewmodels/SubscriptionManager.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "55"
+                  endingLineNumber = "55"
+                  offsetFromSymbolStart = "292">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
    </Breakpoints>
 </Bucket>
