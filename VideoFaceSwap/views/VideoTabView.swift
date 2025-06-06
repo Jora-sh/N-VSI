@@ -91,18 +91,29 @@ struct eachItem : View {
             } label: {
                 
                 ZStack {
-                    WebImage(url: URL(string: item.thumbnailUrl))
-                        .resizable()
-                        
-                        .onSuccess { image, data, cacheType in
-                            DispatchQueue.main.async {
-                                showVideo = true
-                            }
-                            print("Image loaded successfully from \(cacheType)")
+                    
+                    WebImage(url: URL(string: item.thumbnailUrl)) { image in
+                        image
+                            .resizable()
+                            .scaledToFill()
+                    } placeholder: {
+                        Image(.imgThumbnailSmall) // Your local placeholder image
+                            .resizable()
+                            .scaledToFill()
+                    }
+                    .onSuccess { image, data, cacheType in
+                        DispatchQueue.main.async {
+                            showVideo = true
                         }
-                        .scaledToFill()
-                        .frame(width: (UIScreen.screenWidth - 40)/2, height: (((UIScreen.screenWidth - 40)/2)/9)*16)
-                        .clipShape(RoundedRectangle(cornerRadius: 8))
+                        print("Image loaded successfully from \(cacheType)")
+                    }
+                    .transition(.fade(duration: 0.5))
+                    .frame(
+                        width: (UIScreen.main.bounds.width - 40) / 2,
+                        height: (((UIScreen.main.bounds.width - 40) / 2) / 9) * 16
+                    )
+                    .clipShape(RoundedRectangle(cornerRadius: 8))
+
                         
                     
                     if showVideo {

@@ -101,7 +101,7 @@ struct TemplateScreen: View {
                     .onDisappear(perform: {
                         player.volume = 0.0
                     })
-                    .onChange(of: selected, { oldValue, newValue in
+                    .onChange(of: selected) { newValue in
                         player.pause()
                         selectedTemplate = mainViewModel.templateItems.first(where: { item in
                             return item.id == selected
@@ -110,7 +110,7 @@ struct TemplateScreen: View {
                         DispatchQueue.main.asyncAfter(deadline: .now()+1.0) {
                             showVideo = true
                         }
-                    })
+                    }
                     .onChange(of: imageSelection) { item in
                         Task {
                             print(selected)
@@ -132,7 +132,7 @@ struct TemplateScreen: View {
                                         
                                     } else {
                                         
-                                        if UserSettings.videoIsWorking {
+                                        if mainViewModel.homeConfig?.homeConfig?.features?.videoWorking == true {
                                             withAnimation {
                                                 mainViewModel.SCREEN_VIEW = .Loading
                                             }
@@ -189,13 +189,17 @@ struct TemplateScreen: View {
                                     url: URL(string: item.thumbnailUrl),
                                     content: { image in
                                         image.resizable()
-                                            .aspectRatio(contentMode: .fill)
+                                            .scaledToFill()
                                             .frame(width: UIScreen.screenWidth - 32, height: UIScreen.screenHeight - 228)
-                                            .clipShape(RoundedRectangle(cornerRadius: 8))
+                                            
                                             
                                     },
                                     placeholder: {
-                                        ProgressView()
+                                        Image(.imgThumbnailResult)
+                                            .resizable()
+                                            .scaledToFill()
+                                            .frame(width: UIScreen.screenWidth - 32, height: UIScreen.screenHeight - 228)
+                                            
                                     }
                                 )
                                 .clipShape(RoundedRectangle(cornerRadius: 8))
@@ -222,12 +226,13 @@ struct TemplateScreen: View {
                       matching: .images,
                       photoLibrary: .shared()) {
                           HStack {
-                              if selectedTemplate?.isFree == false {
+                              if selectedTemplate?.isFree == false && (mainViewModel.userModel?.credits ?? 0) <= 0 {
                                   Image(.iconPremium)
                                   Spacer()
                                       .frame(width: 6)
                               }
-                              Text(selectedTemplate?.isFree == true ? "Choose Face" : "Premium Swap")
+                              Text(selectedTemplate?.isFree == true || (mainViewModel.userModel?.credits ?? 0) > 0
+                                   ? "Choose Face" : "Premium Swap")
                                   .font(.system(size: 16, weight: .bold))
                                   .foregroundStyle(.white)
                           }

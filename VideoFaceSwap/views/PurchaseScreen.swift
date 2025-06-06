@@ -114,7 +114,7 @@ struct PurchaseScreen: View {
                                 
                                 Text("Special Offer")
                                     .font(.system(size: 12, weight: .semibold))
-                                    .foregroundStyle(.white)
+                                    .foregroundStyle(.black)
                                     .frame(width: 88, height: 24)
                                     .background(content: {
                                         LinearGradient(colors: [Color(hex: "#FFC700"),Color(hex: "#FDDC00")], startPoint: .leading, endPoint: .trailing)
@@ -235,7 +235,7 @@ struct PurchaseScreen: View {
         } label: {
             HStack{
                 Text("Continue")
-                    .foregroundColor(.white)
+                    .foregroundColor(selectedItemIndex?.id != "offer_faceswap_video" ? .white : .black)
                     .font(.system(size: 20 , weight: .medium))
             }
             .frame(width: UIScreen.screenWidth - 32 , height: 48)

@@ -132,6 +132,8 @@ class SwapViewModel : ObservableObject {
                     print(progress)
                 }).responseData { result in
                     let json = JSON(result.data ?? "")
+                    print(json)
+                    
                     switch result.result{
                         
                     case .success(let value):

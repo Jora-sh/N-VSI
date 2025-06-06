@@ -155,7 +155,7 @@ struct LoadingScreen: View {
                 Text("Are you sure you want to cancel swapping faces? this will reduce your credits.")
             }
             
-            ErrorDialog(errorType: .Sorry, showDialog: $showErrorDialog) {
+            ErrorDialog(errorType: .Oops, showDialog: $showErrorDialog) {
                 withAnimation {
                     mainViewModel.SCREEN_VIEW = .Main
                 }
@@ -169,7 +169,7 @@ struct LoadingScreen: View {
                 withAnimation {
                     mainViewModel.SCREEN_VIEW = .Purchase
                 }
-            }.onChange(of: showNoCreditsLeftDialog) { old, new in
+            }.onChange(of: showNoCreditsLeftDialog) { new in
                 if !showNoCreditsLeftDialog {
                     withAnimation {
                         mainViewModel.SCREEN_VIEW = .Purchase

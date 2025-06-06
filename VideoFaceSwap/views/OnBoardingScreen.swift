@@ -75,9 +75,12 @@ struct OnBoardingScreen: View {
                     
                     Button(action: {
                         UserSettings.isWatchOnBoarding = true
-                        withAnimation {
-                            mainViewModel.SCREEN_VIEW = .Main
+                        if UserSettings.token != "" {
+                            withAnimation {
+                                mainViewModel.SCREEN_VIEW = .Main
+                            }
                         }
+                        mainViewModel.isLoadingSignUp = true
                     }, label: {
                         HStack {
                             Text("Get Started")
@@ -128,6 +131,10 @@ struct OnBoardingScreen: View {
                         }
                         .foregroundStyle(Color(hex: textColor))
                         .font(.system(size: 13, weight: .regular))
+                        
+                        Text(" (You must be online to use App!)")
+                            .font(.system(size: 12))
+                            .foregroundStyle(Color.init(hex: "#f1f1f1").opacity(0.9))
                         
                         Spacer()
                     }

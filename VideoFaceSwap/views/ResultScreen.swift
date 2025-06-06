@@ -22,6 +22,11 @@ struct ResultScreen: View {
     
     @State var player : AVPlayer = AVPlayer()
     
+    @State private var isVideoReady: Bool = false
+
+    let thumbnailImage: Image = Image(.imgThumbnailResult)
+    @State private var playerObserver: NSKeyValueObservation? = nil
+    
     var header: some View {
         HStack {
             
@@ -68,32 +73,47 @@ struct ResultScreen: View {
             header
             
             ZStack {
-                
-                VideoPlayer(player: player)
-                    .disabled(true) // Hides iOS video controls
-                    .aspectRatio(contentMode: .fill)
-                    .frame(width: (UIScreen.screenWidth - 32))
-                    .clipShape(RoundedRectangle(cornerRadius: 8))
-                    .onAppear {
+                        if !isVideoReady {
+                            Image(.imgThumbnailResult)
+                                .resizable()
+                                .aspectRatio(contentMode: .fill)
+                                .frame(width: UIScreen.main.bounds.width - 32, height: UIScreen.screenHeight - 280)
+                                .clipShape(RoundedRectangle(cornerRadius: 8))
+                        }
                         
-                        player = AVPlayer(url: URL(string: swapViewModel.resultModel?.vidUrl ?? "")!)
-                        player.play()
-                    }
-                    .onDisappear {
-                        player.volume = 0.0
-                    }
-                    .onReceive(NotificationCenter
-                        .default
-                        .publisher(
-                            for: .AVPlayerItemDidPlayToEndTime,
-                            object: player.currentItem),
-                               perform: { _ in
-                                    player.seek(to: .zero)
-                                    player.play()
+                        VideoPlayer(player: player)
+                            .disabled(true)
+                            .aspectRatio(contentMode: .fill)
+                            .frame(width: UIScreen.main.bounds.width - 32, height: UIScreen.screenHeight - 280)
+                            .clipShape(RoundedRectangle(cornerRadius: 8))
+                            .opacity(isVideoReady ? 1 : 0)
+                            .onAppear {
+                                if let url = URL(string: swapViewModel.resultModel?.vidUrl ?? "") {
+                                    let playerItem = AVPlayerItem(url: url)
+                                    player.replaceCurrentItem(with: playerItem)
+                                    player.volume = 1.0
+                                    
+                                    // ✅ Retain observer to avoid deallocation
+                                    playerObserver = playerItem.observe(\.status, options: [.new, .initial]) { item, _ in
+                                        if item.status == .readyToPlay {
+                                            DispatchQueue.main.async {
+                                                isVideoReady = true
+                                                player.play()
+                                            }
+                                        }
+                                    }
                                 }
-                    )
-                
-            }
+                            }
+                            .onDisappear {
+                                player.pause()
+                                player.volume = 0.0
+                                playerObserver = nil // Clean up observer
+                            }
+                            .onReceive(NotificationCenter.default.publisher(for: .AVPlayerItemDidPlayToEndTime, object: player.currentItem)) { _ in
+                                player.seek(to: .zero)
+                                player.play()
+                            }
+                    }
             
             Spacer()
                 .frame(height: 24)

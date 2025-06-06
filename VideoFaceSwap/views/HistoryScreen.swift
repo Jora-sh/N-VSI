@@ -106,44 +106,62 @@ struct HistoryScreen: View {
     }
 }
 
-struct HistoryItemView : View {
+struct HistoryItemView: View {
     
-    let item : CreationModel
+    let item: CreationModel
     
-    @State var player : AVPlayer = AVPlayer()
+    @State private var player: AVPlayer = AVPlayer()
+    @State private var isVideoReady: Bool = false
+    @State private var playerObserver: NSKeyValueObservation? = nil
     
-    @Binding var saveState : SaveState
-
-    @Binding var selectedItem : CreationModel?
-    
-    @Binding var showDialog : Bool
+    @Binding var saveState: SaveState
+    @Binding var selectedItem: CreationModel?
+    @Binding var showDialog: Bool
     
     var body: some View {
-        
         ZStack {
+            if !isVideoReady {
+                Image(.imgThumbnailSmall)
+                    .resizable()
+                    .frame(width: (UIScreen.screenWidth - 64)/2, height: ((UIScreen.screenWidth - 54)/2) + 20)
+                    .aspectRatio(contentMode: .fill)
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    
+            }
+
             VideoPlayer(player: player)
                 .disabled(true)
+                .frame(width: (UIScreen.screenWidth - 64)/2, height: ((UIScreen.screenWidth - 54)/2) + 20)
                 .clipShape(RoundedRectangle(cornerRadius: 12))
+                .opacity(isVideoReady ? 1 : 0)
                 .onAppear {
-                    player = AVPlayer()
-                    player = AVPlayer(url: URL(string: item.vidUrl ?? "")!)
-                    player.play()
-                    player.volume = 0.0
-                }
-                .onReceive(NotificationCenter
-                    .default
-                    .publisher(
-                        for: .AVPlayerItemDidPlayToEndTime,
-                        object: player.currentItem),
-                           perform: { _ in
-                                player.seek(to: .zero)
-                                player.play()
+                    if let url = URL(string: item.vidUrl ?? "") {
+                        let playerItem = AVPlayerItem(url: url)
+                        player.replaceCurrentItem(with: playerItem)
+                        player.volume = 0.0
+                        
+                        // Retain observer to track when video is ready
+                        playerObserver = playerItem.observe(\.status, options: [.new, .initial]) { item, _ in
+                            if item.status == .readyToPlay {
+                                DispatchQueue.main.async {
+                                    isVideoReady = true
+                                    player.play()
+                                }
                             }
-                )
-            
-            
-            
-        }.frame(width: (UIScreen.screenWidth - 64)/2, height: ((UIScreen.screenWidth - 54)/2) + 20)
+                        }
+                    }
+                }
+                .onDisappear {
+                    player.pause()
+                    player.volume = 0.0
+                    playerObserver = nil
+                }
+                .onReceive(NotificationCenter.default.publisher(for: .AVPlayerItemDidPlayToEndTime, object: player.currentItem)) { _ in
+                    player.seek(to: .zero)
+                    player.play()
+                }
+        }
+        .frame(width: (UIScreen.screenWidth - 64)/2, height: ((UIScreen.screenWidth - 54)/2) + 20)
     }
 }
 

@@ -17,15 +17,9 @@ struct ContentView: View {
             
             BackgroundView()
                 .onAppear {
-                    if !UserSettings.isWatchOnBoarding {
-                        mainViewModel.SCREEN_VIEW = .OnBoarding
-                    }
                     if UserSettings.username == "" {
                         UserSettings.username = "IOS-\(UUID().uuidString)"
                         
-                    }
-                    if UserSettings.token == "" {
-                        mainViewModel.signupUser { err in }
                     }
                     print(UserSettings.username)
                     
@@ -47,6 +41,8 @@ struct ContentView: View {
                 LoadingScreen()
             case .Result:
                 ResultScreen()
+            case .Splash:
+                SplashScreen()
             }
             
         }
@@ -61,4 +57,5 @@ enum ScreenEnum {
     case Templates
     case Loading
     case Result
+    case Splash
 }

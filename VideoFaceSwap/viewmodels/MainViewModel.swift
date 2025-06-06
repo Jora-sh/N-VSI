@@ -17,7 +17,8 @@ let base_url = "https://swp.yagorai.com/nexora-swap-ios/api/"
 
 class MainViewModel : ObservableObject {
     
-    @Published var SCREEN_VIEW : ScreenEnum = .OnBoarding
+    @Published var isLoadingSignUp = false
+    @Published var SCREEN_VIEW : ScreenEnum = .Splash
     @Published var categories : [CategoryModel] = []
     @Published var templateItems : [TemplateModel] = []
     @Published var userModel : UserModel? = nil
@@ -28,16 +29,16 @@ class MainViewModel : ObservableObject {
     
     @Published var templatePlayers: [TemplateModel: AVPlayer] = [:]
         
-        func player(for template: TemplateModel) -> AVPlayer {
-            if let existingPlayer = templatePlayers[template] {
-                return existingPlayer
-            }
-            
-            let newPlayer = AVPlayer(url: URL(string: template.templateLowResolutionUrl)!)
-            newPlayer.volume = 0.0
-            templatePlayers[template] = newPlayer
-            return newPlayer
+    func player(for template: TemplateModel) -> AVPlayer {
+        if let existingPlayer = templatePlayers[template] {
+            return existingPlayer
         }
+        
+        let newPlayer = AVPlayer(url: URL(string: template.templateLowResolutionUrl)!)
+        newPlayer.volume = 0.0
+        templatePlayers[template] = newPlayer
+        return newPlayer
+    }
     
     func signupUser(onResponse : @escaping (Error?) -> Void) {
         
@@ -67,21 +68,26 @@ class MainViewModel : ObservableObject {
                     switch data {
                     case .success(let data):
                         print(data ?? "")
-                        if UserSettings.token == "" {
-                            UserSettings.token = data?.user?.token?.token ?? ""
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+                            if UserSettings.token == "" {
+                                UserSettings.token = data?.user?.token?.token ?? ""
+                            }
+                            if self.isLoadingSignUp {
+                                self.SCREEN_VIEW = .Main
+                            }
+                            self.getMe()
                         }
-                        self.getMe()
                         
                         onResponse(nil)
                         
                     case .failure(let error):
-                        onResponse(error)
+                        self.signupUser(onResponse: onResponse)
                     }
                     
                     
                 case .failure(let err):
                     print(err.localizedDescription)
-                    onResponse(err)
+                    self.signupUser(onResponse: onResponse)
                 }
             }
     }
@@ -488,7 +494,7 @@ struct HomeConfigModel : Codable {
 }
 
 struct ImageConfigModel : Codable {
-    let bannerImage:String
+    let bannerImage:String?
 }
 
 struct FeatureModel  :Codable {

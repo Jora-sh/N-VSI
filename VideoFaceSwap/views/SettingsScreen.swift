@@ -51,28 +51,30 @@ struct SettingsScreen: View {
                 .onAppear {
                     isAutoSaveOn = UserSettings.autoAddToHistory
                 }
-                .onChange(of: isAutoSaveOn) { oldValue, newValue in
+                .onChange(of: isAutoSaveOn) { newValue in
                     mainViewModel.toggleAddToHistory()
                 }
             
             Spacer()
                 .frame(height: 16)
             
-            Button {
-                withAnimation {
-                    mainViewModel.SCREEN_VIEW = .Purchase
-                }
-            } label: {
-                AsyncImage(url: URL(string: mainViewModel.homeConfig?.homeConfig?.icons?.bannerImage ?? "http://89.22.239.26/nexora-swap-ios-stage/public/home/3e294587-97d8-4405-97d9-5fcd9b8fd4b3.png")!, scale: 1.0) { img in
-                    img.resizable()
-                        .frame(width: UIScreen.screenWidth - 32, height: 120)
-                        .scaledToFit()
-                        .clipShape(RoundedRectangle(cornerRadius: 8))
-                } placeholder: {
-                    Image(.background)
-                        .frame(width: UIScreen.screenWidth - 32, height: 120)
-                        .scaledToFit()
-                        .clipShape(RoundedRectangle(cornerRadius: 8))
+            if let bannerImage = mainViewModel.homeConfig?.homeConfig?.icons?.bannerImage {
+                Button {
+                    withAnimation {
+                        mainViewModel.SCREEN_VIEW = .Purchase
+                    }
+                } label: {
+                    AsyncImage(url: URL(string: bannerImage)!) { img in
+                        img.resizable()
+                            .frame(width: UIScreen.screenWidth - 32, height: 120)
+                            .scaledToFit()
+                            .clipShape(RoundedRectangle(cornerRadius: 8))
+                    } placeholder: {
+                        Image(.background)
+                            .frame(width: UIScreen.screenWidth - 32, height: 120)
+                            .scaledToFit()
+                            .clipShape(RoundedRectangle(cornerRadius: 8))
+                    }
                 }
             }
 

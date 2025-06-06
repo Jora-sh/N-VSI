@@ -43,9 +43,9 @@ struct CustomScreen: View {
                             }
                         }
                     }
-                    .onChange(of: swapViewModel.imageSelected, { oldValue, newValue in
+                    .onChange(of: swapViewModel.imageSelected) { newValue in
                         selectImage()
-                    })
+                    }
                     .onAppear(perform: {
                         if let videoURL = swapViewModel.videoUrl {
                             player = AVPlayer(url: videoURL)
