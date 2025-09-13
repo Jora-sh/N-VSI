@@ -42,7 +42,7 @@ struct LoadingScreen: View {
             } label: {
                 Image(.iconContactUs)
                     .resizable()
-                    .frame(width: 24, height: 24)
+                    .frame(width: 32, height: 32)
                     .padding(.vertical, 8)
             }
             

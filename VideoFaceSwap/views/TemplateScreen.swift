@@ -63,10 +63,11 @@ struct TemplateScreen: View {
                         .frame(width: 19, height: 19)
                         
                     Text(String(mainViewModel.userModel?.credits ?? 0))
-                        .font(.system(size: 16, weight: .bold))
+                        .font(.system(size: 15, weight: .bold))
                         .foregroundColor(.white)
                         
-                }.padding(8).roundedCornerWithBorder(lineWidth: 1, borderColor: .white, radius: 8, corners: .allCorners)
+                }.padding(.horizontal, 7)
+                    .padding(.vertical,5).roundedCornerWithBorder(lineWidth: 1, borderColor: .white, radius: 8, corners: .allCorners)
                     
             }
             
@@ -80,7 +81,7 @@ struct TemplateScreen: View {
             } label: {
                 Image(.iconContactUs)
                     .resizable()
-                    .frame(width: 24, height: 24)
+                    .frame(width: 32, height: 32)
                     .padding(.vertical, 8)
             }
             

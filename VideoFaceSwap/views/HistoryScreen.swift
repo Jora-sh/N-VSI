@@ -77,7 +77,7 @@ struct HistoryScreen: View {
                 }
                 
             }.refreshable {
-                mainViewModel.getMyCreations()
+                mainViewModel.getMyCreations{_ in}
             }
             
             NoHistoryDialog(shown: $showNoHistoryDialog) {
@@ -94,7 +94,7 @@ struct HistoryScreen: View {
             }
             .opacity(mainViewModel.isHistoryLoading ? 1.0 : 0.0)
             .onAppear(perform: {
-                mainViewModel.getMyCreations()
+                mainViewModel.getMyCreations{_ in}
                 if mainViewModel.historyList.count == 0 {
                     showNoHistoryDialog = true
                 } else {

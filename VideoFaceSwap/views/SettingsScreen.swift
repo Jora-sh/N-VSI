@@ -106,7 +106,7 @@ struct SettingsScreen: View {
                             
                             Image(.iconVip)
                                 .resizable()
-                                .frame(width: 24, height: 24)
+                                .frame(width: 32, height: 32)
                             
                             Text("  More Credits")
                                 .font(.system(size: 16, weight: .semibold))
@@ -117,7 +117,7 @@ struct SettingsScreen: View {
                             Image(.iconBack)
                                 .resizable()
                                 .rotationEffect(.degrees(180))
-                                .frame(width: 24, height: 24)
+                                .frame(width: 32, height: 32)
                             
                         }.frame(height: 48)
                     })
@@ -127,7 +127,7 @@ struct SettingsScreen: View {
                             
                             Image(.iconShare)
                                 .resizable()
-                                .frame(width: 24, height: 24)
+                                .frame(width: 32, height: 32)
                             
                             Text("  Share App")
                                 .font(.system(size: 16, weight: .semibold))
@@ -138,7 +138,7 @@ struct SettingsScreen: View {
                             Image(.iconBack)
                                 .resizable()
                                 .rotationEffect(.degrees(180))
-                                .frame(width: 24, height: 24)
+                                .frame(width: 32, height: 32)
                             
                         }.frame(height: 48)
                     })
@@ -148,11 +148,11 @@ struct SettingsScreen: View {
                     }, label: {
                         HStack {
                             
-                            Image(.iconHistoryUnselected)
+                            Image(.iconHistory)
                                 .resizable()
-                                .frame(width: 24, height: 24)
+                                .frame(width: 32, height: 32)
                             
-                            Text("  Auto Add to History")
+                            Text("  Add to History")
                                 .font(.system(size: 16, weight: .semibold))
                                 .foregroundStyle(Color(hex: textColor))
                             
@@ -192,7 +192,7 @@ struct SettingsScreen: View {
                             
                             Image(.iconContactUs)
                                 .resizable()
-                                .frame(width: 24, height: 24)
+                                .frame(width: 32, height: 32)
                             
                             Text("  Contact Us")
                                 .font(.system(size: 16, weight: .semibold))
@@ -203,7 +203,7 @@ struct SettingsScreen: View {
                             Image(.iconBack)
                                 .resizable()
                                 .rotationEffect(.degrees(180))
-                                .frame(width: 24, height: 24)
+                                .frame(width: 32, height: 32)
                             
                         }.frame(height: 48)
                     })
@@ -215,7 +215,7 @@ struct SettingsScreen: View {
                             
                             Image(.iconRate)
                                 .resizable()
-                                .frame(width: 24, height: 24)
+                                .frame(width: 32, height: 32)
                             
                             Text("  Rate & Review")
                                 .font(.system(size: 16, weight: .semibold))
@@ -226,7 +226,7 @@ struct SettingsScreen: View {
                             Image(.iconBack)
                                 .resizable()
                                 .rotationEffect(.degrees(180))
-                                .frame(width: 24, height: 24)
+                                .frame(width: 32, height: 32)
                             
                         }.frame(height: 48)
                     })
@@ -255,7 +255,7 @@ struct SettingsScreen: View {
                             
                             Image(.iconTerms)
                                 .resizable()
-                                .frame(width: 24, height: 24)
+                                .frame(width: 32, height: 32)
                             
                             Text("  Terms of use")
                                 .font(.system(size: 16, weight: .semibold))
@@ -266,7 +266,7 @@ struct SettingsScreen: View {
                             Image(.iconBack)
                                 .resizable()
                                 .rotationEffect(.degrees(180))
-                                .frame(width: 24, height: 24)
+                                .frame(width: 32, height: 32)
                             
                         }.frame(height: 48)
                     })
@@ -276,7 +276,7 @@ struct SettingsScreen: View {
                             
                             Image(.iconPrivacy)
                                 .resizable()
-                                .frame(width: 24, height: 24)
+                                .frame(width: 32, height: 32)
                             
                             Text("  Privacy Policy")
                                 .font(.system(size: 16, weight: .semibold))
@@ -287,7 +287,7 @@ struct SettingsScreen: View {
                             Image(.iconBack)
                                 .resizable()
                                 .rotationEffect(.degrees(180))
-                                .frame(width: 24, height: 24)
+                                .frame(width: 32, height: 32)
                             
                         }.frame(height: 48)
                     }

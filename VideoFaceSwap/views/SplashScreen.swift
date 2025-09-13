@@ -32,9 +32,17 @@ struct SplashScreen : View {
                                 }
                             }
                         } else {
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                                withAnimation {
-                                    mainViewModel.SCREEN_VIEW = .Main
+                            mainViewModel.getMe {err in
+                                if err == nil {
+                                    print(UserSettings.username)
+                                    mainViewModel.getHomeConfig()
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                                        withAnimation {
+                                            mainViewModel.SCREEN_VIEW = .Main
+                                        }
+                                    }
+                                } else {
+                                    print("FAAAAALSE")
                                 }
                             }
                         }

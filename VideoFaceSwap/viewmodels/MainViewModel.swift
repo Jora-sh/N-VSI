@@ -68,14 +68,14 @@ class MainViewModel : ObservableObject {
                     switch data {
                     case .success(let data):
                         print(data ?? "")
+                        UserSettings.token = data?.user?.token?.token ?? ""
                         DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
-                            if UserSettings.token == "" {
-                                UserSettings.token = data?.user?.token?.token ?? ""
-                            }
+                            
+                            
                             if self.isLoadingSignUp {
                                 self.SCREEN_VIEW = .Main
                             }
-                            self.getMe()
+//                            self.getMe {_ in}
                         }
                         
                         onResponse(nil)
@@ -130,18 +130,22 @@ class MainViewModel : ObservableObject {
                         onResponse(nil)
                         
                     case .failure(let error):
-                        onResponse(error)
+                        self.signupUser { err in
+                            self.getAllCategories(onResponse: onResponse)
+                        }
                     }
                     
                     
                 case .failure(let err):
                     print(err.localizedDescription)
-                    onResponse(err)
+                    self.signupUser { err in
+                        self.getAllCategories(onResponse: onResponse)
+                    }
                 }
             }
     }
     
-    func getMe() {
+    func getMe(onResponse : @escaping (Error?) -> Void) {
         
         self.getHomeConfig()
         
@@ -158,7 +162,7 @@ class MainViewModel : ObservableObject {
         AF.request(url,method: .get,headers: headers)
             .validate()
             .response { result in
-                
+                print(result.data ?? "")
                 
                 switch result.result{
                     
@@ -175,14 +179,21 @@ class MainViewModel : ObservableObject {
                         
                         self.userModel = data?.user
                         OneSignal.login(self.userModel?.id ?? "NO_ID")
+                        onResponse(nil)
                         
                     case .failure(let error):
                         print(error?.localizedDescription ?? "")
+                        self.signupUser { e in
+                            onResponse(e)
+                        }
                     }
                     
                     
                 case .failure(let err):
                     print(err.localizedDescription)
+                    self.signupUser { e in
+                        onResponse(e)
+                    }
                     
                 }
             }
@@ -222,13 +233,17 @@ class MainViewModel : ObservableObject {
                         
                     case .failure(let error):
                         print(error?.localizedDescription)
-                        onResponse(nil,error)
+                        self.signupUser { err in
+                            self.getTemplateForCategoryById(id: id, onResponse: onResponse)
+                        }
                     }
                     
                     
                 case .failure(let err):
                     print(err.localizedDescription)
-                    onResponse(nil,err)
+                    self.signupUser { err in
+                        self.getTemplateForCategoryById(id: id, onResponse: onResponse)
+                    }
                 }
             }
     }
@@ -299,10 +314,15 @@ class MainViewModel : ObservableObject {
                         
                     case .failure(let error):
                         print(error?.localizedDescription ?? "")
+                        self.signupUser { err in
+                            self.sendPurchaseToServer(parameters: parameters, onResponse: onResponse)
+                        }
                     }
                 case .failure(let err):
                     print(err.localizedDescription)
-                    
+                    self.signupUser { err in
+                        self.sendPurchaseToServer(parameters: parameters, onResponse: onResponse)
+                    }
                 }
             }
     }
@@ -353,7 +373,7 @@ class MainViewModel : ObservableObject {
             }
     }
     
-    func getMyCreations() {
+    func getMyCreations(onResponse : @escaping (Error?) -> Void) {
         
         
         let headers : HTTPHeaders = [
@@ -395,16 +415,16 @@ class MainViewModel : ObservableObject {
                         
                     case .failure(let error):
                         print(error?.localizedDescription ?? "")
-                        withAnimation {
-                            self.isHistoryLoading = false
+                        self.signupUser { err in
+                            self.getMyCreations(onResponse: onResponse)
                         }
                     }
                     
                     
                 case .failure(let err):
                     print(err.localizedDescription)
-                    withAnimation {
-                        self.isHistoryLoading = false
+                    self.signupUser { err in
+                        self.getMyCreations(onResponse: onResponse)
                     }
                     
                 }
@@ -426,7 +446,7 @@ class MainViewModel : ObservableObject {
                 
                 print(JSON(result.data))
                 
-                self.getMe()
+                self.getMe{_ in}
                 
             }
     }

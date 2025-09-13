@@ -55,36 +55,41 @@ struct HomeScreen: View {
                                 selectedCategory = mainViewModel.categories[0].id
                             }
                         }
-                        mainViewModel.getMe()
+                        mainViewModel.getMe {_ in}
                     }
                 
-                ScrollView(.horizontal, showsIndicators: false) {
-                    
-                    HStack(spacing: 8) {
-                        Spacer()
-                            .frame(width: 12)
-                        ForEach(mainViewModel.categories, id: \.id) { category in
-                            
-                            Button {
-                                withAnimation(.easeIn(duration: 0.2)) {
-                                    selectedCategory = category.id
-                                }
-                            } label: {
-                                Text(category.name)
-                                    .font(.system(size: 16, weight: .bold))
-                                    .foregroundStyle(.white)
-                                    .padding(.vertical, 8)
-                                    .padding(.horizontal, 8)
-                                    .background {
-                                        LinearGradient(colors: selectedCategory == category.id ? gradientColor : [], startPoint: .leading, endPoint: .trailing)
+                ScrollViewReader { proxy in
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        
+                        HStack(spacing: 8) {
+                            Spacer()
+                                .frame(width: 12)
+                            ForEach(mainViewModel.categories, id: \.id) { category in
+                                
+                                Button {
+                                    withAnimation(.easeIn(duration: 0.2)) {
+                                        selectedCategory = category.id
                                     }
-                                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                                } label: {
+                                    Text(category.name)
+                                        .font(.system(size: 16, weight: .bold))
+                                        .foregroundStyle(.white)
+                                        .padding(.vertical, 8)
+                                        .padding(.horizontal, 8)
+                                        .background {
+                                            LinearGradient(colors: selectedCategory == category.id ? gradientColor : [], startPoint: .leading, endPoint: .trailing)
+                                        }
+                                        .clipShape(RoundedRectangle(cornerRadius: 8))
+                                }.tag(category.id)
                             }
+                            Spacer()
+                                .frame(width: 12)
                         }
-                        Spacer()
-                            .frame(width: 12)
+                        
+                    }.onChange(of: selectedCategory) { after in
+                        proxy.scrollTo(selectedCategory)
+
                     }
-                    
                 }
                 
                 Spacer()

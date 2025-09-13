@@ -20,7 +20,7 @@ struct PurchaseScreen: View {
     
     @State var isLoading: Bool = false
     @State var showSuccessDialog: Bool = false
-    @State var player : AVPlayer = AVPlayer(url: URL(string: "http://89.22.239.26/nexora-swap-ios-stage/public/uploads/video_facefusion-20250211154123-3630817-7e464-357966868480.mp4")!)
+    @State var player : AVPlayer = AVPlayer(url: Bundle.main.url(forResource: "vsi_purchase_vid", withExtension: "mp4")!)
     
     let texts = [
 //        "Instant and unlimited insect identify",
@@ -282,31 +282,26 @@ struct PurchaseScreen: View {
     var body: some View {
         ZStack {
             
-//            VideoView(player: player)
-//                .disabled(true) // Hides iOS video controls
-//                .aspectRatio(contentMode: .fill)
-//                .onAppear {
-//
-//                    player.play()
-//                    player.volume = 0
-//                }
-//                .onReceive(NotificationCenter
-//                    .default
-//                    .publisher(
-//                        for: .AVPlayerItemDidPlayToEndTime,
-//                        object: player.currentItem),
-//                           perform: { _ in
-//                                player.seek(to: .zero)
-//                                player.play()
-//                            }
-//                )
-//                .frame(width: (UIScreen.screenWidth), height: UIScreen.screenHeight/2)
-//                
-            
-            Image(.imgPurchase)
-                .resizable()
+            VideoView(player: player)
+                .disabled(true) // Hides iOS video controls
+                .aspectRatio(contentMode: .fill)
+                .onAppear {
+
+                    player.play()
+                    player.volume = 0
+                }
+                .onReceive(NotificationCenter
+                    .default
+                    .publisher(
+                        for: .AVPlayerItemDidPlayToEndTime,
+                        object: player.currentItem),
+                           perform: { _ in
+                                player.seek(to: .zero)
+                                player.play()
+                            }
+                )
+                .frame(width: (UIScreen.screenWidth), height: UIScreen.screenHeight)
                 .ignoresSafeArea()
-                .frame(width: UIScreen.screenWidth, height: UIScreen.screenHeight)
                 .task {
                     print("in purchase")
                     await subscriptionsManager.updatePurchasedProducts()
@@ -315,6 +310,23 @@ struct PurchaseScreen: View {
                         selectedItemIndex = subscriptionsManager.products[0]
                     }
                 }
+                .overlay {
+                    LinearGradient(colors: [.black.opacity(0.5), .black.opacity(0.0)], startPoint: .bottom, endPoint: .top)
+                }
+            
+            
+//            Image(.imgPurchase)
+//                .resizable()
+//                .ignoresSafeArea()
+//                .frame(width: UIScreen.screenWidth, height: UIScreen.screenHeight)
+//                .task {
+//                    print("in purchase")
+//                    await subscriptionsManager.updatePurchasedProducts()
+//                    await subscriptionsManager.loadProducts()
+//                    if !subscriptionsManager.products.isEmpty {
+//                        selectedItemIndex = subscriptionsManager.products[0]
+//                    }
+//                }
             
             VStack {
                 

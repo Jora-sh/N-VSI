@@ -52,7 +52,7 @@ struct CustomScreen: View {
                             player?.volume = 0.0
                             player?.play()
                         }
-                        mainViewModel.getMe()
+                        mainViewModel.getMe{_ in}
                         if mainViewModel.userModel?.credits ?? 0 > 0 {
                             showNoCreditDialog = false
                         }

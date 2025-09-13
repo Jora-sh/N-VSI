@@ -51,7 +51,7 @@ struct ResultScreen: View {
             } label: {
                 Image(.iconContactUs)
                     .resizable()
-                    .frame(width: 24, height: 24)
+                    .frame(width: 32, height: 32)
                     .padding(.vertical, 8)
             }
             
@@ -82,27 +82,13 @@ struct ResultScreen: View {
                         }
                         
                         VideoPlayer(player: player)
-                            .disabled(true)
+                            .disabled(false)
                             .aspectRatio(contentMode: .fill)
                             .frame(width: UIScreen.main.bounds.width - 32, height: UIScreen.screenHeight - 280)
                             .clipShape(RoundedRectangle(cornerRadius: 8))
                             .opacity(isVideoReady ? 1 : 0)
                             .onAppear {
-                                if let url = URL(string: swapViewModel.resultModel?.vidUrl ?? "") {
-                                    let playerItem = AVPlayerItem(url: url)
-                                    player.replaceCurrentItem(with: playerItem)
-                                    player.volume = 1.0
-                                    
-                                    // ✅ Retain observer to avoid deallocation
-                                    playerObserver = playerItem.observe(\.status, options: [.new, .initial]) { item, _ in
-                                        if item.status == .readyToPlay {
-                                            DispatchQueue.main.async {
-                                                isVideoReady = true
-                                                player.play()
-                                            }
-                                        }
-                                    }
-                                }
+                                loadVideo()
                             }
                             .onDisappear {
                                 player.pause()
@@ -251,6 +237,26 @@ struct ResultScreen: View {
         vc.popoverPresentationController?.sourceView = source.view
         source.present(vc, animated: true)
         return true
+    }
+    
+    func loadVideo() {
+        if let url = URL(string: swapViewModel.resultModel?.vidUrl ?? "") {
+            let playerItem = AVPlayerItem(url: url)
+            player.replaceCurrentItem(with: playerItem)
+            player.volume = 1.0
+            
+            // ✅ Retain observer to avoid deallocation
+            playerObserver = playerItem.observe(\.status, options: [.new, .initial]) { item, _ in
+                if item.status == .readyToPlay {
+                    DispatchQueue.main.async {
+                        isVideoReady = true
+                        player.play()
+                    }
+                } else if item.status == .failed {
+                    loadVideo()
+                }
+            }
+        }
     }
 }
 
