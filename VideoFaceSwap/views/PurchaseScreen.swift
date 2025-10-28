@@ -18,8 +18,6 @@ struct PurchaseScreen: View {
     
     @State var selectedItemIndex : Product? = nil
     
-    @State var isLoading: Bool = false
-    @State var showSuccessDialog: Bool = false
     @State var player : AVPlayer = AVPlayer(url: Bundle.main.url(forResource: "vsi_purchase_vid", withExtension: "mp4")!)
     
     let texts = [
@@ -215,22 +213,21 @@ struct PurchaseScreen: View {
     
     var purchaseButton : some View {
         Button {
-            isLoading = true
+            subscriptionsManager.isLoading = true
             Task {
                 if let selectedItemIndex = selectedItemIndex {
                     await subscriptionsManager.buyProduct(selectedItemIndex) {it1,it2,it3,it4,it5 in
-                        mainViewModel.sendPurchaseToServer(parameters: [
-                           "productId" : it1,
-                           "appBundleId" : it2,
-                           "purchasedQuantity" : Int(1),
-                           "environment" : it4,
-                           "id" : it5,
-                        ]) {
-                            self.showSuccessDialog = true
-                        }
+//                        mainViewModel.sendPurchaseToServer(parameters: [
+//                           "productId" : it1,
+//                           "appBundleId" : it2,
+//                           "purchasedQuantity" : Int(1),
+//                           "environment" : it4,
+//                           "id" : it5,
+//                        ]) {
+//                            self.showSuccessDialog = true
+//                        }
                     }
                 }
-                isLoading = false
             }
         } label: {
             HStack{
@@ -372,7 +369,7 @@ struct PurchaseScreen: View {
                 Spacer()
                     .frame(height: 32)
             }
-            .alert("Success!", isPresented: $showSuccessDialog) {
+            .alert("Success!", isPresented: $subscriptionsManager.showSuccess) {
                 Button("ok") {
                     withAnimation {
                         mainViewModel.SCREEN_VIEW = .Main
@@ -390,7 +387,7 @@ struct PurchaseScreen: View {
                     .ignoresSafeArea()
                 
                 ProgressView()
-            } .opacity(isLoading ? 0.5 : 0.0)
+            } .opacity(subscriptionsManager.isLoading ? 0.5 : 0.0)
         }
     }
 }

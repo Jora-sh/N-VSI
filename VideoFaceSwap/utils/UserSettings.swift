@@ -10,6 +10,7 @@ import Foundation
 
 class UserSettings : NSObject {
     
+    private static let keychainKey = "com.ssss.VideoFaceSwap"
     static let defaults = UserDefaults.standard
 
     
@@ -93,5 +94,58 @@ class UserSettings : NSObject {
         set{
             UserSettings.defaults.set(newValue , forKey: "autoAddToHistory")
         }
+    }
+    
+    static func getAppAccountToken() -> UUID {
+            if let savedToken = KeychainHelper.standard.read(service: keychainKey, account: "user"),
+               let uuid = UUID(uuidString: savedToken) {
+                return uuid
+            } else {
+                let newToken = UUID()
+                KeychainHelper.standard.save(newToken.uuidString, service: keychainKey, account: "user")
+                return newToken
+            }
+        }
+}
+
+class KeychainHelper {
+    static let standard = KeychainHelper()
+
+    func save(_ value: String, service: String, account: String) {
+        let data = Data(value.utf8)
+
+        // Delete old item if it exists
+        let query = [
+            kSecClass: kSecClassGenericPassword,
+            kSecAttrService: service,
+            kSecAttrAccount: account
+        ] as CFDictionary
+        SecItemDelete(query)
+
+        // Add new item
+        let attributes = [
+            kSecClass: kSecClassGenericPassword,
+            kSecAttrService: service,
+            kSecAttrAccount: account,
+            kSecValueData: data
+        ] as CFDictionary
+
+        SecItemAdd(attributes, nil)
+    }
+
+    func read(service: String, account: String) -> String? {
+        let query = [
+            kSecClass: kSecClassGenericPassword,
+            kSecAttrService: service,
+            kSecAttrAccount: account,
+            kSecReturnData: true,
+            kSecMatchLimit: kSecMatchLimitOne
+        ] as CFDictionary
+
+        var result: AnyObject?
+        SecItemCopyMatching(query, &result)
+
+        guard let data = result as? Data else { return nil }
+        return String(data: data, encoding: .utf8)
     }
 }

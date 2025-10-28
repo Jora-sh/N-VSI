@@ -18,6 +18,8 @@ class SubscriptionsManager: NSObject, ObservableObject {
     var purchasedProductIDs: Set<String> = []
 
     @Published var products: [Product] = []
+    @Published var isLoading: Bool = false
+    @Published var showSuccess: Bool = false
     
     private var entitlementManager: EntitlementManager? = nil
     private var updates: Task<Void, Never>? = nil
@@ -56,7 +58,11 @@ extension SubscriptionsManager {
     
     func buyProduct(_ product: Product, didBuy : @escaping (String, String,Int,String,String) -> Void) async {
         do {
-            let result = try await product.purchase()
+            
+            isLoading = true
+            let token = UserSettings.getAppAccountToken()
+            let options = Product.PurchaseOption.appAccountToken(token)
+            let result = try await product.purchase(options: [options])
             
             switch result {
             case let .success(.verified(transaction)):
@@ -69,28 +75,37 @@ extension SubscriptionsManager {
                        transaction.purchasedQuantity,
                        transaction.environment.rawValue,
                        String(transaction.id))
+                DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+                    self.isLoading = false
+                    self.showSuccess = true
+                }
                 //send to ali sadeghi boos kardani
             case let .success(.unverified(_, error)):
                 // Successful purchase but transaction/receipt can't be verified
                 // Could be a jailbroken phone
                 print("Unverified purchase. Might be jailbroken. Error: \(error)")
+                isLoading = false
                 break
             case .pending:
                 // Transaction waiting on SCA (Strong Customer Authentication) or
                 // approval from Ask to Buy
+                isLoading = false
                 break
             case .userCancelled:
                 print("User cancelled!")
                 Analytics.logEvent("User_cancel", parameters: ["product" : product])
+                isLoading = false
                 break
             @unknown default:
                 print("Failed to purchase the product!")
                 Analytics.logEvent("Failed_purchase", parameters: ["product" : product])
+                isLoading = false
                 break
             }
         } catch {
             print("Failed to purchase the product!")
             Analytics.logEvent("Failed_purchase_catch", parameters: ["product" : product])
+            isLoading = false
         }
     }
     

@@ -48,11 +48,17 @@ class MainViewModel : ObservableObject {
         
         let url = URL(string: "\(base_url)auth/signup")!
         
-        let parameter = ["username":UserSettings.username]
+        if UserSettings.username == "" {
+            UserSettings.username = "IOS-\(UUID().uuidString)"
+        }
+        let parameters = [
+            "username":"\(UserSettings.getAppAccountToken())",
+            "appAccountToken":"\(UserSettings.getAppAccountToken())"
+        ]
         
-        print(parameter)
+        print(parameters)
         
-        AF.request(url,method: .post,parameters: parameter,headers: headers)
+        AF.request(url,method: .post,parameters: parameters,headers: headers)
             .validate()
             .response { result in
                 
