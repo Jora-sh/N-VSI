@@ -18,6 +18,7 @@ let base_url = "https://swp.yagorai.com/nexora-swap-ios/api/"
 class MainViewModel : ObservableObject {
     
     @Published var isLoadingSignUp = false
+    @Published var mainBottomBar : BottomBar = .Home
     @Published var SCREEN_VIEW : ScreenEnum = .Splash
     @Published var categories : [CategoryModel] = []
     @Published var templateItems : [TemplateModel] = []
@@ -320,15 +321,11 @@ class MainViewModel : ObservableObject {
                         
                     case .failure(let error):
                         print(error?.localizedDescription ?? "")
-                        self.signupUser { err in
-                            self.sendPurchaseToServer(parameters: parameters, onResponse: onResponse)
-                        }
+                        onResponse()
                     }
                 case .failure(let err):
                     print(err.localizedDescription)
-                    self.signupUser { err in
-                        self.sendPurchaseToServer(parameters: parameters, onResponse: onResponse)
-                    }
+                    onResponse()
                 }
             }
     }

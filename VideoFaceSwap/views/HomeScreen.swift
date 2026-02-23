@@ -17,25 +17,16 @@ struct HomeScreen: View {
     var body: some View {
         VStack {
             
-            if let banner = mainViewModel.homeConfig?.homeConfig?.icons?.bannerImage {
-                Button {
-                    withAnimation {
-                        mainViewModel.SCREEN_VIEW = .Purchase
-                    }
-                } label: {
-                    AsyncImage(url: URL(string: banner)!, scale: 1.0) { img in
-                        img.resizable()
-                            .frame(width: UIScreen.screenWidth - 32, height: 120)
-                            .scaledToFit()
-                            .clipShape(RoundedRectangle(cornerRadius: 8))
-                    } placeholder: {
-                        Image(.background)
-                            .frame(width: UIScreen.screenWidth - 32, height: 120)
-                            .scaledToFit()
-                            .clipShape(RoundedRectangle(cornerRadius: 8))
-                    }
+            Button {
+                withAnimation {
+                    mainViewModel.SCREEN_VIEW = .Purchase
                 }
-                    
+            } label: {
+                Image(.imgBanner)
+                    .resizable()
+                    .frame(width: UIScreen.screenWidth - 32, height: 120)
+                    .scaledToFit()
+                    .clipShape(RoundedRectangle(cornerRadius: 8))
             }
             
             VStack {

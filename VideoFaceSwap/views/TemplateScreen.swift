@@ -9,35 +9,34 @@ import SwiftUI
 import PhotosUI
 import AVKit
 import Vision
+import UIKit
 
 struct TemplateScreen: View {
     
-    @EnvironmentObject var mainViewModel  :MainViewModel
-    @EnvironmentObject var swapViewModel  :SwapViewModel
+    @EnvironmentObject var mainViewModel  : MainViewModel
+    @EnvironmentObject var swapViewModel  : SwapViewModel
     
-    @State var isShowing = true
-    @State var selected = ""
+    @State private var isShowing = true
+    @State private var selected = ""
     
-    @State var uiImage: UIImage? = nil
-    @State var imageSelection: PhotosPickerItem? = nil
+    @State private var uiImage: UIImage? = nil
+    @State private var showImagePicker = false
     
-    @State var showNoCreditsLeftDialog : Bool = false
-    @State var creditsNeeded : Int = 0
+    @State private var showNoCreditsLeftDialog = false
+    @State private var creditsNeeded: Int = 0
+    @State private var showErrorDialog = false
+    @State private var showContactUsBottomSheet = false
+    @State private var selectedTemplate: TemplateModel? = nil
+    @State private var player: AVPlayer = AVPlayer()
+    @State private var showVideo = true
+    @State private var showNoFaceDetected = false
     
-    @State var showErrorDialog: Bool = false
+    @State private var isOnboardingAnimating = false
+    @State private var isShowingOnBoardingTemplate = true
     
-    @State var showContactUsBottomSheet = false
-    
-    @State var selectedTemplate : TemplateModel? = nil
-    @State var player : AVPlayer = AVPlayer()
-
-    @State var showVideo = true
-    
-    @State private var showNoFaceDetected: Bool = false
-    
+    // MARK: - HEADER
     var header: some View {
         HStack {
-            
             Button {
                 withAnimation {
                     mainViewModel.SCREEN_VIEW = .Main
@@ -48,7 +47,6 @@ struct TemplateScreen: View {
                     .frame(width: 24, height: 24)
                     .padding(.vertical, 8)
             }
-            
             
             Spacer()
             
@@ -65,14 +63,13 @@ struct TemplateScreen: View {
                     Text(String(mainViewModel.userModel?.credits ?? 0))
                         .font(.system(size: 15, weight: .bold))
                         .foregroundColor(.white)
-                        
-                }.padding(.horizontal, 7)
-                    .padding(.vertical,5).roundedCornerWithBorder(lineWidth: 1, borderColor: .white, radius: 8, corners: .allCorners)
-                    
+                }
+                .padding(.horizontal, 7)
+                .padding(.vertical, 5)
+                .roundedCornerWithBorder(lineWidth: 1, borderColor: .white, radius: 8, corners: .allCorners)
             }
             
-            Spacer()
-                .frame(width: 12)
+            Spacer().frame(width: 12)
             
             Button {
                 withAnimation {
@@ -84,280 +81,221 @@ struct TemplateScreen: View {
                     .frame(width: 32, height: 32)
                     .padding(.vertical, 8)
             }
-            
         }
         .frame(width: UIScreen.screenWidth - 32)
     }
     
+    // MARK: - BODY
     var body: some View {
         ZStack {
             VStack {
-                
                 header
-                    .onAppear(perform: {
-                        selected = mainViewModel.templateItems[0].id
-                        print(selected)
-                        selectedTemplate = mainViewModel.templateItems[0]
-                    })
-                    .onDisappear(perform: {
+                    .onAppear {
+                        selected = mainViewModel.templateItems.first?.id ?? ""
+                        selectedTemplate = mainViewModel.templateItems.first
+                    }
+                    .onDisappear {
                         player.volume = 0.0
-                    })
+                    }
                     .onChange(of: selected) { newValue in
                         player.pause()
-                        selectedTemplate = mainViewModel.templateItems.first(where: { item in
-                            return item.id == selected
-                        })
+                        selectedTemplate = mainViewModel.templateItems.first(where: { $0.id == selected })
                         showVideo = false
-                        DispatchQueue.main.asyncAfter(deadline: .now()+1.0) {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
                             showVideo = true
                         }
                     }
-                    .onChange(of: imageSelection) { item in
-                        Task {
-                            print(selected)
-                            if let loaded = try? await imageSelection?.loadTransferable(type: Image.self) {
-                                swapViewModel.imageToSwapWithTemplate = loaded.asUIImage()
-                                swapViewModel.templateToSwapWithTemplate = mainViewModel.templateItems.first(where: { item in
-                                    return item.id == selected
-                                })
-                                print(selected)
-                                
-                                self.creditsNeeded = Int(swapViewModel.templateToSwapWithTemplate?.duration ?? 10.0)
-                                
-                                if hasFace(in: swapViewModel.imageToSwapWithTemplate!) {
-                                    if ((mainViewModel.userModel?.credits ?? 0) - Int(swapViewModel.templateToSwapWithTemplate?.duration ?? 10.0) <= 0) && selectedTemplate?.isFree == false {
-                                        
-                                        withAnimation {
-                                            self.showNoCreditsLeftDialog.toggle()
-                                        }
-                                        
-                                    } else {
-                                        
-                                        if mainViewModel.homeConfig?.homeConfig?.features?.videoWorking == true {
-                                            withAnimation {
-                                                mainViewModel.SCREEN_VIEW = .Loading
-                                            }
-                                        } else {
-                                            withAnimation {
-                                                showErrorDialog = true
-                                            }
-                                        }
-                                        
-                                    }
-                                } else {
-                                    withAnimation {
-                                        showNoFaceDetected = true
-                                    }
-                                }
-                                
-                            } else {
-                                print("Failed")
-                            }
-                            
-                        }
+                    .onChange(of: uiImage) { image in
+                        guard let image = image else { return }
+                        handleSelectedImage(image)
                     }
                 
-                
+                // MARK: Templates
                 VTabView(selection: $selected) {
                     ForEach(mainViewModel.templateItems, id: \.id) { item in
-                        
                         ZStack {
                             if item.id == selected && showVideo {
                                 VideoPlayer(player: player)
-                                    .disabled(true) // Hides iOS video controls
+                                    .disabled(true)
                                     .aspectRatio(contentMode: .fill)
                                     .onAppear {
-                                        
                                         player = AVPlayer(url: URL(string: item.templateUrl)!)
                                         player.play()
                                         player.volume = 0.7
                                     }
-                                    .onReceive(NotificationCenter
-                                        .default
-                                        .publisher(
-                                            for: .AVPlayerItemDidPlayToEndTime,
-                                            object: player.currentItem),
-                                               perform: { _ in
-                                                    player.seek(to: .zero)
-                                                    player.seek(to: .zero)
-                                                    player.play()
-                                                }
-                                    )
-                                    .frame(width: (UIScreen.screenWidth - 32))
+                                    .onReceive(NotificationCenter.default.publisher(for: .AVPlayerItemDidPlayToEndTime, object: player.currentItem)) { _ in
+                                        player.seek(to: .zero)
+                                        player.play()
+                                    }
+                                    .frame(width: UIScreen.screenWidth - 32)
                                     .clipShape(RoundedRectangle(cornerRadius: 8))
                             } else {
-                                AsyncImage(
-                                    url: URL(string: item.thumbnailUrl),
-                                    content: { image in
-                                        image.resizable()
-                                            .scaledToFill()
-                                            .frame(width: UIScreen.screenWidth - 32, height: UIScreen.screenHeight - 228)
-                                            
-                                            
-                                    },
-                                    placeholder: {
-                                        Image(.imgThumbnailResult)
-                                            .resizable()
-                                            .scaledToFill()
-                                            .frame(width: UIScreen.screenWidth - 32, height: UIScreen.screenHeight - 228)
-                                            
-                                    }
-                                )
+                                AsyncImage(url: URL(string: item.thumbnailUrl)) { image in
+                                    image.resizable()
+                                        .scaledToFill()
+                                        .frame(width: UIScreen.screenWidth - 32, height: UIScreen.screenHeight - 228)
+                                } placeholder: {
+                                    Image(.imgThumbnailResult)
+                                        .resizable()
+                                        .scaledToFill()
+                                        .frame(width: UIScreen.screenWidth - 32, height: UIScreen.screenHeight - 228)
+                                }
                                 .clipShape(RoundedRectangle(cornerRadius: 8))
                             }
                         }
-                        .background(content: {
+                        .background(
                             RoundedRectangle(cornerRadius: 8)
                                 .foregroundStyle(Color.black.opacity(0.7))
                                 .frame(width: UIScreen.screenWidth - 32, height: UIScreen.screenHeight - 228)
-                        })
+                        )
                         .tag(item.id)
-                        
-                        
                     }
-                    
-                }.tabViewStyle(.page(indexDisplayMode: .never))
-                    
+                }
+                .tabViewStyle(.page(indexDisplayMode: .never))
                 
-                Spacer()
-                    .frame(height: 10)
+                Spacer().frame(height: 10)
                 
-                PhotosPicker(
-                      selection: $imageSelection,
-                      matching: .images,
-                      photoLibrary: .shared()) {
-                          HStack {
-                              if selectedTemplate?.isFree == false && (mainViewModel.userModel?.credits ?? 0) <= 0 {
-                                  Image(.iconPremium)
-                                  Spacer()
-                                      .frame(width: 6)
-                              }
-                              Text(selectedTemplate?.isFree == true || (mainViewModel.userModel?.credits ?? 0) > 0
-                                   ? "Choose Face" : "Premium Swap")
-                                  .font(.system(size: 16, weight: .bold))
-                                  .foregroundStyle(.white)
-                          }
-                          .frame(width: UIScreen.screenWidth - 32, height: 48)
-                          .background {
-                              LinearGradient(colors: gradientColor, startPoint: .leading, endPoint: .trailing)
-                          }
-                          .clipShape(RoundedRectangle(cornerRadius: 8))
-                      }
+                // MARK: Choose Face Button
+                Button {
+                    showImagePicker = true
+                } label: {
+                    HStack {
+                        if selectedTemplate?.isFree == false && (mainViewModel.userModel?.credits ?? 0) <= 0 {
+                            Image(.iconPremium)
+                            Spacer().frame(width: 6)
+                        }
+                        Text(selectedTemplate?.isFree == true || (mainViewModel.userModel?.credits ?? 0) > 0
+                             ? "Choose Face" : "Premium Swap")
+                            .font(.system(size: 16, weight: .bold))
+                            .foregroundStyle(.white)
+                    }
+                    .frame(width: UIScreen.screenWidth - 32, height: 48)
+                    .background(
+                        LinearGradient(colors: gradientColor, startPoint: .leading, endPoint: .trailing)
+                    )
+                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                }
+                .sheet(isPresented: $showImagePicker) {
+                    ClassicImagePicker(selectedImage: $uiImage)
+                }
                 
-                Spacer()
-                    .frame(height: 16)
-                
+                Spacer().frame(height: 16)
             }
         }
         
-        ZStack {
-            
-            Color.black.opacity(0.5)
-                .ignoresSafeArea()
-            
-            
-            VStack {
-                
-                Spacer()
-                
-                Image(.iconOnBoardingSwapTemplates)
-                    .resizable()
-                    .frame(width: 236, height: 148)
-                    .offset(y: isOnboardingAnimating ? 20 : -20)
-                    .onAppear {
-                        startAnimateOnBoarding()
-                        isShowingOnBoardingTemplate = !UserSettings.didShowTemplateOnBoarding
-                    }
-                
-                Spacer()
-                    .frame(height: 64)
-                
-            }
-            
-            
-        }
-        .onTapGesture {
-            withAnimation {
-                isShowingOnBoardingTemplate = false
-            }
-            UserSettings.didShowTemplateOnBoarding = true
-        }.opacity(isShowingOnBoardingTemplate ? 1.0 : 0.0)
-            .offset(y: isShowingOnBoardingTemplate ? 0 : UIScreen.screenHeight)
-        
-        ErrorDialog(errorType: .Sorry, showDialog: $showErrorDialog) {
-            
-        }
+        // MARK: - Overlays
+        ErrorDialog(errorType: .Sorry, showDialog: $showErrorDialog) {}
         
         ErrorDialog(errorType: .NoFace, showDialog: $showNoFaceDetected) {
             withAnimation {
                 swapViewModel.imageToSwapWithTemplate = nil
-                imageSelection = nil
+                uiImage = nil
             }
         }
         
-        NoCreditsLeftDialog(shown: $showNoCreditsLeftDialog,
-                            creditsOwned: .constant(mainViewModel.userModel?.credits ?? 0),
-                            creditsNeeded: $creditsNeeded) {
+        NoCreditsLeftDialog(
+            shown: $showNoCreditsLeftDialog,
+            creditsOwned: .constant(mainViewModel.userModel?.credits ?? 0),
+            creditsNeeded: $creditsNeeded
+        ) {
             withAnimation {
                 mainViewModel.SCREEN_VIEW = .Purchase
             }
         }
-        .sheet(isPresented: $showContactUsBottomSheet, content: {
+        .sheet(isPresented: $showContactUsBottomSheet) {
             ContactUsView(showContactUsBottomSheet: $showContactUsBottomSheet)
-        })
+        }
     }
     
-    @State var isOnboardingAnimating = false
-    @State var isShowingOnBoardingTemplate = true
-    
-    func startAnimateOnBoarding() {
-        withAnimation {
-            isOnboardingAnimating = true
-        }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-            withAnimation(.bouncy) {
-                isOnboardingAnimating = false
+    // MARK: - Handle Selected Image
+    func handleSelectedImage(_ image: UIImage) {
+        swapViewModel.imageToSwapWithTemplate = image
+        swapViewModel.templateToSwapWithTemplate = mainViewModel.templateItems.first(where: { $0.id == selected })
+        creditsNeeded = Int(swapViewModel.templateToSwapWithTemplate?.duration ?? 10.0)
+        
+        if hasFace(in: image) {
+            if ((mainViewModel.userModel?.credits ?? 0) - creditsNeeded <= 0) && selectedTemplate?.isFree == false {
+                withAnimation {
+                    showNoCreditsLeftDialog = true
+                }
+            } else {
+                if mainViewModel.homeConfig?.homeConfig?.features?.videoWorking == true {
+                    withAnimation {
+                        mainViewModel.SCREEN_VIEW = .Loading
+                    }
+                } else {
+                    withAnimation {
+                        showErrorDialog = true
+                    }
+                }
             }
-        }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
-            startAnimateOnBoarding()
-        }
-    }
-    
-    func selectImage() {
-        if let sampleImage = swapViewModel.imageSelected {
+        } else {
             withAnimation {
-                showNoFaceDetected = !hasFace(in: sampleImage)
+                showNoFaceDetected = true
             }
         }
     }
     
+    // MARK: - Face Detection
     func hasFace(in image: UIImage) -> Bool {
-        guard let cgImage = image.cgImage else {
-            print("Invalid CGImage")
-            return false
-        }
-
+        guard let cgImage = image.cgImage else { return false }
         let request = VNDetectFaceRectanglesRequest()
-#if targetEnvironment(simulator)
+        #if targetEnvironment(simulator)
         request.usesCPUOnly = true
-#endif
+        #endif
         let handler = VNImageRequestHandler(cgImage: cgImage, options: [:])
-
         do {
             try handler.perform([request])
             if let results = request.results as? [VNFaceObservation] {
                 return !results.isEmpty
-            } else {
-                return false
             }
         } catch {
             print("Face detection error: \(error.localizedDescription)")
-            return false
+        }
+        return false
+    }
+}
+
+struct ClassicImagePicker: UIViewControllerRepresentable {
+    @Binding var selectedImage: UIImage?
+    @Environment(\.presentationMode) var presentationMode
+    
+    class Coordinator: NSObject, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
+        let parent: ClassicImagePicker
+        
+        init(_ parent: ClassicImagePicker) {
+            self.parent = parent
+        }
+        
+        func imagePickerController(_ picker: UIImagePickerController,
+                                   didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+            if let image = info[.originalImage] as? UIImage {
+                parent.selectedImage = image
+            }
+            parent.presentationMode.wrappedValue.dismiss()
+        }
+        
+        func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+            parent.presentationMode.wrappedValue.dismiss()
         }
     }
     
+    func makeCoordinator() -> Coordinator {
+        Coordinator(self)
+    }
+    
+    func makeUIViewController(context: Context) -> UIImagePickerController {
+        let picker = UIImagePickerController()
+        picker.delegate = context.coordinator
+        picker.allowsEditing = false
+        picker.sourceType = .photoLibrary
+        return picker
+    }
+    
+    func updateUIViewController(_ uiViewController: UIImagePickerController, context: Context) {}
 }
+
+
 
 
 @available(iOS 14.0, *)

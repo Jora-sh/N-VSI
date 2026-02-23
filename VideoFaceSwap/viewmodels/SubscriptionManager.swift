@@ -11,9 +11,9 @@ import FirebaseAnalytics
 @MainActor
 class SubscriptionsManager: NSObject, ObservableObject {
     let productIDs: [String] = [
-        "30_video_credits",
-        "200_video_credits",
-        "offer_faceswap_video"
+        "starter_videoswap_credits",
+        "pro_videoswap_credits",
+        "offer_videoswap_credits"
     ]
     var purchasedProductIDs: Set<String> = []
 

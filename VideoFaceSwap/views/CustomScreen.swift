@@ -6,172 +6,152 @@
 //
 
 import SwiftUI
-import AVFoundation
-import CoreTransferable
-import _AVKit_SwiftUI
-import _PhotosUI_SwiftUI
+import PhotosUI
+import AVKit
 import Vision
 
 struct CustomScreen: View {
     
     @EnvironmentObject var swapViewModel: SwapViewModel
     @EnvironmentObject var mainViewModel: MainViewModel
-    @State var videoURL : URL? = nil
     
+    @State var videoURL : URL? = nil
     @State var player : AVPlayer? = nil
     
+    @State var showPHPicker = false
     @State var showNoCreditsLeftDialog : Bool = false
     @State var creditsNeeded : Int = 0
-    
     @State var showErrorDialog: Bool = false
     @State var showNoCreditDialog: Bool = true
-    
     @State private var showNoFaceDetected: Bool = false
-    
     
     var body: some View {
         ZStack {
             VStack {
                 
                 Spacer()
-                    .onChange(of: swapViewModel.imageSelection) { item in
-                        Task {
-                            if let loaded = try? await swapViewModel.imageSelection?.loadTransferable(type: Image.self) {
-                                swapViewModel.imageSelected = loaded.asUIImage()
-                            } else {
-                                print("Failed")
-                            }
-                        }
-                    }
-                    .onChange(of: swapViewModel.imageSelected) { newValue in
-                        selectImage()
-                    }
-                    .onAppear(perform: {
+                    .onAppear {
                         if let videoURL = swapViewModel.videoUrl {
                             player = AVPlayer(url: videoURL)
                             player?.volume = 0.0
                             player?.play()
                         }
-                        mainViewModel.getMe{_ in}
+                        mainViewModel.getMe { _ in }
                         if mainViewModel.userModel?.credits ?? 0 > 0 {
                             showNoCreditDialog = false
                         }
-                    })
+                    }
                 
-                ZStack{
-                    
-                    PhotosPicker(
-                        selection: $swapViewModel.imageSelection,
-                          matching: .images,
-                          photoLibrary: .shared()) {
-                              if swapViewModel.imageSelected == nil {
-                                  VStack {
-                                      Image(.iconFace)
-                                          .resizable()
-                                          .aspectRatio( contentMode: .fill)
-                                          .frame(width: 36 , height: 36)
-                                          .padding(.bottom , 18)
-                                      
-                                      Text("Tap Here")
-                                          .font(.system(size: 18 , weight: .medium))
-                                          .foregroundColor(Color.white)
-                                          .padding(.bottom , 0)
-                                      
-                                      Text("to select the photo")
-                                          .font(.system(size: 16 ))
-                                          .foregroundColor(Color.white)
-                                          .padding(.top , 5)
-                                      
-                                  }
-                                  .frame(width: UIScreen.screenWidth - 192 , height: UIScreen.screenWidth - 192)
-                              }else {
-                                  
-                                  ZStack {
-                                      Image(uiImage: swapViewModel.imageSelected!)
-                                          .resizable()
-                                          .aspectRatio( contentMode: .fit)
-                                          .frame(width: UIScreen.screenWidth - 120 , height: UIScreen.screenWidth - 192)
-                                          .cornerRadius(10)
-                                          .padding()
-                                      
-                                      VStack {
-                                          
-                                          HStack {
-                                              
-                                              Spacer()
-                                              
-                                              Button {
-                                                  withAnimation {
-                                                      swapViewModel.imageSelected = nil
-                                                  }
-                                              } label: {
-                                                  Image(.iconClose)
-                                                      .resizable()
-                                                      .frame(width: 22, height:22)
-                                              }
+//                Button {
+//                    withAnimation {
+//                        mainViewModel.SCREEN_VIEW = .purchaseOffer
+//                    }
+//                } label: {
+//                    TimerView()
+//                }
 
-                                          }
-                                          
-                                          Spacer()
-                                          
-                                      }.padding(24)
-                                  }
-                                   
-                                  
-                              }
-                          }
-                          .frame(width: UIScreen.screenWidth - 120 , height: UIScreen.screenWidth - 192)
-                          .background(Color(hex: "#1B1B1E"))
-                          .cornerRadius(16)
-                          .padding(.bottom , 18)
-                    
+                Spacer()
+                
+                // MARK: IMAGE PICKER (PHPicker)
+                ZStack {
+                    if swapViewModel.imageSelected == nil {
+                        Button {
+                            showPHPicker = true
+                        } label: {
+                            VStack {
+                                Image(.iconFace)
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fill)
+                                    .frame(width: 36, height: 36)
+                                    .padding(.bottom, 18)
+                                
+                                Text("Tap Here")
+                                    .font(.system(size: 18, weight: .medium))
+                                    .foregroundColor(.white)
+                                
+                                Text("to select the photo")
+                                    .font(.system(size: 16))
+                                    .foregroundColor(.white)
+                                    .padding(.top, 5)
+                            }
+                            .frame(width: UIScreen.screenWidth - 192, height: UIScreen.screenWidth - 192)
+                        }
+                    } else {
+                        ZStack {
+                            Image(uiImage: swapViewModel.imageSelected!)
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(width: UIScreen.screenWidth - 120, height: UIScreen.screenWidth - 192)
+                                .cornerRadius(10)
+                                .padding()
+                            
+                            VStack {
+                                HStack {
+                                    Spacer()
+                                    Button {
+                                        withAnimation {
+                                            swapViewModel.imageSelected = nil
+                                        }
+                                    } label: {
+                                        Image(.iconClose)
+                                            .resizable()
+                                            .frame(width: 22, height: 22)
+                                    }
+                                }
+                                Spacer()
+                            }
+                            .padding(24)
+                        }
+                    }
+                }
+                .frame(width: UIScreen.screenWidth - 120, height: UIScreen.screenWidth - 192)
+                .background(Color(hex: "#1B1B1E"))
+                .cornerRadius(16)
+                .padding(.bottom, 0)
+                .sheet(isPresented: $showPHPicker) {
+                    PHPickerWrapper(selectedImage: $swapViewModel.imageSelected)
+                        .onDisappear {
+                            selectImage()
+                        }
                 }
                 
-                
-                
-                //MARK: switch images button
-                
+                // MARK: SWITCH ICON
                 Image(.iconDoubleArrow)
                     .resizable()
                     .frame(width: 64, height: 64)
                 
+                // MARK: VIDEO PICKER (Unchanged)
                 ZStack {
-                    
                     PhotosPicker(
                         selection: $swapViewModel.videoSelection,
-                          matching: .videos,
-                          photoLibrary: .shared()) {
+                        matching: .videos,
+                        photoLibrary: .shared()
+                    ) {
                         if swapViewModel.videoSelection == nil {
                             VStack {
                                 Image(.iconVideo)
                                     .resizable()
-                                    .aspectRatio( contentMode: .fill)
-                                    .frame(width: 36 , height: 36)
-                                    .padding(.bottom , 18)
+                                    .aspectRatio(contentMode: .fill)
+                                    .frame(width: 36, height: 36)
+                                    .padding(.bottom, 18)
                                 
                                 Text("Tap Here")
-                                    .font(.system(size: 18 , weight: .medium))
+                                    .font(.system(size: 18, weight: .medium))
                                     .foregroundColor(.white)
-                                    .padding(.bottom , 0)
                                 
                                 Text("to select the Video")
-                                    .font(.system(size: 16 ))
+                                    .font(.system(size: 16))
                                     .foregroundColor(.white)
-                                    .padding(.top , 5)
-                                
+                                    .padding(.top, 5)
                             }
-                            .frame(width: UIScreen.screenWidth - 192 , height: UIScreen.screenWidth - 192)
+                            .frame(width: UIScreen.screenWidth - 192, height: UIScreen.screenWidth - 192)
                         } else {
-                            
                             ZStack {
                                 VideoPlayer(player: player)
-                                    .frame(width: UIScreen.screenWidth - 120 , height: UIScreen.screenWidth - 192)
+                                    .frame(width: UIScreen.screenWidth - 120, height: UIScreen.screenWidth - 192)
                                 VStack {
-                                    
                                     HStack {
-                                        
                                         Spacer()
-                                        
                                         Button {
                                             withAnimation {
                                                 swapViewModel.videoSelection = nil
@@ -179,133 +159,100 @@ struct CustomScreen: View {
                                         } label: {
                                             Image(.iconClose)
                                                 .resizable()
-                                                .frame(width: 22, height:22)
+                                                .frame(width: 22, height: 22)
                                         }
-                                        
                                     }
-                                    
                                     Spacer()
-                                    
-                                }.padding(24)
+                                }
+                                .padding(24)
                             }
-                            
                         }
-                    }.onChange(of:  swapViewModel.videoSelection) { newMedia in
+                    }
+                    .onChange(of: swapViewModel.videoSelection) { newMedia in
                         Task {
-                            guard let item = swapViewModel.videoSelection else {  return }
+                            guard let item = swapViewModel.videoSelection else { return }
                             let config = VideoKit.Config(.presetMediumQuality,
                                                          limitFPS: 23,
                                                          limitBitrate: 2_500_000)
-
-                            item.loadTransferable(type: Movie.self) { result in   // <-- here
+                            item.loadTransferable(type: Movie.self) { result in
                                 switch result {
                                 case .success(let movie):
-                                    
                                     if let movie = movie {
                                         VideoKit.mutate(videoUrl: movie.url, config: config) { result in
                                             switch result {
-                                                case .success(let videoUrl):
-                                                    // DO SOMETHING WITH YOUR VIDEO
+                                            case .success(let videoUrl):
                                                 player = AVPlayer(url: videoUrl)
                                                 player?.volume = 0.0
                                                 player?.play()
                                                 videoURL = videoUrl
                                                 swapViewModel.videoUrl = videoUrl
-                                                    break
-                                                case .error(let errorString):
-                                                    print(errorString)
-                                                break
+                                            case .error(let errorString):
+                                                print(errorString)
                                             }
                                         }
-                                    } else {
-                                        print("movie is nil")
                                     }
                                 case .failure(let failure):
-                                    fatalError("\(failure)")
+                                    print("Video load error: \(failure)")
                                 }
                             }
                         }
                     }
-                        
-                    .frame(width: UIScreen.screenWidth - 120 , height: UIScreen.screenWidth - 192)
+                    .frame(width: UIScreen.screenWidth - 120, height: UIScreen.screenWidth - 192)
                     .background(Color(hex: "#1B1B1E"))
                     .cornerRadius(16)
-                    .padding(.top , 18)
+                    .padding(.top, 0)
                 }
                 
-                    
-                
                 Spacer()
-                //MARK: START SWAPING BUTTON
+                
+                // MARK: START SWAPPING BUTTON
                 Button {
                     if swapViewModel.imageSelected != nil && swapViewModel.videoSelection != nil {
-                        creditsNeeded =  Int(self.player?.currentItem?.asset.duration.seconds ?? 10.0)
+                        creditsNeeded = Int(self.player?.currentItem?.asset.duration.seconds ?? 10.0)
                         
-                        if swapViewModel.imageSelected != nil && swapViewModel.videoSelection != nil {
-                            
-                            if creditsNeeded >= (mainViewModel.userModel?.credits ?? 0) {
-                                
-                                swapViewModel.goLoadingWithoutCredits = true
-                                swapViewModel.creditsNeededForCustomSwap = creditsNeeded
+                        if creditsNeeded >= (mainViewModel.userModel?.credits ?? 0) {
+                            swapViewModel.goLoadingWithoutCredits = true
+                            swapViewModel.creditsNeededForCustomSwap = creditsNeeded
+                            withAnimation {
+                                mainViewModel.SCREEN_VIEW = .Loading
+                            }
+                        } else {
+                            if UserSettings.videoIsWorking {
+                                swapViewModel.goLoadingWithoutCredits = false
                                 withAnimation {
-//                                        self.showNoCreditsLeftDialog.toggle()
                                     mainViewModel.SCREEN_VIEW = .Loading
                                 }
-                                
                             } else {
-                                if UserSettings.videoIsWorking {
-                                    swapViewModel.goLoadingWithoutCredits = false
-                                    withAnimation {
-                                        mainViewModel.SCREEN_VIEW = .Loading
-                                    }
-                                } else {
-                                    withAnimation {
-                                        showErrorDialog = true
-                                    }
+                                withAnimation {
+                                    showErrorDialog = true
                                 }
-                                
                             }
                         }
                     }
-                    
                 } label: {
-                    HStack{
-                        Text("Start Swapping")
-                            .foregroundColor(.white)
-                            .opacity(swapViewModel.imageSelected != nil && swapViewModel.videoSelection != nil ? 1.0 : 0.3)
-                            .font(.system(size: 20 , weight: .medium))
-                    }
-                    .frame(width: UIScreen.screenWidth - 78 , height: UIScreen.screenHeight / 17)
-                    .background(
-                        swapViewModel.imageSelected != nil && swapViewModel.videoSelection != nil ?
-                        LinearGradient(
-                            colors: gradientColor,
-                            startPoint: .leading,
-                            endPoint: .trailing
-                        ) : LinearGradient(
-                            stops: [
-                                Gradient.Stop(color: Color.white.opacity(0.5), location: 0.00),
-                            ],
-                            startPoint: UnitPoint(x: 0, y: 0.5),
-                            endPoint: UnitPoint(x: 1, y: 0.5)
-                            )
-                    )
-                    .cornerRadius(10)
+                    Text("Start Swapping")
+                        .foregroundColor(.white)
+                        .opacity(swapViewModel.imageSelected != nil && swapViewModel.videoSelection != nil ? 1.0 : 0.3)
+                        .font(.system(size: 20, weight: .medium))
+                        .frame(width: UIScreen.screenWidth - 78, height: UIScreen.screenHeight / 17)
+                        .background(
+                            swapViewModel.imageSelected != nil && swapViewModel.videoSelection != nil
+                            ? LinearGradient(colors: gradientColor, startPoint: .leading, endPoint: .trailing)
+                            : LinearGradient(stops: [Gradient.Stop(color: Color.white.opacity(0.5), location: 0.0)],
+                                             startPoint: .leading, endPoint: .trailing)
+                        )
+                        .cornerRadius(10)
                 }
                 
                 Spacer()
-                
-                
             }
             
-            ErrorDialog(errorType: .Sorry, showDialog: $showErrorDialog) {
-                
-            }
+            // MARK: - Error and Credit Dialogs
+            ErrorDialog(errorType: .Sorry, showDialog: $showErrorDialog) {}
             
             ErrorDialog(errorType: .NoFace, showDialog: $showNoFaceDetected) {
                 withAnimation {
                     swapViewModel.imageSelected = nil
-                    swapViewModel.imageSelection = nil
                 }
             }
             
@@ -316,11 +263,10 @@ struct CustomScreen: View {
                     mainViewModel.SCREEN_VIEW = .Purchase
                 }
             }
-            
-//            NoCreditDialog(shown:$showNoCreditDialog)
         }
     }
     
+    // MARK: - Face Detection
     func selectImage() {
         if let sampleImage = swapViewModel.imageSelected {
             withAnimation {
@@ -330,34 +276,169 @@ struct CustomScreen: View {
     }
     
     func hasFace(in image: UIImage) -> Bool {
-        guard let cgImage = image.cgImage else {
-            print("Invalid CGImage")
-            return false
-        }
-
+        guard let cgImage = image.cgImage else { return false }
         let request = VNDetectFaceRectanglesRequest()
-#if targetEnvironment(simulator)
+        #if targetEnvironment(simulator)
         request.usesCPUOnly = true
-#endif
+        #endif
         let handler = VNImageRequestHandler(cgImage: cgImage, options: [:])
-
         do {
             try handler.perform([request])
             if let results = request.results as? [VNFaceObservation] {
                 return !results.isEmpty
-            } else {
-                return false
             }
         } catch {
             print("Face detection error: \(error.localizedDescription)")
-            return false
+        }
+        return false
+    }
+}
+
+//
+// MARK: - PHPicker Wrapper
+//
+struct PHPickerWrapper: UIViewControllerRepresentable {
+    @Binding var selectedImage: UIImage?
+    
+    func makeUIViewController(context: Context) -> PHPickerViewController {
+        var config = PHPickerConfiguration(photoLibrary: .shared())
+        config.filter = .images
+        config.selectionLimit = 1
+        
+        let picker = PHPickerViewController(configuration: config)
+        picker.delegate = context.coordinator
+        return picker
+    }
+    
+    func updateUIViewController(_ uiViewController: PHPickerViewController, context: Context) {}
+    
+    func makeCoordinator() -> Coordinator {
+        Coordinator(self)
+    }
+    
+    class Coordinator: NSObject, PHPickerViewControllerDelegate {
+        var parent: PHPickerWrapper
+        
+        init(_ parent: PHPickerWrapper) {
+            self.parent = parent
+        }
+        
+        func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
+            picker.dismiss(animated: true)
+            guard let provider = results.first?.itemProvider else { return }
+            
+            if provider.canLoadObject(ofClass: UIImage.self) {
+                provider.loadObject(ofClass: UIImage.self) { image, _ in
+                    DispatchQueue.main.async {
+                        self.parent.selectedImage = image as? UIImage
+                    }
+                }
+            }
         }
     }
 }
 
 
 
+struct TimerView: View {
+    @StateObject private var timerManager = TimerManager()
+    
+    var body: some View {
+        HStack {
+            Text("Limited Offer")
+                .font(.system(size: 16, weight: .semibold))
+                .foregroundStyle(Color.white)
+            
+            Spacer()
+            
+            Text(timerManager.timeString)
+                .font(.system(size: 16, weight: .semibold))
+                .foregroundStyle(Color.white)
+        }
+        .frame(height: 40)
+        .padding(.horizontal, 14)
+        .background {
+//            Color.init(hex: "#C43737").opacity(0.7)
+//                .clipShape(RoundedRectangle(cornerRadius: 10))
+            Image(.imgBackOffer)
+                .resizable()
+                .scaledToFit()
+        }
+        .frame(width: UIScreen.screenWidth - 32, height: 40)
+        .roundedCornerWithBorder(lineWidth: 1.5, borderColor: Color(hex: "#C43737"), radius: 10, corners: .allCorners)
+        .onAppear {
+            timerManager.startTimer()
+        }
+    }
+}
 
+class TimerManager: ObservableObject {
+    @Published var timeString: String = "24:00:00"
+    
+    private var timer: Timer?
+    private let totalDuration: TimeInterval = 24 * 60 * 60 // 24 hours in seconds
+    private let startTimeKey = "timerStartTime"
+    
+    init() {
+        updateTimeString()
+    }
+    
+    func startTimer() {
+        // Initialize start time if not set
+        if UserDefaults.standard.object(forKey: startTimeKey) == nil {
+            UserDefaults.standard.set(Date().timeIntervalSince1970, forKey: startTimeKey)
+        }
+        
+        // Update immediately
+        updateTimeString()
+        
+        // Start repeating timer for UI updates
+        timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
+            self?.updateTimeString()
+        }
+    }
+    
+    private func updateTimeString() {
+        guard let startTime = UserDefaults.standard.object(forKey: startTimeKey) as? TimeInterval else {
+            return
+        }
+        
+        let startDate = Date(timeIntervalSince1970: startTime)
+        let currentDate = Date()
+        let elapsedTime = currentDate.timeIntervalSince(startDate)
+        
+        // Calculate how many complete 24-hour cycles have passed
+        let completeCycles = floor(elapsedTime / totalDuration)
+        
+        // Calculate time within current cycle
+        let timeInCurrentCycle = elapsedTime - (completeCycles * totalDuration)
+        
+        // Calculate remaining time (countdown)
+        let remainingTime = totalDuration - timeInCurrentCycle
+        
+        // If cycle completed, reset start time
+        if remainingTime <= 0 {
+            let newStartTime = currentDate.timeIntervalSince1970
+            UserDefaults.standard.set(newStartTime, forKey: startTimeKey)
+            timeString = formatTime(totalDuration)
+            return
+        }
+        
+        timeString = formatTime(remainingTime)
+    }
+    
+    private func formatTime(_ timeInterval: TimeInterval) -> String {
+        let hours = Int(timeInterval) / 3600
+        let minutes = Int(timeInterval) / 60 % 60
+        let seconds = Int(timeInterval) % 60
+        
+        return String(format: "%02d:%02d:%02d", hours, minutes, seconds)
+    }
+    
+    deinit {
+        timer?.invalidate()
+    }
+}
 struct Movie: Transferable {
   let url: URL
 

@@ -17,6 +17,7 @@ struct LoadingScreen: View {
     
     @State var showErrorDialog = false
     
+    @State var showNoFaceDialog = false
     @State var showNoCreditsLeftDialog = false
     @State var showContactUsBottomSheet = false
     @State var showNoFreeCreditsLeftDialog = false
@@ -74,11 +75,13 @@ struct LoadingScreen: View {
                                 swapViewModel.swapWithTemplate(image: swapViewModel.imageToSwapWithTemplate, templateId : swapViewModel.templateToSwapWithTemplate?.templateName ?? "") { isSuccess, msg in
                                     
                                     if isSuccess {
-                                        swapViewModel.checkForVideo(jobId: msg ?? "") { isSuccess, videoUrl in
+                                        swapViewModel.checkForVideo(jobId: msg ?? "") { isSuccess, videoUrl, msg in
                                             if isSuccess {
                                                 withAnimation {
                                                     mainViewModel.SCREEN_VIEW = .Result
                                                 }
+                                            } else if msg?.contains("faces") == true {
+                                                self.showNoFaceDialog = true
                                             } else {
                                                 self.showErrorDialog = true
                                             }
@@ -88,6 +91,8 @@ struct LoadingScreen: View {
                                             self.showNoCreditsLeftDialog = true
                                         } else if msg == "not enough free credits" {
                                             self.showNoFreeCreditsLeftDialog = true
+                                        } else if msg?.contains("faces") == true {
+                                            self.showNoFaceDialog = true
                                         } else {
                                             self.showErrorDialog = true
                                         }
@@ -98,11 +103,13 @@ struct LoadingScreen: View {
                                 swapViewModel.uploadMedia(videoPath: swapViewModel.videoUrl, image: swapViewModel.imageSelected!) { isSuccess, msg in
                                     
                                     if isSuccess {
-                                        swapViewModel.checkForVideo(jobId: msg ?? "") { isSuccess, videoUrl in
+                                        swapViewModel.checkForVideo(jobId: msg ?? "") { isSuccess, videoUrl, msg in
                                             if isSuccess {
                                                 withAnimation {
                                                     mainViewModel.SCREEN_VIEW = .Result
                                                 }
+                                            } else if msg?.contains("faces") == true {
+                                                self.showNoFaceDialog = true
                                             } else {
                                                 self.showErrorDialog = true
                                             }
@@ -156,6 +163,12 @@ struct LoadingScreen: View {
             }
             
             ErrorDialog(errorType: .Oops, showDialog: $showErrorDialog) {
+                withAnimation {
+                    mainViewModel.SCREEN_VIEW = .Main
+                }
+            }
+            
+            ErrorDialog(errorType: .NoFace, showDialog: $showNoFaceDialog) {
                 withAnimation {
                     mainViewModel.SCREEN_VIEW = .Main
                 }

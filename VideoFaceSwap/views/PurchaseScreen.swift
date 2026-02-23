@@ -52,9 +52,9 @@ struct PurchaseScreen: View {
     
     func getProductNumberFromId(id:String) -> String {
         switch id {
-            case "30_video_credits": return "30"
-            case "200_video_credits": return "200"
-            case "offer_faceswap_video": return "500"
+            case "starter_videoswap_credits": return "30"
+            case "pro_videoswap_credits": return "200"
+            case "offer_videoswap_credits": return "500"
             default : return "500"
         }
     }
@@ -62,7 +62,7 @@ struct PurchaseScreen: View {
     var purchaseItemView : some View {
         ForEach(subscriptionsManager.products, id: \.id) { purchaseItem in
             
-            if purchaseItem.id == "offer_faceswap_video" {
+            if purchaseItem.id == "offer_videoswap_credits" {
                 Spacer()
                     .frame(height: 16)
                 
@@ -217,28 +217,28 @@ struct PurchaseScreen: View {
             Task {
                 if let selectedItemIndex = selectedItemIndex {
                     await subscriptionsManager.buyProduct(selectedItemIndex) {it1,it2,it3,it4,it5 in
-//                        mainViewModel.sendPurchaseToServer(parameters: [
-//                           "productId" : it1,
-//                           "appBundleId" : it2,
-//                           "purchasedQuantity" : Int(1),
-//                           "environment" : it4,
-//                           "id" : it5,
-//                        ]) {
-//                            self.showSuccessDialog = true
-//                        }
+                        mainViewModel.sendPurchaseToServer(parameters: [
+                           "productId" : it1,
+                           "appBundleId" : it2,
+                           "purchasedQuantity" : Int(1),
+                           "environment" : it4,
+                           "id" : it5,
+                        ]) {
+                            
+                        }
                     }
                 }
             }
         } label: {
             HStack{
                 Text("Continue")
-                    .foregroundColor(selectedItemIndex?.id != "offer_faceswap_video" ? .white : .black)
+                    .foregroundColor(selectedItemIndex?.id != "offer_videoswap_credits" ? .white : .black)
                     .font(.system(size: 20 , weight: .medium))
             }
             .frame(width: UIScreen.screenWidth - 32 , height: 48)
             .background {
                 
-                if selectedItemIndex?.id != "offer_faceswap_video" {
+                if selectedItemIndex?.id != "offer_videoswap_credits" {
                     LinearGradient(
                         colors: selectedItemIndex != nil ? gradientColor : [Color.white.opacity(0.5)],
                         startPoint: .leading,
@@ -279,37 +279,50 @@ struct PurchaseScreen: View {
     var body: some View {
         ZStack {
             
-            VideoView(player: player)
-                .disabled(true) // Hides iOS video controls
-                .aspectRatio(contentMode: .fill)
-                .onAppear {
+            VStack {
+                VideoView(player: player)
+                    .disabled(true) // Hides iOS video controls
+                    .aspectRatio(contentMode: .fill)
+                    .onAppear {
 
-                    player.play()
-                    player.volume = 0
-                }
-                .onReceive(NotificationCenter
-                    .default
-                    .publisher(
-                        for: .AVPlayerItemDidPlayToEndTime,
-                        object: player.currentItem),
-                           perform: { _ in
-                                player.seek(to: .zero)
-                                player.play()
-                            }
-                )
-                .frame(width: (UIScreen.screenWidth), height: UIScreen.screenHeight)
-                .ignoresSafeArea()
-                .task {
-                    print("in purchase")
-                    await subscriptionsManager.updatePurchasedProducts()
-                    await subscriptionsManager.loadProducts()
-                    if !subscriptionsManager.products.isEmpty {
-                        selectedItemIndex = subscriptionsManager.products[0]
+                        player.play()
+                        player.volume = 0
                     }
-                }
-                .overlay {
-                    LinearGradient(colors: [.black.opacity(0.5), .black.opacity(0.0)], startPoint: .bottom, endPoint: .top)
-                }
+                    .onDisappear {
+                        mainViewModel.getMe { err in
+                            
+                        }
+                    }
+                    .onReceive(NotificationCenter
+                        .default
+                        .publisher(
+                            for: .AVPlayerItemDidPlayToEndTime,
+                            object: player.currentItem),
+                               perform: { _ in
+                                    player.seek(to: .zero)
+                                    player.play()
+                                }
+                    )
+                    .frame(width: (UIScreen.screenWidth), height: UIScreen.screenHeight*0.75)
+                    .task {
+                        print("in purchase")
+                        await subscriptionsManager.updatePurchasedProducts()
+                        await subscriptionsManager.loadProducts()
+                        if !subscriptionsManager.products.isEmpty {
+                            selectedItemIndex = subscriptionsManager.products[0]
+                        }
+                    }
+                    .overlay(alignment: .bottom) {
+                        LinearGradient(colors: [.black, .black.opacity(0.0)], startPoint: .bottom, endPoint: .center)
+                    }
+                    .ignoresSafeArea()
+                
+                Spacer()
+            }
+            .overlay(alignment: .bottom) {
+                LinearGradient(colors: [.black, .black.opacity(0.0)], startPoint: .bottom, endPoint: .top)
+            }
+            .ignoresSafeArea()
             
             
 //            Image(.imgPurchase)

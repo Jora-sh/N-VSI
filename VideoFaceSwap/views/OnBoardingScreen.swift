@@ -22,12 +22,17 @@ struct OnBoardingScreen: View {
                     }
                 }
             
-            VStack(alignment: .leading) {
-                
+            VStack {
                 Image(.imgOnBoarding)
                     .resizable()
                     .frame(width: UIScreen.screenWidth, height: UIScreen.screenWidth*1.5)
                     .ignoresSafeArea()
+                Spacer()
+            }
+            
+            VStack(alignment: .leading) {
+                
+                Spacer()
                 
                 VStack {
                     
@@ -69,7 +74,7 @@ struct OnBoardingScreen: View {
                         
                     
                     Spacer()
-                        .frame(height: 24)
+                        .frame(height: 20)
                     
                    
                     
@@ -95,7 +100,7 @@ struct OnBoardingScreen: View {
                     })
                     
                     Spacer()
-                        .frame(height: 36)
+                        .frame(height: 24)
                     
                     HStack {
                         Group {
@@ -141,7 +146,7 @@ struct OnBoardingScreen: View {
                     .frame(width: UIScreen.screenWidth - 32)
                     
                     Spacer()
-                        .frame(height: 36)
+                        .frame(height: 10)
                     
                 }
                 .padding(.horizontal, 20)

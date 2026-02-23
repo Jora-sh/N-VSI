@@ -15,8 +15,6 @@ struct MainScreen: View {
     
     @EnvironmentObject var mainViewModel : MainViewModel
     
-    @State var mainBottomBar : BottomBar = .Home
-    
     var header: some View {
         HStack {
             
@@ -54,7 +52,7 @@ struct MainScreen: View {
             
             
         }.overlay {
-            switch mainBottomBar {
+            switch mainViewModel.mainBottomBar {
             case .Home:
                 HStack {
                     Text("Video")
@@ -102,13 +100,13 @@ struct MainScreen: View {
                         
                     }
                 
-                switch mainBottomBar {
+                switch mainViewModel.mainBottomBar {
                 case .Home:
                     HomeScreen()
                 case .Upload:
                     CustomScreen()
                 case .History:
-                    HistoryScreen(homeBottomBarSelected: $mainBottomBar)
+                    HistoryScreen(homeBottomBarSelected: $mainViewModel.mainBottomBar)
                 }
                 
                 appBottomBar
@@ -124,43 +122,43 @@ struct MainScreen: View {
             Spacer()
             Button(action: {
                 withAnimation {
-                    mainBottomBar = .Home
+                    mainViewModel.mainBottomBar = .Home
                 }
             }, label: {
                 VStack {
-                    Image(mainBottomBar == .Home ? .iconTemplateSelected : .iconTemplateUnselected)
+                    Image(mainViewModel.mainBottomBar == .Home ? .iconTemplateSelected : .iconTemplateUnselected)
                     
                     Text("Templates")
                         .font(.system(size:12))
-                        .gradientForeground(colors: mainBottomBar == .Home ? gradientColor : [.white])
+                        .gradientForeground(colors: mainViewModel.mainBottomBar == .Home ? gradientColor : [.white])
                 }.frame(width: 120, height: 64)
             })
             Spacer()
             Button(action: {
                 withAnimation {
-                    mainBottomBar = .Upload
+                    mainViewModel.mainBottomBar = .Upload
                 }
             }, label: {
                 VStack {
-                    Image(mainBottomBar == .Upload ? .iconCustomSelected : .iconCustomUnselected)
+                    Image(mainViewModel.mainBottomBar == .Upload ? .iconCustomSelected : .iconCustomUnselected)
                     
                     Text("Upload Video")
                         .font(.system(size:12))
-                        .gradientForeground(colors: mainBottomBar == .Upload ? gradientColor : [.white])
+                        .gradientForeground(colors: mainViewModel.mainBottomBar == .Upload ? gradientColor : [.white])
                 }.frame(width: 120, height: 64)
             })
             Spacer()
             Button(action: {
                 withAnimation {
-                    mainBottomBar = .History
+                    mainViewModel.mainBottomBar = .History
                 }
             }, label: {
                 VStack {
-                    Image(mainBottomBar == .History ? .iconHistorySelected : .iconHistoryUnselected)
+                    Image(mainViewModel.mainBottomBar == .History ? .iconHistorySelected : .iconHistoryUnselected)
                     
                     Text("History")
                         .font(.system(size:12))
-                        .gradientForeground(colors: mainBottomBar == .History ? gradientColor : [.white])
+                        .gradientForeground(colors: mainViewModel.mainBottomBar == .History ? gradientColor : [.white])
                 }.frame(width: 120, height: 64)
             })
             Spacer()

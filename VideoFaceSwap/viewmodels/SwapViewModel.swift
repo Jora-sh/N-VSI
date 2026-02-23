@@ -167,7 +167,7 @@ class SwapViewModel : ObservableObject {
         }
     }
     
-    func checkForVideo(jobId:String,  onResponse : @escaping (Bool,String?) -> Void) {
+    func checkForVideo(jobId:String,  onResponse : @escaping (Bool,String?,String?) -> Void) {
         
         let headers : HTTPHeaders = [
             "Authorization" : "Bearer \(UserSettings.token)",
@@ -203,23 +203,23 @@ class SwapViewModel : ObservableObject {
                                 }
                             } else {
                                 self.resultModel = data
-                                onResponse(true, data?.vidUrl)
+                                onResponse(true, data?.vidUrl, "")
                                 
                             }
                         } else {
-                            onResponse(false, nil)
+                            onResponse(false, nil, data?.message)
                         }
                         
                     case .failure(let error):
                         print(error?.localizedDescription ?? "")
-                        onResponse(false, nil)
+                        onResponse(false, nil,"")
                         break
                     }
                     
                     
                 case .failure(let err):
                     print(err.localizedDescription)
-                    onResponse(false, nil)
+                    onResponse(false, nil,"")
                 }
             }
     }

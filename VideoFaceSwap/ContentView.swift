@@ -33,6 +33,8 @@ struct ContentView: View {
                 MainScreen()
             case .Settings:
                 SettingsScreen()
+            case .purchaseOffer:
+                OfferPurchaseScreen()
             case .Purchase:
                 PurchaseScreen()
             case .Templates:
@@ -54,6 +56,7 @@ enum ScreenEnum {
     case Main
     case Settings
     case Purchase
+    case purchaseOffer
     case Templates
     case Loading
     case Result

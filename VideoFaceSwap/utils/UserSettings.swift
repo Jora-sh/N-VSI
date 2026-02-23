@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 
 class UserSettings : NSObject {
@@ -96,24 +97,35 @@ class UserSettings : NSObject {
         }
     }
     
+    // Updated to return UUID type with IDFV + Keychain backup
     static func getAppAccountToken() -> UUID {
-            if let savedToken = KeychainHelper.standard.read(service: keychainKey, account: "user"),
-               let uuid = UUID(uuidString: savedToken) {
-                return uuid
-            } else {
-                let newToken = UUID()
-                KeychainHelper.standard.save(newToken.uuidString, service: keychainKey, account: "user")
-                return newToken
-            }
+        // 1. Try to get from Keychain first
+        if let savedToken = KeychainHelper.standard.read(service: keychainKey, account: "deviceID"),
+           let uuid = UUID(uuidString: savedToken) {
+            return uuid
         }
+        
+        // 2. Use IDFV if available
+        if let idfv = UIDevice.current.identifierForVendor {
+            KeychainHelper.standard.save(idfv.uuidString, service: keychainKey, account: "deviceID")
+            return idfv
+        }
+        
+        // 3. Generate UUID as last fallback (rare case)
+        let newToken = UUID()
+        KeychainHelper.standard.save(newToken.uuidString, service: keychainKey, account: "deviceID")
+        return newToken
+    }
 }
 
 class KeychainHelper {
     static let standard = KeychainHelper()
-
+    
+    private init() {}
+    
     func save(_ value: String, service: String, account: String) {
         let data = Data(value.utf8)
-
+        
         // Delete old item if it exists
         let query = [
             kSecClass: kSecClassGenericPassword,
@@ -121,18 +133,23 @@ class KeychainHelper {
             kSecAttrAccount: account
         ] as CFDictionary
         SecItemDelete(query)
-
-        // Add new item
+        
+        // Add new item with proper attributes
         let attributes = [
             kSecClass: kSecClassGenericPassword,
             kSecAttrService: service,
             kSecAttrAccount: account,
-            kSecValueData: data
+            kSecValueData: data,
+            kSecAttrAccessible: kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly,
+            kSecAttrSynchronizable: false
         ] as CFDictionary
-
-        SecItemAdd(attributes, nil)
+        
+        let status = SecItemAdd(attributes, nil)
+        if status != errSecSuccess {
+            print("⚠️ Keychain save error: \(status)")
+        }
     }
-
+    
     func read(service: String, account: String) -> String? {
         let query = [
             kSecClass: kSecClassGenericPassword,
@@ -141,11 +158,26 @@ class KeychainHelper {
             kSecReturnData: true,
             kSecMatchLimit: kSecMatchLimitOne
         ] as CFDictionary
-
+        
         var result: AnyObject?
-        SecItemCopyMatching(query, &result)
-
-        guard let data = result as? Data else { return nil }
+        let status = SecItemCopyMatching(query, &result)
+        
+        guard status == errSecSuccess,
+              let data = result as? Data else {
+            return nil
+        }
+        
         return String(data: data, encoding: .utf8)
     }
+    
+    func delete(service: String, account: String) {
+        let query = [
+            kSecClass: kSecClassGenericPassword,
+            kSecAttrService: service,
+            kSecAttrAccount: account
+        ] as CFDictionary
+        SecItemDelete(query)
+    }
 }
+
+

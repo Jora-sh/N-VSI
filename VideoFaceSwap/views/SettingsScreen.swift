@@ -14,6 +14,7 @@ struct SettingsScreen: View {
     
     @State var showContactUsBottomSheet = false
     @State var isAutoSaveOn = true
+    @State private var showCopiedAlert = false
     
     @Environment(\.requestReview) var requestReview
     
@@ -58,24 +59,16 @@ struct SettingsScreen: View {
             Spacer()
                 .frame(height: 16)
             
-            if let bannerImage = mainViewModel.homeConfig?.homeConfig?.icons?.bannerImage {
-                Button {
-                    withAnimation {
-                        mainViewModel.SCREEN_VIEW = .Purchase
-                    }
-                } label: {
-                    AsyncImage(url: URL(string: bannerImage)!) { img in
-                        img.resizable()
-                            .frame(width: UIScreen.screenWidth - 32, height: 120)
-                            .scaledToFit()
-                            .clipShape(RoundedRectangle(cornerRadius: 8))
-                    } placeholder: {
-                        Image(.background)
-                            .frame(width: UIScreen.screenWidth - 32, height: 120)
-                            .scaledToFit()
-                            .clipShape(RoundedRectangle(cornerRadius: 8))
-                    }
+            Button {
+                withAnimation {
+                    mainViewModel.SCREEN_VIEW = .Purchase
                 }
+            } label: {
+                Image(.imgBanner)
+                    .resizable()
+                    .frame(width: UIScreen.screenWidth - 32, height: 120)
+                    .scaledToFill()
+                    .clipShape(RoundedRectangle(cornerRadius: 8))
             }
 
             
@@ -209,28 +202,60 @@ struct SettingsScreen: View {
                     })
                     
                     Button(action: {
-                        requestReview()
+                        if let userId = mainViewModel.userModel?.id {
+                            UIPasteboard.general.string = userId
+                            showCopiedAlert = true
+                        }
                     }, label: {
                         HStack {
-                            
-                            Image(.iconRate)
+
+                            Image(.iconUserId)
                                 .resizable()
                                 .frame(width: 32, height: 32)
-                            
-                            Text("  Rate & Review")
+
+                            Text("  User Id")
                                 .font(.system(size: 16, weight: .semibold))
+                                .foregroundStyle(Color(hex: textColor))
+
+                            Spacer()
+
+                            Text(mainViewModel.userModel?.id ?? "")
+                                .font(.system(size: 13))
                                 .foregroundStyle(Color(hex: textColor))
                             
                             Spacer()
+                                .frame(width: 8)
                             
-                            Image(.iconBack)
+                            Image(.iconCopy)
                                 .resizable()
-                                .rotationEffect(.degrees(180))
                                 .frame(width: 32, height: 32)
-                            
-                        }.frame(height: 48)
+                        }
+                        .frame(height: 48)
                     })
                     
+//                    Button(action: {
+//                        requestReview()
+//                    }, label: {
+//                        HStack {
+//                            
+//                            Image(.iconRate)
+//                                .resizable()
+//                                .frame(width: 32, height: 32)
+//                            
+//                            Text("  Rate & Review")
+//                                .font(.system(size: 16, weight: .semibold))
+//                                .foregroundStyle(Color(hex: textColor))
+//                            
+//                            Spacer()
+//                            
+//                            Image(.iconBack)
+//                                .resizable()
+//                                .rotationEffect(.degrees(180))
+//                                .frame(width: 32, height: 32)
+//                            
+//                        }.frame(height: 48)
+//                    })
+//                    
                 }.padding(.horizontal, 16)
                 
                 Spacer()
@@ -294,7 +319,11 @@ struct SettingsScreen: View {
                     
                 }.padding(.horizontal, 16)
             }
-        }.sheet(isPresented: $showContactUsBottomSheet, content: {
+        }
+        .alert("Copied!", isPresented: $showCopiedAlert) {
+            Button("OK", role: .cancel) {}
+        }
+        .sheet(isPresented: $showContactUsBottomSheet, content: {
             ContactUsView(showContactUsBottomSheet: $showContactUsBottomSheet)
         })
     }
