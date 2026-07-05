@@ -17,16 +17,18 @@ struct HomeScreen: View {
     var body: some View {
         VStack {
             
-            Button {
-                withAnimation {
-                    mainViewModel.SCREEN_VIEW = .Purchase
+            if (mainViewModel.userModel?.credits ?? 0) <= 0 {
+                Button {
+                    withAnimation {
+                        mainViewModel.SCREEN_VIEW = .Purchase
+                    }
+                } label: {
+                    Image(.imgBanner)
+                        .resizable()
+                        .frame(width: UIScreen.screenWidth - 32, height: 120)
+                        .scaledToFit()
+                        .clipShape(RoundedRectangle(cornerRadius: 8))
                 }
-            } label: {
-                Image(.imgBanner)
-                    .resizable()
-                    .frame(width: UIScreen.screenWidth - 32, height: 120)
-                    .scaledToFit()
-                    .clipShape(RoundedRectangle(cornerRadius: 8))
             }
             
             VStack {
