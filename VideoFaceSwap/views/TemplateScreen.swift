@@ -60,7 +60,7 @@ struct TemplateScreen: View {
                         .resizable()
                         .frame(width: 19, height: 19)
                         
-                    Text(String(mainViewModel.userModel?.credits ?? 0))
+                    Text(String(mainViewModel.userModel?.totalCredits ?? 0))
                         .font(.system(size: 15, weight: .bold))
                         .foregroundColor(.white)
                 }
@@ -160,11 +160,11 @@ struct TemplateScreen: View {
                     showImagePicker = true
                 } label: {
                     HStack {
-                        if selectedTemplate?.isFree == false && (mainViewModel.userModel?.credits ?? 0) <= 0 {
+                        if selectedTemplate?.isFree == false && (mainViewModel.userModel?.totalCredits ?? 0) <= 0 {
                             Image(.iconPremium)
                             Spacer().frame(width: 6)
                         }
-                        Text(selectedTemplate?.isFree == true || (mainViewModel.userModel?.credits ?? 0) > 0
+                        Text(selectedTemplate?.isFree == true || (mainViewModel.userModel?.totalCredits ?? 0) > 0
                              ? "Choose Face" : "Premium Swap")
                             .font(.system(size: 16, weight: .bold))
                             .foregroundStyle(.white)
@@ -174,6 +174,20 @@ struct TemplateScreen: View {
                         LinearGradient(colors: gradientColor, startPoint: .leading, endPoint: .trailing)
                     )
                     .clipShape(RoundedRectangle(cornerRadius: 8))
+                    .overlay(alignment: .trailing) {
+                        if mainViewModel.userModel?.totalCredits ?? 0 > 0 && selectedTemplate?.isFree == false {
+                            HStack {
+                                Image(.iconCoins)
+                                    .resizable()
+                                    .frame(width: 19, height: 19)
+                                    
+                                Text(String(selectedTemplate?.durationSec ?? 5))
+                                    .font(.system(size: 15, weight: .bold))
+                                    .foregroundColor(.white)
+                                
+                            }.padding(.trailing, 16)
+                        }
+                    }
                 }
                 .sheet(isPresented: $showImagePicker) {
                     ClassicImagePicker(selectedImage: $uiImage)
@@ -195,13 +209,18 @@ struct TemplateScreen: View {
         
         NoCreditsLeftDialog(
             shown: $showNoCreditsLeftDialog,
-            creditsOwned: .constant(mainViewModel.userModel?.credits ?? 0),
-            creditsNeeded: $creditsNeeded
-        ) {
-            withAnimation {
-                mainViewModel.SCREEN_VIEW = .Purchase
-            }
-        }
+            creditsOwned: .constant(mainViewModel.userModel?.totalCredits ?? 0),
+            creditsNeeded: $creditsNeeded,
+            onGoToCreditHistoyClicked: {
+                mainViewModel.CreditDetailsBackstack = .Templates
+withAnimation {
+mainViewModel.SCREEN_VIEW = .PurchaseHistory
+}
+}) {
+withAnimation {
+mainViewModel.SCREEN_VIEW = .Purchase
+}
+}
         .sheet(isPresented: $showContactUsBottomSheet) {
             ContactUsView(showContactUsBottomSheet: $showContactUsBottomSheet)
         }
@@ -211,10 +230,10 @@ struct TemplateScreen: View {
     func handleSelectedImage(_ image: UIImage) {
         swapViewModel.imageToSwapWithTemplate = image
         swapViewModel.templateToSwapWithTemplate = mainViewModel.templateItems.first(where: { $0.id == selected })
-        creditsNeeded = Int(swapViewModel.templateToSwapWithTemplate?.duration ?? 10.0)
+        creditsNeeded = Int(swapViewModel.templateToSwapWithTemplate?.durationSec ?? 10)
         
         if hasFace(in: image) {
-            if ((mainViewModel.userModel?.credits ?? 0) - creditsNeeded <= 0) && selectedTemplate?.isFree == false {
+            if ((mainViewModel.userModel?.totalCredits ?? 0) - creditsNeeded <= 0) && selectedTemplate?.isFree == false {
                 withAnimation {
                     showNoCreditsLeftDialog = true
                 }

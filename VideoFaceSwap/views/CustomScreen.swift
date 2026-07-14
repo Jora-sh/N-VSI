@@ -9,6 +9,7 @@ import SwiftUI
 import PhotosUI
 import AVKit
 import Vision
+import OneSignalFramework
 
 struct CustomScreen: View {
     
@@ -31,13 +32,17 @@ struct CustomScreen: View {
                 
                 Spacer()
                     .onAppear {
+                        OneSignal.Notifications.requestPermission({ accepted in
+                          print("User accepted notifications: \(accepted)")
+                        }, fallbackToSettings: true)
+                        
                         if let videoURL = swapViewModel.videoUrl {
                             player = AVPlayer(url: videoURL)
                             player?.volume = 0.0
                             player?.play()
                         }
                         mainViewModel.getMe { _ in }
-                        if mainViewModel.userModel?.credits ?? 0 > 0 {
+                        if mainViewModel.userModel?.totalCredits ?? 0 > 0 {
                             showNoCreditDialog = false
                         }
                     }
@@ -208,23 +213,29 @@ struct CustomScreen: View {
                 // MARK: START SWAPPING BUTTON
                 Button {
                     if swapViewModel.imageSelected != nil && swapViewModel.videoSelection != nil {
-                        creditsNeeded = Int(self.player?.currentItem?.asset.duration.seconds ?? 10.0)
-                        
-                        if creditsNeeded >= (mainViewModel.userModel?.credits ?? 0) {
-                            swapViewModel.goLoadingWithoutCredits = true
+                        Task {
+                            let duration = try? await self.player?.currentItem?.asset.load(.duration)
+                            let creditsNeeded = Int(duration?.seconds ?? 10)
+                            // use creditsNeeded here
                             swapViewModel.creditsNeededForCustomSwap = creditsNeeded
-                            withAnimation {
-                                mainViewModel.SCREEN_VIEW = .Loading
-                            }
-                        } else {
-                            if UserSettings.videoIsWorking {
-                                swapViewModel.goLoadingWithoutCredits = false
+                            
+                        
+                            if creditsNeeded >= (mainViewModel.userModel?.totalCredits ?? 0) {
+                                swapViewModel.goLoadingWithoutCredits = true
+                                swapViewModel.creditsNeededForCustomSwap = creditsNeeded
                                 withAnimation {
                                     mainViewModel.SCREEN_VIEW = .Loading
                                 }
                             } else {
-                                withAnimation {
-                                    showErrorDialog = true
+                                if UserSettings.videoIsWorking {
+                                    swapViewModel.goLoadingWithoutCredits = false
+                                    withAnimation {
+                                        mainViewModel.SCREEN_VIEW = .Loading
+                                    }
+                                } else {
+                                    withAnimation {
+                                        showErrorDialog = true
+                                    }
                                 }
                             }
                         }
@@ -257,8 +268,14 @@ struct CustomScreen: View {
             }
             
             NoCreditsLeftDialog(shown: $showNoCreditsLeftDialog,
-                                creditsOwned: .constant(mainViewModel.userModel?.credits ?? 0),
-                                creditsNeeded: $creditsNeeded) {
+                                creditsOwned: .constant(mainViewModel.userModel?.totalCredits ?? 0),
+                                creditsNeeded: $creditsNeeded,
+                                onGoToCreditHistoyClicked: {
+                mainViewModel.CreditDetailsBackstack = .Main
+                withAnimation {
+                    mainViewModel.SCREEN_VIEW = .PurchaseHistory
+                }
+            }) {
                 withAnimation {
                     mainViewModel.SCREEN_VIEW = .Purchase
                 }

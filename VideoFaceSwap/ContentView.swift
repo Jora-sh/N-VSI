@@ -45,6 +45,8 @@ struct ContentView: View {
                 ResultScreen()
             case .Splash:
                 SplashScreen()
+            case .PurchaseHistory:
+                CreditHistory()
             }
             
         }
@@ -55,6 +57,7 @@ enum ScreenEnum {
     case OnBoarding
     case Main
     case Settings
+    case PurchaseHistory
     case Purchase
     case purchaseOffer
     case Templates

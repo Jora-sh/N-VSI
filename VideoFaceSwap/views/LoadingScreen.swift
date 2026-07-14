@@ -64,7 +64,7 @@ struct LoadingScreen: View {
                 
                 header
                     .onAppear{
-                        if swapViewModel.goLoadingWithoutCredits {
+                        if false {
                             DispatchQueue.main.asyncAfter(deadline: .now() + 6) {
                                 withAnimation {
                                     self.showNoCreditsLeftDialog = true
@@ -115,7 +115,15 @@ struct LoadingScreen: View {
                                             }
                                         }
                                     } else {
-                                        self.showErrorDialog = true
+                                        if msg == "not enough credits" {
+                                            self.showNoCreditsLeftDialog = true
+                                        } else if msg == "not enough free credits" {
+                                            self.showNoFreeCreditsLeftDialog = true
+                                        } else if msg?.contains("faces") == true {
+                                            self.showNoFaceDialog = true
+                                        } else {
+                                            self.showErrorDialog = true
+                                        }
                                     }
                                     swapViewModel.templateToSwapWithTemplate = nil
                                 }
@@ -177,16 +185,16 @@ struct LoadingScreen: View {
             NoFreeCreditsLeftDialog(shown: $showNoFreeCreditsLeftDialog)
             
             NoCreditsLeftDialog(shown: $showNoCreditsLeftDialog,
-                                creditsOwned: .constant(mainViewModel.userModel?.credits ?? 0),
-                                creditsNeeded: $swapViewModel.creditsNeededForCustomSwap) {
+                                creditsOwned: .constant(mainViewModel.userModel?.totalCredits ?? 0),
+                                creditsNeeded: $swapViewModel.creditsNeededForCustomSwap,
+                                onGoToCreditHistoyClicked: {
+                mainViewModel.CreditDetailsBackstack = .Main
+                withAnimation {
+                    mainViewModel.SCREEN_VIEW = .PurchaseHistory
+                }
+            }) {
                 withAnimation {
                     mainViewModel.SCREEN_VIEW = .Purchase
-                }
-            }.onChange(of: showNoCreditsLeftDialog) { new in
-                if !showNoCreditsLeftDialog {
-                    withAnimation {
-                        mainViewModel.SCREEN_VIEW = .Purchase
-                    }
                 }
             }
             

@@ -8,6 +8,7 @@
 import SwiftUI
 import Photos
 import _AVKit_SwiftUI
+import SDWebImageSwiftUI
 
 struct HistoryScreen: View {
     
@@ -70,6 +71,23 @@ struct HistoryScreen: View {
                             }, message: {
                                 Text("Video Successfully Saved! enjoy..")
                             })
+                            .alert("Delete Video?", isPresented: $showDialog, presenting: selectedItem) { item in
+                                Button("Cancel", role: .cancel) {}
+                                Button("Delete", role: .destructive) {
+                                    if let jobId = item.jobId, !jobId.isEmpty {
+                                        if let index = mainViewModel.historyList.firstIndex(where: { $0.jobId == jobId }) {
+                                            withAnimation {
+                                                _ = mainViewModel.historyList.remove(at: index)
+                                            }
+                                        }
+                                        mainViewModel.deleteSwapHistoryItem(jobId: jobId) { _ in
+//                                            mainViewModel.getMyCreations { _ in }
+                                        }
+                                    }
+                                }
+                            } message: { _ in
+                                Text("This will permanently delete this video. This action cannot be undone.")
+                            }
                     }
                     
                 } else {
@@ -113,6 +131,7 @@ struct HistoryItemView: View {
     @State private var player: AVPlayer = AVPlayer()
     @State private var isVideoReady: Bool = false
     @State private var playerObserver: NSKeyValueObservation? = nil
+    @State private var isSharing: Bool = false
     
     @Binding var saveState: SaveState
     @Binding var selectedItem: CreationModel?
@@ -120,48 +139,110 @@ struct HistoryItemView: View {
     
     var body: some View {
         ZStack {
-            if !isVideoReady {
+
+            WebImage(url: URL(string: item.thumbnailUrl ?? "")) { img in
+                img
+                    .resizable()
+                    .scaledToFill()
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
+            } placeholder: {
                 Image(.imgThumbnailSmall)
                     .resizable()
-                    .frame(width: (UIScreen.screenWidth - 64)/2, height: ((UIScreen.screenWidth - 54)/2) + 20)
-                    .aspectRatio(contentMode: .fill)
+                    .scaledToFill()
                     .clipShape(RoundedRectangle(cornerRadius: 12))
-                    
             }
-
-            VideoPlayer(player: player)
-                .disabled(true)
-                .frame(width: (UIScreen.screenWidth - 64)/2, height: ((UIScreen.screenWidth - 54)/2) + 20)
-                .clipShape(RoundedRectangle(cornerRadius: 12))
-                .opacity(isVideoReady ? 1 : 0)
-                .onAppear {
-                    if let url = URL(string: item.vidUrl ?? "") {
-                        let playerItem = AVPlayerItem(url: url)
-                        player.replaceCurrentItem(with: playerItem)
-                        player.volume = 0.0
-                        
-                        // Retain observer to track when video is ready
-                        playerObserver = playerItem.observe(\.status, options: [.new, .initial]) { item, _ in
-                            if item.status == .readyToPlay {
-                                DispatchQueue.main.async {
-                                    isVideoReady = true
-                                    player.play()
+            .clipShape(RoundedRectangle(cornerRadius: 12))
+            .frame(width: (UIScreen.screenWidth - 64)/2, height: ((UIScreen.screenWidth - 64)/2) * 16/9)
+            .scaledToFill()
+            .clipShape(RoundedRectangle(cornerRadius: 12))
+                .overlay(alignment: .bottom) {
+                    LinearGradient(
+                        colors: [.black,.black.opacity(0.0)],
+                        startPoint: .bottom,
+                        endPoint: .center
+                    )
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                        .overlay(alignment: .bottom) {
+                            HStack {
+                                Button {
+                                    selectedItem = item
+                                    showDialog = true
+                                } label: {
+                                    Image(.iconTrash)
+                                        .resizable()
+                                        .frame(width: 24, height: 24)
+                                        .padding(3)
                                 }
-                            }
+
+                                Spacer()
+                                
+                                Button {
+                                    shareVideo()
+                                } label: {
+                                    ZStack {
+                                        Image(.iconShareHistory)
+                                            .resizable()
+                                            .frame(width: 24, height: 24)
+                                            .padding(3)
+                                            .opacity(isSharing ? 0 : 1)
+                                        if isSharing {
+                                            ProgressView()
+                                                .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                                        }
+                                    }
+                                }
+                                .disabled(isSharing)
+                                
+                            }.padding(.horizontal, 12)
+                                .padding(.vertical)
                         }
-                    }
-                }
-                .onDisappear {
-                    player.pause()
-                    player.volume = 0.0
-                    playerObserver = nil
-                }
-                .onReceive(NotificationCenter.default.publisher(for: .AVPlayerItemDidPlayToEndTime, object: player.currentItem)) { _ in
-                    player.seek(to: .zero)
-                    player.play()
+                    
                 }
         }
-        .frame(width: (UIScreen.screenWidth - 64)/2, height: ((UIScreen.screenWidth - 54)/2) + 20)
+        .frame(width: (UIScreen.screenWidth - 64)/2, height: ((UIScreen.screenWidth - 64)/2) * 16/9)
+    }
+
+    func shareVideo() {
+        guard let vidUrlString = item.vidUrl,
+              let url = URL(string: vidUrlString) else {
+            return
+        }
+
+        isSharing = true
+
+        DispatchQueue.global(qos: .background).async {
+            if let urlData = NSData(contentsOf: url) {
+                let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
+                let fileURL = URL(fileURLWithPath: "\(documentsPath)/VideoFaceSwap.mp4")
+                urlData.write(to: fileURL, atomically: true)
+                DispatchQueue.main.async {
+                    isSharing = false
+                    share(items: [fileURL])
+                }
+            } else {
+                DispatchQueue.main.async {
+                    isSharing = false
+                }
+            }
+        }
+    }
+
+    @discardableResult
+    func share(
+        items: [Any],
+        excludedActivityTypes: [UIActivity.ActivityType]? = nil
+    ) -> Bool {
+        guard let source = UIApplication.shared.windows.last?.rootViewController else {
+            return false
+        }
+        let vc = UIActivityViewController(
+            activityItems: items,
+            applicationActivities: nil
+        )
+        vc.excludedActivityTypes = excludedActivityTypes
+        vc.popoverPresentationController?.sourceView = source.view
+        source.present(vc, animated: true)
+        return true
     }
 }
 

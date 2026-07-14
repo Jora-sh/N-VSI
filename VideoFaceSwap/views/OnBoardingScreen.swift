@@ -12,6 +12,10 @@ struct OnBoardingScreen: View {
     
     @EnvironmentObject var mainViewModel : MainViewModel
     
+    @Environment(\.requestReview) var requestReview
+    
+    @State var step = 1
+    
     var body: some View {
         ZStack {
             
@@ -19,13 +23,24 @@ struct OnBoardingScreen: View {
                 .onAppear {
                     if UserSettings.isWatchOnBoarding {
                         mainViewModel.SCREEN_VIEW = .Main
+                        if mainViewModel.userModel?.hasActiveSubscription == false &&
+                            mainViewModel.userModel?.totalCredits ?? 0 <= 0 {
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+                                if mainViewModel.SCREEN_VIEW == .Main {
+                                    withAnimation {
+                                        mainViewModel.SCREEN_VIEW = .Purchase
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             
             VStack {
-                Image(.imgOnBoarding)
+                Image(step == 1 ? .imgOnBoarding : .imgOnBoarding2)
                     .resizable()
-                    .frame(width: UIScreen.screenWidth, height: UIScreen.screenWidth*1.5)
+                    .frame(width: UIScreen.screenWidth,
+                           height: step == 1 ? UIScreen.screenWidth*1.5 : UIScreen.screenHeight-200)
                     .ignoresSafeArea()
                 Spacer()
             }
@@ -37,58 +52,168 @@ struct OnBoardingScreen: View {
                 VStack {
                     
                     HStack(spacing: 0) {
-                        Group {
-                            
-                            Text("Ready to ")
-                                .foregroundStyle(.white)
-                            
-                            Text("Swap ")
-                                .foregroundStyle(Color(hex: "#3ECCF8"))
-                            
-                            Text("Your ")
-                                .foregroundStyle(.white)
-                            
-                            Text("Videos")
-                                .foregroundStyle(Color(hex: "#3ECCF8"))
-                            
-                            Text("?")
-                                .foregroundStyle(.white)
-                            
+                        if step == 1 {
+                            Group {
+                                
+                                Text("Ready to ")
+                                    .foregroundStyle(.white)
+                                
+                                Text("Swap ")
+                                    .foregroundStyle(Color(hex: "#3ECCF8"))
+                                
+                                Text("Your ")
+                                    .foregroundStyle(.white)
+                                
+                                Text("Videos")
+                                    .foregroundStyle(Color(hex: "#3ECCF8"))
+                                
+                                Text("?")
+                                    .foregroundStyle(.white)
+                                
+                            }
+                            .font(.system(size: 24, weight: .heavy))
+                        } else {
+                            VStack {
+                                HStack {
+                                    Group {
+                                        
+                                        Text("Help Us")
+                                            .foregroundStyle(.white)
+                                        
+                                        Text("Grow ")
+                                            .foregroundStyle(Color(hex: "#3ECCF8"))
+                                        
+                                    }
+                                    .font(.system(size: 24, weight: .heavy))
+                                }
+                            }
                         }
-                        .font(.system(size: 20, weight: .heavy))
-                        
-                        Spacer()
                         
                     }.frame(width: UIScreen.screenWidth - 32)
                     
                     Spacer()
                         .frame(height: 8)
                     
-                    HStack {
-                        Text("Upload a video and let the magic begin!")
-                            .font(.system(size: 14,weight: .semibold))
-                            .foregroundStyle(.white)
-                        Spacer()
-                    }
-                    .frame(width: UIScreen.screenWidth - 32)
+                    HStack(spacing: 0) {
                         
+                        if step == 1 {
+                            Group {
+                                
+                                Text("Upload a video and let the ")
+                                    .foregroundStyle(.white)
+                                
+                                Text("magic ")
+                                    .foregroundStyle(Color(hex: "#3ECCF8"))
+                                
+                                Text("begin! ")
+                                    .foregroundStyle(.white)
+                                
+                            }
+                            .font(.system(size: 14,weight: .semibold))
+                        } else {
+                            Group {
+                                
+                                Text("Your ")
+                                    .foregroundStyle(.white)
+                                
+                                Text("support ")
+                                    .foregroundStyle(Color(hex: "#3ECCF8"))
+                                
+                                Text("means ")
+                                    .foregroundStyle(.white)
+                                
+                                Text("everything ")
+                                    .foregroundStyle(Color(hex: "#3ECCF8"))
+                                
+                                Text("to us.")
+                                    .foregroundStyle(.white)
+                                
+                            }.font(.system(size: 14,weight: .semibold))
+                        }
+                    }
+                    
                     
                     Spacer()
-                        .frame(height: 20)
+                        .frame(height: step == 1 ? 20 : 36)
                     
+                    if step == 1 {
+                        HStack {
+                            Group {
+                                
+                                Text("By continuing, You agree to our")
+                                
+                                Link(destination: URL(string: termsOfServiceLink)!, label: {
+                                    Text("Terms & Conditions ")
+                                        .underline()
+                                })
+                                
+                            }
+                            .foregroundStyle(Color(hex: textColor))
+                            .font(.system(size: 13, weight: .regular))
+                            
+                        }
+                        .frame(width: UIScreen.screenWidth - 32)
+                        
+                        Spacer()
+                            .frame(height: 8)
+                        
+                        HStack {
+                            Group {
+                                
+                                Text("and")
+                                
+                                Link(destination: URL(string: privacyPolicyLink)!, label: {
+                                    Text("Privacy Policy.")
+                                        .underline()
+                                })
+                                
+                            }
+                            .foregroundStyle(Color(hex: textColor))
+                            .font(.system(size: 13, weight: .regular))
+                            
+                            Text(" (You must be online to use App!)")
+                                .font(.system(size: 12))
+                                .foregroundStyle(Color.init(hex: "#f1f1f1").opacity(0.9))
+                            
+                        }
+                        .frame(width: UIScreen.screenWidth - 32)
+                        
+                        Spacer()
+                            .frame(height: 20)
+                    }
                    
                     
                     Button(action: {
-                        UserSettings.isWatchOnBoarding = true
-                        if UserSettings.token != "" {
+                        if step == 1 {
                             withAnimation {
-                                mainViewModel.SCREEN_VIEW = .Main
+                                step = 2
+                            }
+                        } else {
+                            requestReview()
+                            
+                            DispatchQueue.main.asyncAfter(deadline: .now()+3) {
+                                UserSettings.isWatchOnBoarding = true
+                                if UserSettings.token != "" {
+                                    withAnimation {
+                                        mainViewModel.SCREEN_VIEW = .Main
+                                    }
+                                }
+                                mainViewModel.isLoadingSignUp = true
+                                if mainViewModel.userModel?.hasActiveSubscription == false &&
+                                    mainViewModel.userModel?.totalCredits ?? 0 <= 0 {
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+                                        if mainViewModel.SCREEN_VIEW == .Main {
+                                            withAnimation {
+                                                mainViewModel.SCREEN_VIEW = .Purchase
+                                            }
+                                        }
+                                    }
+                                }
                             }
                         }
-                        mainViewModel.isLoadingSignUp = true
                     }, label: {
                         HStack {
-                            Text("Get Started")
+                            Text(step == 1 ? "Continue" : "Get Started")
                                 .font(.system(size: 16, weight: .bold))
                                 .foregroundStyle(.white)
                         }
@@ -101,53 +226,6 @@ struct OnBoardingScreen: View {
                     
                     Spacer()
                         .frame(height: 24)
-                    
-                    HStack {
-                        Group {
-                            
-                            Text("By continuing, You agree to our")
-                            
-                            Link(destination: URL(string: termsOfServiceLink)!, label: {
-                                Text("Terms & Conditions ")
-                                    .underline()
-                            })
-                            
-                        }
-                        .foregroundStyle(Color(hex: textColor))
-                        .font(.system(size: 13, weight: .regular))
-                        
-                        Spacer()
-                    }
-                    .frame(width: UIScreen.screenWidth - 32)
-                    
-                    Spacer()
-                        .frame(height: 8)
-                    
-                    HStack {
-                        Group {
-                            
-                            Text("and")
-                            
-                            Link(destination: URL(string: privacyPolicyLink)!, label: {
-                                Text("Privacy Policy.")
-                                    .underline()
-                            })
-                            
-                        }
-                        .foregroundStyle(Color(hex: textColor))
-                        .font(.system(size: 13, weight: .regular))
-                        
-                        Text(" (You must be online to use App!)")
-                            .font(.system(size: 12))
-                            .foregroundStyle(Color.init(hex: "#f1f1f1").opacity(0.9))
-                        
-                        Spacer()
-                    }
-                    .frame(width: UIScreen.screenWidth - 32)
-                    
-                    Spacer()
-                        .frame(height: 10)
-                    
                 }
                 .padding(.horizontal, 20)
                 
@@ -156,5 +234,6 @@ struct OnBoardingScreen: View {
     }
 }
 
-let privacyPolicyLink = "https://shaya-creative-app.vercel.app/faceSwapIosPrivacy/privacy"
-let termsOfServiceLink = "https://shaya-creative-app.vercel.app/faceSwapIosPrivacy/terms"
+
+let privacyPolicyLink = "https://marked-cymbal-c29.notion.site/FaceSwap-AI-Video-Swap-Faces-Privacy-Policy-39b8aaa542c38004b545d530ea34ba25"
+let termsOfServiceLink = "https://marked-cymbal-c29.notion.site/FaceSwap-AI-Video-Swap-Faces-Terms-and-Conditions-39b8aaa542c38026a05df6c37eba3e04"

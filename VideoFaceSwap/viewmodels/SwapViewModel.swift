@@ -74,6 +74,7 @@ class SwapViewModel : ObservableObject {
                             }
                         case .failure(let error):
                             print(error?.localizedDescription ?? "")
+                            onResponse(false, "some error occurred")
                             break
                         }
                         
@@ -157,8 +158,16 @@ class SwapViewModel : ObservableObject {
                         
                         
                     case .failure(let err):
-                        print(err.localizedDescription)
-                        onResponse(false, nil)
+                        let data = MyDecoder<FaceSwapResponseModel>().decodeJSON(json: result.data ?? Data())
+                        
+                        switch data {
+                        case .success(let data):
+                            onResponse(false, data?.message)
+                        case .failure(let error):
+                            print(error?.localizedDescription ?? "")
+                            onResponse(false, nil)
+                            break
+                        }
                     }
                 }
             

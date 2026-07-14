@@ -57,7 +57,7 @@ extension OfferSubscriptionsManager {
         return formatter.currencySymbol ?? currencyCode
     }
     
-    func buyProduct(_ product: Product, didBuy : @escaping (String, String,Int,String,String) -> Void) async {
+    func buyProduct(_ product: Product, didBuy : @escaping (String, String,Int,String,String,String) -> Void) async {
         do {
             
             isLoading = true
@@ -66,27 +66,42 @@ extension OfferSubscriptionsManager {
             let result = try await product.purchase(options: [options])
             
             switch result {
-            case let .success(.verified(transaction)):
+            case let .success(verification):
+                guard case let .verified(transaction) = verification else {
+                    // Successful purchase but transaction/receipt can't be verified
+                    // Could be a jailbroken phone
+                    if case let .unverified(_, error) = verification {
+                        print("Unverified purchase. Might be jailbroken. Error: \(error)")
+                    }
+                    isLoading = false
+                    break
+                }
                 // Successful purhcase
                 await transaction.finish()
                 await self.updatePurchasedProducts()
                 print("\(transaction)")
+
+                // Firebase Analytics events (imported into Google Ads for conversion tracking).
+                let offerParams: [String: Any] = [
+                    AnalyticsParameterValue: NSDecimalNumber(decimal: product.price).doubleValue,
+                    AnalyticsParameterCurrency: product.priceFormatStyle.currencyCode,
+                    AnalyticsParameterItemID: product.id,
+                    AnalyticsParameterTransactionID: String(transaction.id)
+                ]
+                Analytics.logEvent("subscribe", parameters: offerParams)
+                Analytics.logEvent(AnalyticsEventPurchase, parameters: offerParams)
+
                 didBuy(transaction.productID,
                        transaction.appBundleID,
                        transaction.purchasedQuantity,
                        transaction.environment.rawValue,
-                       String(transaction.id))
+                       String(transaction.id),
+                       verification.jwsRepresentation)
                 DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
                     self.isLoading = false
                     self.showSuccess = true
                 }
                 //send to ali sadeghi boos kardani
-            case let .success(.unverified(_, error)):
-                // Successful purchase but transaction/receipt can't be verified
-                // Could be a jailbroken phone
-                print("Unverified purchase. Might be jailbroken. Error: \(error)")
-                isLoading = false
-                break
             case .pending:
                 // Transaction waiting on SCA (Strong Customer Authentication) or
                 // approval from Ask to Buy

@@ -24,7 +24,6 @@ struct ResultScreen: View {
     
     @State private var isVideoReady: Bool = false
 
-    let thumbnailImage: Image = Image(.imgThumbnailResult)
     @State private var playerObserver: NSKeyValueObservation? = nil
     
     var header: some View {
@@ -108,6 +107,7 @@ struct ResultScreen: View {
                 withAnimation {
                     mainViewModel.SCREEN_VIEW = .Main
                 }
+                mainViewModel.mainBottomBar = .Upload
             }, label: {
                 HStack {
                     
@@ -124,6 +124,41 @@ struct ResultScreen: View {
             })
             
             HStack {
+                
+                Button(action: {
+                    
+                    DispatchQueue.global(qos: .background).async {
+                        if let url = URL(string: swapViewModel.resultModel?.vidUrl ?? ""),
+                            let urlData = NSData(contentsOf: url)
+                        {
+                            let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0];
+                            let filePath="\(documentsPath)/VideoFaceSwap.mp4"
+                            DispatchQueue.main.async {
+                                urlData.write(toFile: filePath, atomically: true)
+                                share(items: [URL(fileURLWithPath: filePath)])
+                            }
+                        }
+                    }
+                    
+                }, label: {
+                    HStack(spacing: 10) {
+                        
+                        Image(.iconShareResult)
+                            .resizable()
+                            .frame(width: 24,height: 24)
+                        
+                        Text("Share")
+                            .font(.system(size: 16, weight: .bold))
+                            .foregroundStyle(.white)
+                        
+                    }
+                    .frame(width: (UIScreen.screenWidth - 40)/2, height: 48)
+                    .background {
+                        LinearGradient(colors: gradientColor, startPoint: .leading, endPoint: .trailing)
+                    }
+                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                })
+                
                 Button(action: {
                     if saveState == .Idle {
                         withAnimation {
@@ -134,7 +169,7 @@ struct ResultScreen: View {
                                 let urlData = NSData(contentsOf: url)
                             {
                                 let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0];
-                                let filePath="\(documentsPath)/tempFile.mp4"
+                                let filePath="\(documentsPath)/VideoFaceSwap.mp4"
                                 DispatchQueue.main.async {
                                     urlData.write(toFile: filePath, atomically: true)
                                     PHPhotoLibrary.shared().performChanges({
@@ -155,40 +190,11 @@ struct ResultScreen: View {
                 }, label: {
                     HStack {
                         
+                        Image(.iconDownloadResult)
+                            .resizable()
+                            .frame(width: 24,height: 24)
+                        
                         Text(getSaveStateText())
-                            .font(.system(size: 16, weight: .bold))
-                            .foregroundStyle(.white)
-                        
-                    }
-                    .frame(width: (UIScreen.screenWidth - 40)/2, height: 48)
-                    .background {
-                        LinearGradient(colors: gradientColor, startPoint: .leading, endPoint: .trailing)
-                    }
-                    .clipShape(RoundedRectangle(cornerRadius: 8))
-                })
-                
-                Button(action: {
-                    
-                    DispatchQueue.global(qos: .background).async {
-                        if let url = URL(string: swapViewModel.resultModel?.vidUrl ?? ""),
-                            let urlData = NSData(contentsOf: url)
-                        {
-                            let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0];
-                            let filePath="\(documentsPath)/tempFile.mp4"
-                            DispatchQueue.main.async {
-                                urlData.write(toFile: filePath, atomically: true)
-                                share(items: ["", swapViewModel.resultModel?.vidUrl ?? ""])
-                                
-                                
-                                
-                            }
-                        }
-                    }
-                    
-                }, label: {
-                    HStack {
-                        
-                        Text("Share")
                             .font(.system(size: 16, weight: .bold))
                             .foregroundStyle(.white)
                         

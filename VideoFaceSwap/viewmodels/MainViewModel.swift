@@ -20,6 +20,8 @@ class MainViewModel : ObservableObject {
     @Published var isLoadingSignUp = false
     @Published var mainBottomBar : BottomBar = .Home
     @Published var SCREEN_VIEW : ScreenEnum = .Splash
+    @Published var CreditDetailsBackstack : ScreenEnum? = nil
+
     @Published var categories : [CategoryModel] = []
     @Published var templateItems : [TemplateModel] = []
     @Published var userModel : UserModel? = nil
@@ -27,8 +29,21 @@ class MainViewModel : ObservableObject {
     @Published var isHistoryLoading = false
     @Published var historyList : [CreationModel] = []
     
+    // purchase
+    @Published var purchaseBackstack : ScreenEnum? = nil
+    @Published var tabIndex : Int = 0
+    @Published var weeklyCredits = 15
+    @Published var yearlyCredits = 15
+    
+    @Published var creditHistoryList: [CreditHistoryModel] = []
     
     @Published var templatePlayers: [TemplateModel: AVPlayer] = [:]
+    
+    @Environment(\.openURL) var openURL
+    var email = SupportEmail(toAddress: "shaya.creative.app@gmail.com",
+                             subject: "Video Face Swap",
+                             messageHeader: "\n\nUser ID : \(UserSettings.getAppAccountToken())\n\nHello,\nPlease write your suggestion or any issue within the app down here : \n\n")
+    
         
     func player(for template: TemplateModel) -> AVPlayer {
         if let existingPlayer = templatePlayers[template] {
@@ -190,16 +205,14 @@ class MainViewModel : ObservableObject {
                         
                     case .failure(let error):
                         print(error?.localizedDescription ?? "")
-                        self.signupUser { e in
-                            onResponse(e)
-                        }
+                        onResponse(error)
                     }
                     
                     
                 case .failure(let err):
                     print(err.localizedDescription)
-                    self.signupUser { e in
-                        onResponse(e)
+                    self.signupUser { err in
+                        onResponse(err)
                     }
                     
                 }
@@ -362,6 +375,8 @@ class MainViewModel : ObservableObject {
                         UserSettings.videoIsWorking = data?.homeConfig?.features?.videoWorking ?? false
                         print(data?.homeConfig?.features?.videoWorking ?? false)
                         self.homeConfig = data
+                        self.weeklyCredits = self.homeConfig?.homeConfig?.creditSettings?.weeklySubscriptionCreditAmount ?? 15
+                        self.yearlyCredits = self.homeConfig?.homeConfig?.creditSettings?.yearlySubscriptionCreditAmount ?? 100
                         
                         
                     case .failure(let error):
@@ -434,6 +449,68 @@ class MainViewModel : ObservableObject {
             }
     }
     
+    func clearAllSwapHistory(onResponse: @escaping (Error?) -> Void) {
+
+        let headers : HTTPHeaders = [
+            "Authorization" : "Bearer \(UserSettings.token)",
+            "x-api-key" : "ae6a1d02bde6a2e299e2e2033e6a2e20310686"
+        ]
+
+        let url = URL(string: "\(base_url)users/swap-history")!
+
+        print(url)
+
+        AF.request(url, method: .delete, headers: headers)
+            .validate()
+            .response { result in
+
+                switch result.result {
+
+                case .success(let value):
+                    let json = JSON(value ?? "{}")
+                    print(json)
+                    withAnimation {
+                        self.historyList = []
+                    }
+                    onResponse(nil)
+
+                case .failure(let err):
+                    print(err.localizedDescription)
+                    onResponse(err)
+                }
+            }
+    }
+
+    func deleteSwapHistoryItem(jobId: String, onResponse: @escaping (Error?) -> Void) {
+
+        let headers : HTTPHeaders = [
+            "Authorization" : "Bearer \(UserSettings.token)",
+            "x-api-key" : "ae6a1d02bde6a2e299e2e2033e6a2e20310686"
+        ]
+
+        let encodedJobId = jobId.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? jobId
+        let url = URL(string: "\(base_url)users/swap-history/\(encodedJobId)")!
+
+        print(url)
+
+        AF.request(url, method: .delete, headers: headers)
+            .validate()
+            .response { result in
+
+                switch result.result {
+
+                case .success(let value):
+                    let json = JSON(value ?? "{}")
+                    print(json)
+                    onResponse(nil)
+
+                case .failure(let err):
+                    print(err.localizedDescription)
+                    onResponse(err)
+                }
+            }
+    }
+
     func toggleAddToHistory() {
         let url = "\(base_url)users/toggle-add-to-history"
         
@@ -453,6 +530,102 @@ class MainViewModel : ObservableObject {
                 
             }
     }
+    
+    func getCreditHistory() {
+        
+        let headers : HTTPHeaders = [
+            "Authorization" : "Bearer \(UserSettings.token)",
+            "x-api-key" : "ae6a1d02bde6a2e299e2e2033e6a2e20310686"
+        ]
+        
+        print(headers)
+        
+        let url = URL(string: "\(base_url)credit-history")!
+        print(url)
+
+        isHistoryLoading = true
+        
+        AF.request(url,method: .get,headers: headers)
+            .validate()
+            .response { result in
+                
+                print(JSON(result.data) ?? "")
+                
+                switch result.result{
+                    
+                case .success(let value):
+                    let json = JSON(value ?? "{}")
+                    print(json)
+                    
+                    let data = MyDecoder<CreditHistoryResponseModel>().decodeJSON(json: value!)
+                    
+                    switch data {
+                    case .success(let data):
+                        print(data ?? "")
+                        withAnimation {
+                            self.isHistoryLoading = false
+                        }
+                        self.creditHistoryList = data?.data ?? []
+                        
+                    case .failure(let error):
+                        print(error?.localizedDescription ?? "")
+                        self.signupUser { e in
+                            self.getCreditHistory()
+                        }
+                    }
+                    
+                    
+                case .failure(let err):
+                    print(err.localizedDescription)
+                    self.signupUser { e in
+                        self.getCreditHistory()
+                    }
+                }
+            }
+    }
+    
+    func verifyReceipt(parameters : [String:Any], onSuccess: @escaping () -> Void) {
+        
+        let url = "\(base_url)payments/verify-receipt-v2"
+        
+        let headers : HTTPHeaders = [
+            "Authorization" : "Bearer \(UserSettings.token)",
+            "x-api-key" : "ae6a1d02bde6a2e299e2e2033e6a2e20310686"
+        ]
+        
+        print(parameters)
+
+        AF.request(url,method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers)
+            .validate()
+            .response { result in
+
+                print(JSON(result.data) ?? "")
+                self.getMe { _ in
+                    onSuccess()
+                }
+                
+                switch result.result{
+                    
+                case .success(let value):
+                    let json = JSON(value ?? "{}")
+                    print(json)
+                    let data = MyDecoder<UserResponseModel>().decodeJSON(json: value!)
+                    
+                    switch data {
+                    case .success(let data):
+                        print(data ?? "")
+                        
+                        self.userModel = data?.user
+                        
+                        
+                    case .failure(let error):
+                        print(error?.localizedDescription ?? "")
+                    }
+                case .failure(let err):
+                    print(err.localizedDescription)
+                }
+            }
+    }
 
 }
 
@@ -466,7 +639,8 @@ struct UserModel : Codable {
     let role:String?
     let id:String?
     let token: TokenModel?
-    let credits:Int?
+    let totalCredits:Int?
+    let hasActiveSubscription:Bool?
     let autoAddToHistory: Bool?
 }
 
@@ -501,7 +675,7 @@ struct TemplateModel : Codable, Hashable {
     let templateLowResolutionUrl : String
     let templateLowResUrlV2 : String?
     let thumbnailUrl : String
-    let duration: Float?
+    let durationSec: Int?
 }
 
 
@@ -514,6 +688,18 @@ struct HomeConfigModel : Codable {
     let icons:ImageConfigModel?
     let features: FeatureModel?
     let id:String
+    let creditSettings: CreditsSettingsModel?
+}
+
+struct CreditsSettingsModel: Codable {
+    let textToVideoToBeConsumedCredits:Int?
+    let imageToVideoToBeConsumedCredits:Int?
+    let textToImageToBeConsumedCredits:Int?
+    let weeklySubscriptionCreditAmount:Int?
+    let yearlySubscriptionCreditAmount:Int?
+    let proCredits:Int?
+    let starterCredits:Int?
+    let offerCredits:Int?
 }
 
 struct ImageConfigModel : Codable {
@@ -523,7 +709,11 @@ struct ImageConfigModel : Codable {
 struct FeatureModel  :Codable {
     let videoWorking:Bool?
     let testFeature:Bool?
+    let textToVideoWorking:Bool?
+    let textToImageWorking:Bool?
+    let imageToVideoWorking:Bool?
 }
+
 
 struct GetCreationsResponseModel : Codable {
     let success:Bool
@@ -535,4 +725,52 @@ struct CreationModel : Codable {
     let vidUrl:String?
     let jobId:String?
     let videoName:String?
+    let thumbnailUrl:String?
+}
+
+struct CreditHistoryResponseModel: Codable {
+    let data:[CreditHistoryModel]
+}
+
+struct CreditHistoryModel : Codable {
+    
+    let id:String?
+    let userId:String?
+    let transactionType:String?
+    let reason:String?
+    let newCredits:Int?
+    let amount:Int?
+    let createdAt:String?
+    
+}
+
+struct SupportEmail {
+    let toAddress : String
+    let subject : String
+    let messageHeader : String
+    var body : String { """
+
+    "Video Face Swap iOS\n version : \(UIDevice.current.systemVersion)
+    \(messageHeader)
+"""
+    }
+    
+    func send(openUrl : OpenURLAction) {
+        let urlString = "mailto:\(toAddress)?subject=\(subject.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? "" )&body=\(body.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? "" )"
+        
+        guard let url = URL(string: urlString) else {
+            
+            return}
+        
+        
+        openUrl(url) { accepted in
+            
+            if !accepted {
+                print(body)
+            }
+            
+        }
+        
+    }
+    
 }

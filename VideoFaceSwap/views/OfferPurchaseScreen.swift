@@ -42,15 +42,12 @@ struct OfferPurchaseScreen: View {
             subscriptionsManager.isLoading = true
             Task {
                 if subscriptionsManager.products.count > 0 {
-                    await subscriptionsManager.buyProduct(subscriptionsManager.products[0]) {it1,it2,it3,it4,it5 in
-                        mainViewModel.sendPurchaseToServer(parameters: [
+                    await subscriptionsManager.buyProduct(subscriptionsManager.products[0]) {it1,it2,it3,it4,it5,it6 in
+                        mainViewModel.verifyReceipt(parameters: [
                            "productId" : it1,
-                           "appBundleId" : it2,
-                           "purchasedQuantity" : Int(1),
-                           "environment" : it4,
-                           "id" : it5,
+                           "signedTransaction" : it6,
                         ]) {
-                            
+
                         }
                     }
                 }

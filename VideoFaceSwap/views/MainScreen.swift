@@ -41,7 +41,7 @@ struct MainScreen: View {
                         .resizable()
                         .frame(width: 19, height: 19)
                         
-                    Text(String(mainViewModel.userModel?.credits ?? 0))
+                    Text(String(mainViewModel.userModel?.totalCredits ?? 0))
                         .font(.system(size: 15, weight: .bold))
                         .foregroundColor(.white)
                         

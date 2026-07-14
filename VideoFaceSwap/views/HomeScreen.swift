@@ -17,7 +17,7 @@ struct HomeScreen: View {
     var body: some View {
         VStack {
             
-            if (mainViewModel.userModel?.credits ?? 0) <= 0 {
+            if (mainViewModel.userModel?.totalCredits ?? 0) <= 0 {
                 Button {
                     withAnimation {
                         mainViewModel.SCREEN_VIEW = .Purchase
@@ -37,9 +37,7 @@ struct HomeScreen: View {
                     .frame(height: 8)
                     .onAppear {
                         
-                        OneSignal.Notifications.requestPermission({ accepted in
-                          print("User accepted notifications: \(accepted)")
-                        }, fallbackToSettings: true)
+                        
                         if mainViewModel.categories.count > 0 {
                             selectedCategory = mainViewModel.categories[0].id
                         }

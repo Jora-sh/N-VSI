@@ -33,10 +33,16 @@ struct VideoTabView: View {
             
             ScrollView(showsIndicators: false) {
                 LazyVGrid(columns: gridItems, content: {
-                    ForEach(templates, id: \.id) { item in
-                        
-                        eachItem(templates: $templates,item: item)
-                        
+                    if templates.isEmpty {
+                        ForEach(0..<6, id: \.self) { _ in
+                            SkeletonTemplateItem()
+                        }
+                    } else {
+                        ForEach(templates, id: \.id) { item in
+                            
+                            eachItem(templates: $templates,item: item)
+                            
+                        }
                     }
                 }).padding(.horizontal, 16)
                 
@@ -126,9 +132,16 @@ struct eachItem : View {
                     }
                     
                 }.overlay(alignment: .topTrailing) {
-                    if item.isFree == false {
-                        Image(.iconPremiumAccent)
-                            .padding(8)
+                    if mainViewModel.userModel?.totalCredits ?? 0 <= 0 {
+                        if item.isFree == false {
+                            Image(.iconPremiumAccent)
+                                .padding(8)
+                        } else {
+                            Image(.iconFreeTemplate)
+                                .resizable()
+                                .frame(width: 50, height: 30)
+                                .padding(6)
+                        }
                     }
                 }
                 
@@ -159,6 +172,41 @@ struct eachItem : View {
                     
             }
         }
+    }
+}
+
+struct SkeletonTemplateItem: View {
+    
+    @State private var shimmerOffset: CGFloat = -1
+    
+    var body: some View {
+        let width = (UIScreen.screenWidth - 40) / 2
+        let height = (width / 9) * 16
+        
+        RoundedRectangle(cornerRadius: 8)
+            .fill(Color.white.opacity(0.08))
+            .frame(width: width, height: height)
+            .overlay(
+                GeometryReader { geo in
+                    LinearGradient(
+                        colors: [
+                            Color.white.opacity(0.0),
+                            Color.white.opacity(0.15),
+                            Color.white.opacity(0.0)
+                        ],
+                        startPoint: .leading,
+                        endPoint: .trailing
+                    )
+                    .frame(width: geo.size.width, height: geo.size.height)
+                    .offset(x: shimmerOffset * geo.size.width)
+                }
+            )
+            .clipShape(RoundedRectangle(cornerRadius: 8))
+            .onAppear {
+                withAnimation(.linear(duration: 1.2).repeatForever(autoreverses: false)) {
+                    shimmerOffset = 1
+                }
+            }
     }
 }
 

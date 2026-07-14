@@ -11,10 +11,13 @@ import SwiftUI
 
 struct NoCreditsLeftDialog: View {
     
+    @EnvironmentObject var mainViewModel : MainViewModel
+    
     @Binding var shown : Bool
     @Binding var creditsOwned : Int
     @Binding var creditsNeeded : Int
     
+    var onGoToCreditHistoyClicked : () -> Void
     var onGoToPurchaseClicked : () -> Void
     
     var body: some View {
@@ -28,6 +31,7 @@ struct NoCreditsLeftDialog: View {
                     withAnimation {
                         shown = false
                     }
+                    onGoToPurchaseClicked()
                 }
             
             
@@ -46,76 +50,107 @@ struct NoCreditsLeftDialog: View {
                             .foregroundStyle(.white.opacity(0.8))
                             .font(.system(size: 16))
                         
-                        Spacer()
-                            .frame(height: 16)
-                        
-                        HStack {
+                        if mainViewModel.userModel?.totalCredits ?? 0 > 0 || mainViewModel.userModel?.hasActiveSubscription == true {
+                            Spacer()
+                                .frame(height: 16)
                             
-                            Group {
-                                Text("Your")
-                                    .foregroundStyle(Color(hex: "#34A5F2"))
-                                Text("Video Credit :")
+                            HStack {
+                                
+                                Group {
+                                    Text("Your")
+                                        .foregroundStyle(Color(hex: "#34A5F2"))
+                                    Text("Video Credit :")
+                                        .foregroundStyle(.white)
+                                }.bold()
+                                    .font(.system(size: 16))
+                                
+                                Spacer()
+                                    .frame(width: 8)
+                                
+                                Text("\(creditsOwned)")
+                                    .bold()
                                     .foregroundStyle(.white)
-                            }.bold()
-                                .font(.system(size: 16))
+                                    .font(.system(size: 16))
+                                    .padding(6)
+                                    .listRowBackground(
+                                        RoundedRectangle(cornerRadius: 5)
+                                            .strokeBorder(
+                                                Color(hex: "#FF7518"),
+                                                style: StrokeStyle(lineWidth: 1, dash: [10])
+                                            )
+                                    )
+                                    
+                                
+                            }
+                            .frame(width: UIScreen.screenWidth - 116, height: 50)
+                            .roundedCornerWithBorder(lineWidth: 1, borderColor: Color(hex: "#34A5F2"), radius: 5, corners: .allCorners)
                             
                             Spacer()
-                                .frame(width: 8)
+                                .frame(height: 16)
                             
-                            Text("\(creditsOwned)")
-                                .bold()
-                                .foregroundStyle(.white)
-                                .font(.system(size: 16))
-                                .padding(6)
-                                .listRowBackground(
-                                    RoundedRectangle(cornerRadius: 5)
-                                        .strokeBorder(
-                                            Color(hex: "#FF7518"),
-                                            style: StrokeStyle(lineWidth: 1, dash: [10])
-                                        )
-                                )
+                            HStack {
                                 
-                            
-                        }
-                        .frame(width: UIScreen.screenWidth - 116, height: 50)
-                        .roundedCornerWithBorder(lineWidth: 1, borderColor: Color(hex: "#34A5F2"), radius: 5, corners: .allCorners)
-                        
-                        Spacer()
-                            .frame(height: 16)
-                        
-                        HStack {
-                            
-                            Group {
-                                Text("Required")
-                                    .foregroundStyle(Color(hex: "#D32F2F"))
-                                Text("Video Credit :")
+                                Group {
+                                    Text("Required")
+                                        .foregroundStyle(Color(hex: "#D32F2F"))
+                                    Text("Video Credit :")
+                                        .foregroundStyle(.white)
+                                }.bold()
+                                    .font(.system(size: 16))
+                                
+                                Spacer()
+                                    .frame(width: 8)
+                                
+                                Text("\(creditsNeeded)")
+                                    .bold()
                                     .foregroundStyle(.white)
-                            }.bold()
-                                .font(.system(size: 16))
-                            
-                            Spacer()
-                                .frame(width: 8)
-                            
-                            Text("\(creditsNeeded)")
-                                .bold()
-                                .foregroundStyle(.white)
-                                .font(.system(size: 16))
-                                .padding(6)
-                                .listRowBackground(
-                                    RoundedRectangle(cornerRadius: 5)
-                                        .strokeBorder(
-                                            Color(hex: "#AD00FF"),
-                                            style: StrokeStyle(lineWidth: 1, dash: [10])
-                                        )
-                                )
+                                    .font(.system(size: 16))
+                                    .padding(6)
+                                    .listRowBackground(
+                                        RoundedRectangle(cornerRadius: 5)
+                                            .strokeBorder(
+                                                Color(hex: "#AD00FF"),
+                                                style: StrokeStyle(lineWidth: 1, dash: [10])
+                                            )
+                                    )
+                                    
                                 
-                            
+                            }
+                            .frame(width: UIScreen.screenWidth - 116, height: 50)
+                            .roundedCornerWithBorder(lineWidth: 1, borderColor: Color(hex: "#D32F2F"), radius: 5, corners: .allCorners)
                         }
-                        .frame(width: UIScreen.screenWidth - 116, height: 50)
-                        .roundedCornerWithBorder(lineWidth: 1, borderColor: Color(hex: "#D32F2F"), radius: 5, corners: .allCorners)
                         
                         Spacer()
                             .frame(height: 24)
+                        
+                        if mainViewModel.userModel?.totalCredits ?? 0 > 0 || mainViewModel.userModel?.hasActiveSubscription == true {
+                            Button {
+                                withAnimation {
+                                    shown = false
+                                }
+                                onGoToCreditHistoyClicked()
+                            } label: {
+                                
+                                HStack {
+                                    
+                                    Image(.iconDiamond)
+                                        .resizable()
+                                        .frame(width: 24, height: 24)
+                                    
+                                    Text("View Credit Details")
+                                        .font(.system(size: 18 , weight: .semibold))
+                                        .foregroundColor(.white)
+                                }
+                                
+                                .padding(.vertical, 16)
+                                .frame(width: UIScreen.screenWidth - 110, height: 55)
+                                .roundedBorder(Color(hex: "#34A5F2"), width: 1, cornerRadius: 10)
+                                
+                            }
+                            
+                            Spacer()
+                                .frame(height: 12)
+                        }
                         
                         Button {
                             withAnimation {
@@ -149,11 +184,12 @@ struct NoCreditsLeftDialog: View {
                             )
                             .cornerRadius(10)
                         }
-                        
-                    }.frame(width: UIScreen.screenWidth - 64, height: 280)
+                    }
+                    .padding(.vertical, 24)
+                    .frame(width: UIScreen.screenWidth - 64)
                         .background {
                             Color(hex: "#1D1B20")
-                                .frame(width: UIScreen.screenWidth - 64, height: 280)
+                                .frame(width: UIScreen.screenWidth - 64)
                         }
                         .roundedCornerWithBorder(lineWidth: 1, borderColor: Color(hex: "#34A5F2"), radius: 10, corners: .allCorners)
                     
@@ -172,7 +208,7 @@ struct NoCreditsLeftDialog: View {
     }
 }
 
-struct NoCreditDialog: View {
+struct NoFreeCreditDialog: View {
     
     @EnvironmentObject var mainviewmodel: MainViewModel
     
@@ -198,7 +234,8 @@ struct NoCreditDialog: View {
                     
                     VStack {
                         
-                        Text("Sorry, You don’t have enough credit! ")
+                        Text("Your free attempts for today are over.\nTry again tomorrow\nor upgrade for more access.")
+                            .multilineTextAlignment(.center)
                             .foregroundStyle(.white.opacity(0.8))
                             .font(.system(size: 16))
                         
@@ -218,7 +255,7 @@ struct NoCreditDialog: View {
                                     .resizable()
                                     .frame(width: 24, height: 24)
                                 
-                                Text("Get More Video Credit")
+                                Text("Get Video Credit")
                                     .font(.system(size: 18 , weight: .semibold))
                                     .foregroundColor(.white)
                             }

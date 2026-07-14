@@ -15,6 +15,8 @@ struct SettingsScreen: View {
     @State var showContactUsBottomSheet = false
     @State var isAutoSaveOn = true
     @State private var showCopiedAlert = false
+    @State private var showClearHistoryConfirm = false
+    @State private var isClearingHistory = false
     
     @Environment(\.requestReview) var requestReview
     
@@ -59,7 +61,7 @@ struct SettingsScreen: View {
             Spacer()
                 .frame(height: 16)
             
-            if (mainViewModel.userModel?.credits ?? 0) <= 0 {
+            if (mainViewModel.userModel?.totalCredits ?? 0) <= 0 {
                 Button {
                     withAnimation {
                         mainViewModel.SCREEN_VIEW = .Purchase
@@ -94,6 +96,31 @@ struct SettingsScreen: View {
                     
                     Button(action: {
                         withAnimation {
+                            mainViewModel.SCREEN_VIEW = .PurchaseHistory
+                        }
+                    }, label: {
+                        HStack {
+                            
+                            Image(.iconSettingsCreditHistory)
+                                .resizable()
+                                .frame(width: 32, height: 32)
+                            
+                            Text("  Credit Status")
+                                .font(.system(size: 16, weight: .semibold))
+                                .foregroundStyle(Color(hex: textColor))
+                            
+                            Spacer()
+                            
+                            Image(.iconBack)
+                                .resizable()
+                                .rotationEffect(.degrees(180))
+                                .frame(width: 32, height: 32)
+                            
+                        }.frame(height: 48)
+                    })
+                    
+                    Button(action: {
+                        withAnimation {
                             mainViewModel.SCREEN_VIEW = .Purchase
                         }
                     }, label: {
@@ -117,7 +144,7 @@ struct SettingsScreen: View {
                         }.frame(height: 48)
                     })
                     
-                    ShareLink(item: "Check out AI Video Face Swap for incredible face swap videos!\nIt’s easy and fun—just choose a video, swap faces, and watch the magic happen. 🥰\n\n\n🔥Download AI Video Face Swap now and start creating your own amazing videos to share with everyone!🔥", label: {
+                    ShareLink(item: "🔥Download AI Video Face Swap now and start creating your own amazing videos to share with everyone!🔥\n\n\nhttps://apps.apple.com/us/app/faceswap-ai-video-swap-faces/id6738142537", label: {
                         HStack {
                             
                             Image(.iconShare)
@@ -137,6 +164,35 @@ struct SettingsScreen: View {
                             
                         }.frame(height: 48)
                     })
+                    
+                    Button(action: {
+                        showClearHistoryConfirm = true
+                    }, label: {
+                        HStack {
+                            
+                            Image(.iconSettingsTrash)
+                                .resizable()
+                                .frame(width: 32, height: 32)
+                            
+                            Text("  Clear All History")
+                                .font(.system(size: 16, weight: .semibold))
+                                .foregroundStyle(Color(hex: textColor))
+                            
+                            Spacer()
+                            
+                            if isClearingHistory {
+                                ProgressView()
+                                    .frame(width: 32, height: 32)
+                            } else {
+                                Image(.iconBack)
+                                    .resizable()
+                                    .rotationEffect(.degrees(180))
+                                    .frame(width: 32, height: 32)
+                            }
+                            
+                        }.frame(height: 48)
+                    })
+                    .disabled(isClearingHistory)
                     
                     Button(action: {
                         isAutoSaveOn.toggle()
@@ -179,9 +235,7 @@ struct SettingsScreen: View {
                         .frame(height: 6)
                     
                     Button(action: {
-                        withAnimation {
-                            showContactUsBottomSheet = true
-                        }
+                        mainViewModel.email.send(openUrl: mainViewModel.openURL)
                     }, label: {
                         HStack {
                             
@@ -324,6 +378,17 @@ struct SettingsScreen: View {
         }
         .alert("Copied!", isPresented: $showCopiedAlert) {
             Button("OK", role: .cancel) {}
+        }
+        .alert("Clear All History?", isPresented: $showClearHistoryConfirm) {
+            Button("Cancel", role: .cancel) {}
+            Button("Clear", role: .destructive) {
+                isClearingHistory = true
+                mainViewModel.clearAllSwapHistory { _ in
+                    isClearingHistory = false
+                }
+            }
+        } message: {
+            Text("This will permanently delete all your swap history. This action cannot be undone.")
         }
         .sheet(isPresented: $showContactUsBottomSheet, content: {
             ContactUsView(showContactUsBottomSheet: $showContactUsBottomSheet)

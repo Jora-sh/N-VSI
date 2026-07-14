@@ -29,6 +29,16 @@ struct SplashScreen : View {
                                             mainViewModel.SCREEN_VIEW = .OnBoarding
                                         }
                                     }
+                                    if mainViewModel.userModel?.hasActiveSubscription == false &&
+                                        mainViewModel.userModel?.totalCredits ?? 0 <= 0 {
+                                        DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+                                            if mainViewModel.SCREEN_VIEW == .Main {
+                                                withAnimation {
+                                                    mainViewModel.SCREEN_VIEW = .Purchase
+                                                }
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         } else {
@@ -40,9 +50,39 @@ struct SplashScreen : View {
                                         withAnimation {
                                             mainViewModel.SCREEN_VIEW = .Main
                                         }
+                                        if mainViewModel.userModel?.hasActiveSubscription == false &&
+                                            mainViewModel.userModel?.totalCredits ?? 0 <= 0 {
+                                            DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+                                                if mainViewModel.SCREEN_VIEW == .Main {
+                                                    withAnimation {
+                                                        mainViewModel.SCREEN_VIEW = .Purchase
+                                                    }
+                                                }
+                                            }
+                                        }
                                     }
                                 } else {
-                                    print("FAAAAALSE")
+                                    mainViewModel.signupUser { err in
+                                        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                                            withAnimation {
+                                                if UserSettings.isWatchOnBoarding {
+                                                    mainViewModel.SCREEN_VIEW = .Main
+                                                    if mainViewModel.userModel?.hasActiveSubscription == false &&
+                                                        mainViewModel.userModel?.totalCredits ?? 0 <= 0 {
+                                                        DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+                                                            if mainViewModel.SCREEN_VIEW == .Main {
+                                                                withAnimation {
+                                                                    mainViewModel.SCREEN_VIEW = .Purchase
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                } else {
+                                                    mainViewModel.SCREEN_VIEW = .OnBoarding
+                                                }
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         }
