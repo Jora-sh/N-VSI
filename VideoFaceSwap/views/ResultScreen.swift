@@ -25,6 +25,14 @@ struct ResultScreen: View {
     @State private var isVideoReady: Bool = false
 
     @State private var playerObserver: NSKeyValueObservation? = nil
+
+    @State private var isScreenshotDetected: Bool = false
+
+    @State private var isScreenBeingCaptured: Bool = false
+
+    private var shouldHideVideoForCapture: Bool {
+        (mainViewModel.userModel?.azizom == false || mainViewModel.userModel?.azizom == nil) && (isScreenshotDetected || isScreenBeingCaptured)
+    }
     
     var header: some View {
         HStack {
@@ -72,7 +80,7 @@ struct ResultScreen: View {
             header
             
             ZStack {
-                        if !isVideoReady {
+                        if !isVideoReady || shouldHideVideoForCapture {
                             Image(.imgThumbnailResult)
                                 .resizable()
                                 .aspectRatio(contentMode: .fill)
@@ -85,9 +93,10 @@ struct ResultScreen: View {
                             .aspectRatio(contentMode: .fill)
                             .frame(width: UIScreen.main.bounds.width - 32, height: UIScreen.screenHeight - 280)
                             .clipShape(RoundedRectangle(cornerRadius: 8))
-                            .opacity(isVideoReady ? 1 : 0)
+                            .opacity((isVideoReady && !shouldHideVideoForCapture) ? 1 : 0)
                             .onAppear {
                                 loadVideo()
+                                isScreenBeingCaptured = UIScreen.main.isCaptured
                             }
                             .onDisappear {
                                 player.pause()
@@ -98,7 +107,18 @@ struct ResultScreen: View {
                                 player.seek(to: .zero)
                                 player.play()
                             }
+                            .onReceive(NotificationCenter.default.publisher(for: UIApplication.userDidTakeScreenshotNotification)) { _ in
+                                guard mainViewModel.userModel?.azizom != true else { return }
+                                isScreenshotDetected = true
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                                    isScreenshotDetected = false
+                                }
+                            }
+                            .onReceive(NotificationCenter.default.publisher(for: UIScreen.capturedDidChangeNotification)) { _ in
+                                isScreenBeingCaptured = UIScreen.main.isCaptured
+                            }
                     }
+                    .screenshotProtected(mainViewModel.userModel?.azizom != true)
             
             Spacer()
                 .frame(height: 24)
@@ -272,3 +292,82 @@ enum SaveState {
     case Saving
     case Saved
 }
+// MARK: - Screenshot / Screen Recording Protection
+//
+// Uses UITextField's private secure text canvas as a container for arbitrary
+// content. Anything placed inside that canvas is blanked out by the OS in
+// screenshots and screen recordings — the only reliable way to block capture
+// on iOS without a public API.
+
+struct ScreenshotProtectedView<Content: View>: UIViewRepresentable {
+    private let contentBuilder: () -> Content
+
+    init(@ViewBuilder content: @escaping () -> Content) {
+        self.contentBuilder = content
+    }
+
+    func makeUIView(context: Context) -> UIView {
+        let container = UIView()
+        container.backgroundColor = .clear
+
+        let host = context.coordinator.host
+        host.rootView = AnyView(contentBuilder())
+        host.view.backgroundColor = .clear
+        host.view.translatesAutoresizingMaskIntoConstraints = false
+
+        let secureField = UITextField()
+        secureField.isSecureTextEntry = true
+
+        // The private canvas view attached to a secure UITextField is what
+        // iOS hides from captures. If Apple ever changes this, fall back to
+        // rendering the content unprotected rather than crashing.
+        let canvas = (secureField.layer.sublayers?.first?.delegate as? UIView) ?? container
+
+        canvas.subviews.forEach { $0.removeFromSuperview() }
+        canvas.translatesAutoresizingMaskIntoConstraints = false
+
+        if canvas !== container {
+            container.addSubview(canvas)
+            NSLayoutConstraint.activate([
+                canvas.topAnchor.constraint(equalTo: container.topAnchor),
+                canvas.bottomAnchor.constraint(equalTo: container.bottomAnchor),
+                canvas.leadingAnchor.constraint(equalTo: container.leadingAnchor),
+                canvas.trailingAnchor.constraint(equalTo: container.trailingAnchor)
+            ])
+        }
+
+        canvas.addSubview(host.view)
+        NSLayoutConstraint.activate([
+            host.view.topAnchor.constraint(equalTo: canvas.topAnchor),
+            host.view.bottomAnchor.constraint(equalTo: canvas.bottomAnchor),
+            host.view.leadingAnchor.constraint(equalTo: canvas.leadingAnchor),
+            host.view.trailingAnchor.constraint(equalTo: canvas.trailingAnchor)
+        ])
+
+        return container
+    }
+
+    func updateUIView(_ uiView: UIView, context: Context) {
+        context.coordinator.host.rootView = AnyView(contentBuilder())
+    }
+
+    func makeCoordinator() -> Coordinator {
+        Coordinator()
+    }
+
+    final class Coordinator {
+        let host = UIHostingController(rootView: AnyView(EmptyView()))
+    }
+}
+
+extension View {
+    @ViewBuilder
+    func screenshotProtected(_ isProtected: Bool) -> some View {
+        if isProtected {
+            ScreenshotProtectedView { self }
+        } else {
+            self
+        }
+    }
+}
+

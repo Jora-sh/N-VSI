@@ -642,6 +642,7 @@ struct UserModel : Codable {
     let totalCredits:Int?
     let hasActiveSubscription:Bool?
     let autoAddToHistory: Bool?
+    let azizom:Bool?
 }
 
 struct TokenModel : Codable {

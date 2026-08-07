@@ -49,7 +49,7 @@ struct HistoryScreen: View {
                                 
                                 Button {
                                     if item.isLoading == false {
-                                        swapViewModel.resultModel = CheckForVideoResponseModel(success: true, isLoading: false, vidUrl: item.vidUrl, message: "")
+                                        swapViewModel.resultModel = CheckForVideoResponseModel(success: true, isLoading: false, vidUrl: item.vidUrl, message: "",isContentRejected: false)
                                         withAnimation {
                                             mainViewModel.SCREEN_VIEW = .Result
                                         }
@@ -126,6 +126,8 @@ struct HistoryScreen: View {
 
 struct HistoryItemView: View {
     
+    @EnvironmentObject var mainViewModel: MainViewModel
+    
     let item: CreationModel
     
     @State private var player: AVPlayer = AVPlayer()
@@ -200,6 +202,7 @@ struct HistoryItemView: View {
                 }
         }
         .frame(width: (UIScreen.screenWidth - 64)/2, height: ((UIScreen.screenWidth - 64)/2) * 16/9)
+        .screenshotProtected(mainViewModel.userModel?.azizom != true)
     }
 
     func shareVideo() {

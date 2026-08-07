@@ -21,6 +21,7 @@ struct LoadingScreen: View {
     @State var showNoCreditsLeftDialog = false
     @State var showContactUsBottomSheet = false
     @State var showNoFreeCreditsLeftDialog = false
+    @State var showContentRejectedDialog = false
     
     var header: some View {
         HStack {
@@ -80,6 +81,8 @@ struct LoadingScreen: View {
                                                 withAnimation {
                                                     mainViewModel.SCREEN_VIEW = .Result
                                                 }
+                                            } else if swapViewModel.resultModel?.isContentRejected == true {
+                                                self.showContentRejectedDialog = true
                                             } else if msg?.contains("faces") == true {
                                                 self.showNoFaceDialog = true
                                             } else {
@@ -101,13 +104,16 @@ struct LoadingScreen: View {
                                 }
                             } else {
                                 swapViewModel.uploadMedia(videoPath: swapViewModel.videoUrl, image: swapViewModel.imageSelected!) { isSuccess, msg in
-                                    
+                                    print(msg)
+
                                     if isSuccess {
                                         swapViewModel.checkForVideo(jobId: msg ?? "") { isSuccess, videoUrl, msg in
                                             if isSuccess {
                                                 withAnimation {
                                                     mainViewModel.SCREEN_VIEW = .Result
                                                 }
+                                            } else if swapViewModel.resultModel?.isContentRejected == true {
+                                                self.showContentRejectedDialog = true
                                             } else if msg?.contains("faces") == true {
                                                 self.showNoFaceDialog = true
                                             } else {
@@ -177,6 +183,12 @@ struct LoadingScreen: View {
             }
             
             ErrorDialog(errorType: .NoFace, showDialog: $showNoFaceDialog) {
+                withAnimation {
+                    mainViewModel.SCREEN_VIEW = .Main
+                }
+            }
+
+            ErrorDialog(errorType: .ContentRejected, showDialog: $showContentRejectedDialog) {
                 withAnimation {
                     mainViewModel.SCREEN_VIEW = .Main
                 }

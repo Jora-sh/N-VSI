@@ -204,8 +204,11 @@ class SwapViewModel : ObservableObject {
                     switch data {
                     case .success(let data):
                         print(data ?? "")
-                        
-                        if data?.success == true{
+
+                        if data?.isContentRejected == true {
+                            self.resultModel = data
+                            onResponse(false, nil, data?.message)
+                        } else if data?.success == true{
                             if data?.isLoading == true {
                                 DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
                                     self.checkForVideo(jobId: jobId, onResponse: onResponse)
@@ -213,7 +216,7 @@ class SwapViewModel : ObservableObject {
                             } else {
                                 self.resultModel = data
                                 onResponse(true, data?.vidUrl, "")
-                                
+
                             }
                         } else {
                             onResponse(false, nil, data?.message)
@@ -245,6 +248,7 @@ struct CheckForVideoResponseModel : Codable {
     let isLoading: Bool
     let vidUrl:String?
     let message:String?
+    let isContentRejected:Bool?
 }
 
 extension UIImage {

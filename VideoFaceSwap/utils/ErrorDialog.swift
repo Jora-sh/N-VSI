@@ -58,7 +58,7 @@ struct ErrorDialog: View {
                             self.showDialog = false
                         }
                     }, label: {
-                        Text(errorType == .Sorry ? "Go Home" : "Try Again")
+                        Text(getButtonText())
                             .foregroundStyle(.white)
                             .frame(width:164, height: 44)
                             .background {
@@ -92,9 +92,11 @@ struct ErrorDialog: View {
             return "Can't Detect face!"
         case .Sorry:
             return "We are sorry..."
+        case .ContentRejected:
+            return "Content Rejected"
         }
     }
-    
+
     func getDescError() ->String {
         switch errorType {
         case .Oops:
@@ -105,9 +107,11 @@ struct ErrorDialog: View {
             return "Please ensure your face is\nclearly visible & try again."
         case .Sorry:
             return "The app is currently undergoing maintenance and will be back online shortly.\n\nThank you for your patience and understanding!"
+        case .ContentRejected:
+            return "the uploaded content is inappropriate. please choose another content and try again."
         }
     }
-    
+
     func getIconError() -> ImageResource {
         switch errorType {
         case .Oops:
@@ -118,6 +122,19 @@ struct ErrorDialog: View {
             return .iconNoFace
         case .Sorry:
             return .iconGoHome
+        case .ContentRejected:
+            return .iconOops
+        }
+    }
+
+    func getButtonText() -> String {
+        switch errorType {
+        case .Sorry:
+            return "Go Home"
+        case .ContentRejected:
+            return "OK"
+        default:
+            return "Try Again"
         }
     }
 }
@@ -127,4 +144,5 @@ enum ErrorType {
     case NoInternet
     case NoFace
     case Sorry
+    case ContentRejected
 }
