@@ -712,7 +712,7 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_ENTITLEMENTS = VideoFaceSwap/VideoFaceSwap.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 69;
+				CURRENT_PROJECT_VERSION = 71;
 				DEVELOPMENT_ASSET_PATHS = "\"VideoFaceSwap/Preview Content\"";
 				DEVELOPMENT_TEAM = 87588AW22L;
 				ENABLE_PREVIEWS = YES;
@@ -732,7 +732,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 4.69;
+				MARKETING_VERSION = 4.71;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ssss.VideoFaceSwap;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -753,7 +753,7 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_ENTITLEMENTS = VideoFaceSwap/VideoFaceSwap.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 69;
+				CURRENT_PROJECT_VERSION = 71;
 				DEVELOPMENT_ASSET_PATHS = "\"VideoFaceSwap/Preview Content\"";
 				DEVELOPMENT_TEAM = 87588AW22L;
 				ENABLE_PREVIEWS = YES;
@@ -773,7 +773,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 4.69;
+				MARKETING_VERSION = 4.71;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ssss.VideoFaceSwap;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";

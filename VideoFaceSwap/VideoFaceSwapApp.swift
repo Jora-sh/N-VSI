@@ -12,10 +12,15 @@ import OneSignalFramework
 import SDWebImageWebPCoder
 import AppTrackingTransparency
 import AdSupport
+import AVFoundation
 
 class AppDelegate: NSObject, UIApplicationDelegate {
   func application(_ application: UIApplication,
                    didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
+    // Route video audio through the media channel so it plays even when the ringer is silent.
+    try? AVAudioSession.sharedInstance().setCategory(.playback, mode: .moviePlayback)
+    try? AVAudioSession.sharedInstance().setActive(true)
+
     FirebaseApp.configure()
     Analytics.logEvent("logged_in", parameters: nil)
       

@@ -17,19 +17,19 @@ struct HomeScreen: View {
     var body: some View {
         VStack {
             
-            if (mainViewModel.userModel?.totalCredits ?? 0) <= 0 {
-                Button {
-                    withAnimation {
-                        mainViewModel.SCREEN_VIEW = .Purchase
-                    }
-                } label: {
-                    Image(.imgBanner)
-                        .resizable()
-                        .frame(width: UIScreen.screenWidth - 32, height: 120)
-                        .scaledToFit()
-                        .clipShape(RoundedRectangle(cornerRadius: 8))
-                }
-            }
+//            if (mainViewModel.userModel?.totalCredits ?? 0) <= 0 {
+//                Button {
+//                    withAnimation {
+//                        mainViewModel.SCREEN_VIEW = .Purchase
+//                    }
+//                } label: {
+//                    Image(.imgBanner)
+//                        .resizable()
+//                        .frame(width: UIScreen.screenWidth - 32, height: 120)
+//                        .scaledToFit()
+//                        .clipShape(RoundedRectangle(cornerRadius: 8))
+//                }
+//            }
             
             VStack {
                 

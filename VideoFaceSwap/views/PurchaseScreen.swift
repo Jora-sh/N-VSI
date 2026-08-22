@@ -146,7 +146,7 @@ struct PurchaseScreen: View {
                                         .foregroundStyle(Color.init(hex: "#2E2E2E"))
                                 }
                         }
-                        .padding(.top, 50)
+                        .padding(.top, 10)
                         .padding(.horizontal, 20)
                         
                     }

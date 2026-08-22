@@ -184,12 +184,12 @@ struct OnBoardingScreen: View {
                    
                     
                     Button(action: {
-                        if step == 1 {
+                        if step == 4192 {
                             withAnimation {
                                 step = 2
                             }
                         } else {
-                            requestReview()
+//                            requestReview()
                             
                             DispatchQueue.main.asyncAfter(deadline: .now()+3) {
                                 UserSettings.isWatchOnBoarding = true
