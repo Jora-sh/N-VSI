@@ -34,6 +34,8 @@ struct ResultScreen: View {
         (mainViewModel.userModel?.azizom == false || mainViewModel.userModel?.azizom == nil) && (isScreenshotDetected || isScreenBeingCaptured)
     }
     
+    @Environment(\.requestReview) var requestReview
+    
     var header: some View {
         HStack {
             
@@ -97,6 +99,12 @@ struct ResultScreen: View {
                             .onAppear {
                                 loadVideo()
                                 isScreenBeingCaptured = UIScreen.main.isCaptured
+                                if !UserSettings.didRequestReview {
+                                    UserSettings.didRequestReview = true
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                                        requestReview()
+                                    }
+                                }
                             }
                             .onDisappear {
                                 player.pause()

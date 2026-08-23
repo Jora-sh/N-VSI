@@ -97,6 +97,15 @@ class UserSettings : NSObject {
         }
     }
     
+    static var didRequestReview : Bool{
+        get{
+            return UserSettings.defaults.bool(forKey: "didRequestReview")
+        }
+        set{
+            UserSettings.defaults.set(newValue , forKey: "didRequestReview")
+        }
+    }
+    
     // Updated to return UUID type with IDFV + Keychain backup
     static func getAppAccountToken() -> UUID {
         // 1. Try to get from Keychain first
