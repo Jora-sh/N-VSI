@@ -102,6 +102,7 @@ struct PurchaseScreen: View {
                 Button {
                     isLoading = true
                     Task {
+                        await subscriptionsManager.processUnfinishedTransactions()
                         await subscriptionsManager.buyProduct(purchaseItem) {it1,it2,it3,it4,it5,it6,it7 in
                             mainViewModel.verifyReceipt(parameters: [
                                 "productId": it1,
@@ -227,6 +228,7 @@ struct PurchaseScreen: View {
     //                selectedItemIndex = purchaseItem
                     isLoading = true
                     Task {
+                        await purchaseManager.processUnfinishedTransactions()
                         await purchaseManager.buyProduct(purchaseItem) {it1,it2,it3,it4,it5,it6 in
                             mainViewModel.verifyReceipt(parameters: [
                                 "productId": it1,
@@ -318,6 +320,8 @@ struct PurchaseScreen: View {
                     }
                     isLoading = true
                     print("in purchase")
+                    await purchaseManager.processUnfinishedTransactions()
+                    await subscriptionsManager.processUnfinishedTransactions()
                     await subscriptionsManager.updatePurchasedProducts()
                     await subscriptionsManager.loadProducts()
                     if !subscriptionsManager.products.isEmpty {
@@ -481,7 +485,10 @@ class PurchaseManager: NSObject, ObservableObject {
     
     func observeTransactionUpdates() -> Task<Void, Never> {
         Task(priority: .background) { [unowned self] in
-            for await _ in Transaction.updates {
+            for await result in Transaction.updates {
+                if case .verified(let transaction) = result {
+                    await transaction.finish()
+                }
                 await self.updatePurchasedProducts()
             }
         }
@@ -629,7 +636,10 @@ class SubSubscriptionsManager: NSObject, ObservableObject {
     
     func observeTransactionUpdates() -> Task<Void, Never> {
         Task(priority: .background) { [unowned self] in
-            for await _ in Transaction.updates {
+            for await result in Transaction.updates {
+                if case .verified(let transaction) = result {
+                    await transaction.finish()
+                }
                 await self.updatePurchasedProducts()
             }
         }

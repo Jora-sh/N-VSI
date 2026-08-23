@@ -72,6 +72,10 @@ struct VideoFaceSwapApp: App {
                 .onChange(of: scenePhase) { newPhase in
                     if newPhase == .active {
                         requestTrackingAuthorization()
+                        Task {
+                            await purchaseManager.processUnfinishedTransactions()
+                            await subsubscriptionManager.processUnfinishedTransactions()
+                        }
                     }
                 }
         }
@@ -82,21 +86,5 @@ struct VideoFaceSwapApp: App {
     /// shows the prompt once; later calls just return the cached status.
     private func requestTrackingAuthorization() {
         // Small delay so the window is fully active before the prompt is shown.
-//        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-//            ATTrackingManager.requestTrackingAuthorization { status in
-//                switch status {
-//                case .authorized:
-//                    print("ATT: authorized, IDFA = \(ASIdentifierManager.shared().advertisingIdentifier)")
-//                case .denied:
-//                    print("ATT: denied")
-//                case .notDetermined:
-//                    print("ATT: not determined")
-//                case .restricted:
-//                    print("ATT: restricted")
-//                @unknown default:
-//                    print("ATT: unknown")
-//                }
-//            }
-//        }
     }
 }
