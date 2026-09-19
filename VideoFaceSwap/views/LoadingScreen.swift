@@ -72,6 +72,42 @@ struct LoadingScreen: View {
                                 }
                             }
                         } else {
+                            
+                            if !mainViewModel.isOnFaceVideo {
+                                
+                                swapViewModel.uploadMediaImage { isSuccess, msg in
+                                    
+                                    if isSuccess {
+                                        withAnimation {
+                                            mainViewModel.SCREEN_VIEW = .ResultImage
+                                        }
+                                    } else {
+                                        if msg?.contains("credits") == true {
+                                            withAnimation {
+                                                mainViewModel.SCREEN_VIEW = .Purchase
+                                            }
+                                        } else if msg == "not enough free credits" {
+                                            withAnimation {
+                                                mainViewModel.SCREEN_VIEW = .Purchase
+                                            }
+                                        } else if msg?.contains("content") == true {
+                                            self.showContentRejectedDialog = true
+                                        } else if msg == "not enough credits" {
+                                            self.showNoCreditsLeftDialog = true
+                                        } else if msg == "not enough free credits" {
+                                            self.showNoFreeCreditsLeftDialog = true
+                                        } else if msg?.contains("faces") == true {
+                                            self.showNoFaceDialog = true
+                                        } else {
+                                            self.showErrorDialog = true
+                                        }
+                                    }
+                                    swapViewModel.templateToSwapWithTemplate = nil
+                                }
+                                
+                                return
+                            }
+                            
                             if swapViewModel.templateToSwapWithTemplate != nil {
                                 swapViewModel.swapWithTemplate(image: swapViewModel.imageToSwapWithTemplate, templateId : swapViewModel.templateToSwapWithTemplate?.templateName ?? "") { isSuccess, msg in
                                     

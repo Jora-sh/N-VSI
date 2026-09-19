@@ -18,14 +18,20 @@ class SwapViewModel : ObservableObject {
     @Published var imageToSwapWithTemplate : UIImage? = nil
     @Published var templateToSwapWithTemplate : TemplateModel? = nil
     
+    @Published var targetimageSelection : PhotosPickerItem? = nil
+    @Published var targetImageSelected : UIImage? = nil
+    
     @Published var imageSelection: PhotosPickerItem? = nil
     @Published var imageSelected: UIImage? = nil
+    
     @Published var videoSelection: PhotosPickerItem? = nil
     @Published var videoUrl : URL? = nil
+    
     @Published var goLoadingWithoutCredits : Bool = false
     @Published var creditsNeededForCustomSwap : Int = 0
     
     @Published var resultModel : CheckForVideoResponseModel? = nil
+    @Published var resultImageModel : FaceSwapImageResponseModel? = nil
     
     func swapWithTemplate(image:UIImage?, templateId:String,onResponse : @escaping (Bool,String?) -> Void) {
         
@@ -176,6 +182,83 @@ class SwapViewModel : ObservableObject {
         }
     }
     
+    func uploadMediaImage(onResponse : @escaping (Bool,String?) -> Void){
+        
+        let headers : HTTPHeaders = [
+            
+            "Authorization" : "Bearer \(UserSettings.token)",
+            "x-api-key" : "ae6a1d02bde6a2e299e2e2033e6a2e20310686"
+            
+        ]
+        
+        print(headers)
+        
+        
+        if let imgSec = targetImageSelected, let image = imageSelected {
+            AF.upload( multipartFormData: { multipartFormData in
+                
+                multipartFormData.append(((image.resizeToMaxSize(maxSize: CGSize(width: 1000, height: 1000)) ?? image).jpegData(compressionQuality: 0.5))!, withName: "firstImage", fileName: "image1.jpg", mimeType: "image/jpeg")
+                multipartFormData.append(((imgSec.resizeToMaxSize(maxSize: CGSize(width: 1000, height: 1000)) ?? imgSec).jpegData(compressionQuality: 0.5))!, withName: "secondImage", fileName: "image2.jpg", mimeType: "image/jpeg")
+                
+            },
+                       to: "\(base_url)users/image-swap" , method: .post , headers: headers)  { $0.timeoutInterval = 100 }
+              
+                .validate().uploadProgress(closure: { progress in
+                    print(progress)
+                }).responseData { result in
+                    let json = JSON(result.data ?? "")
+                    print(json)
+                    
+                    switch result.result{
+                        
+                    case .success(let value):
+                        let json = JSON(value)
+                        print(json)
+                        
+                        let data1 = MyDecoder<FaceSwapImageResponseModel>().decodeJSON(json: value)
+                        
+                        switch data1 {
+                        case .success(let data):
+                            if data?.success == true {
+                                self.resultImageModel = data
+                                onResponse(true, "ssssss")
+                            } else {
+                                onResponse(false, data?.message)
+                            }
+                        case .failure(let error):
+                            print(error?.localizedDescription ?? "")
+                            onResponse(false, nil)
+                            break
+                        }
+                        
+                        
+                    case .failure(let err):
+                        let data = try? MyDecoder<FaceSwapImageResponseModel>().decodeJSON(json: json.rawData())
+                        if let data = data {
+                            switch data {
+                            case .success(let data):
+                                if data?.success == true {
+                                    self.resultImageModel = data
+                                    onResponse(true, "sss")
+                                } else {
+                                    print(data?.message)
+                                    onResponse(false, data?.message)
+                                }
+                            case .failure(let error):
+                                print(error?.localizedDescription ?? "")
+                                onResponse(false, nil)
+                                break
+                            }
+                        }
+                        print(err.localizedDescription)
+                    }
+                }
+            
+        } else {
+            onResponse(false, "Photo is not selected")
+        }
+    }
+    
     func checkForVideo(jobId:String,  onResponse : @escaping (Bool,String?,String?) -> Void) {
         
         let headers : HTTPHeaders = [
@@ -249,6 +332,13 @@ struct CheckForVideoResponseModel : Codable {
     let vidUrl:String?
     let message:String?
     let isContentRejected:Bool?
+}
+
+struct FaceSwapImageResponseModel : Codable {
+    let success:Bool
+    let imageUrl:String?
+    let downloadUrl:String?
+    let message:String?
 }
 
 extension UIImage {

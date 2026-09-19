@@ -20,10 +20,12 @@ struct CustomScreen: View {
     @State var player : AVPlayer? = nil
     
     @State var showPHPicker = false
+    @State var showPHPickerTarget = false
     @State var showNoCreditsLeftDialog : Bool = false
     @State var creditsNeeded : Int = 0
     @State var showErrorDialog: Bool = false
     @State var showNoCreditDialog: Bool = true
+    @State var showTermsDialog: Bool = false
     @State private var showNoFaceDetected: Bool = false
     
     var body: some View {
@@ -33,7 +35,7 @@ struct CustomScreen: View {
                 Spacer()
                     .onAppear {
                         OneSignal.Notifications.requestPermission({ accepted in
-                          print("User accepted notifications: \(accepted)")
+                            print("User accepted notifications: \(accepted)")
                         }, fallbackToSettings: true)
                         
                         if let videoURL = swapViewModel.videoUrl {
@@ -47,14 +49,30 @@ struct CustomScreen: View {
                         }
                     }
                 
-//                Button {
-//                    withAnimation {
-//                        mainViewModel.SCREEN_VIEW = .purchaseOffer
-//                    }
-//                } label: {
-//                    TimerView()
-//                }
-
+                //                Button {
+                //                    withAnimation {
+                //                        mainViewModel.SCREEN_VIEW = .purchaseOffer
+                //                    }
+                //                } label: {
+                //                    TimerView()
+                //                }
+                
+                Spacer()
+                    .frame(height: 5)
+                
+                Picker("", selection: $mainViewModel.isOnFaceVideo) {
+                    Text("Video Swap")
+                        .bold()
+                        .foregroundStyle(mainViewModel.isOnFaceVideo ? Color.black : Color.white)
+                        .tag(true)
+                    Text("Photo Swap")
+                        .bold()
+                        .foregroundStyle(!mainViewModel.isOnFaceVideo ? Color.black : Color.white)
+                        .tag(false)
+                }
+                .pickerStyle(.segmented)
+                .frame(width: UIScreen.screenWidth - 64)
+                
                 Spacer()
                 
                 // MARK: IMAGE PICKER (PHPicker)
@@ -70,11 +88,7 @@ struct CustomScreen: View {
                                     .frame(width: 36, height: 36)
                                     .padding(.bottom, 18)
                                 
-                                Text("Tap Here")
-                                    .font(.system(size: 18, weight: .medium))
-                                    .foregroundColor(.white)
-                                
-                                Text("to select the photo")
+                                Text("Choose Target Face Photo")
                                     .font(.system(size: 16))
                                     .foregroundColor(.white)
                                     .padding(.top, 5)
@@ -125,41 +139,121 @@ struct CustomScreen: View {
                     .resizable()
                     .frame(width: 64, height: 64)
                 
-                // MARK: VIDEO PICKER (Unchanged)
-                ZStack {
-                    PhotosPicker(
-                        selection: $swapViewModel.videoSelection,
-                        matching: .videos,
-                        photoLibrary: .shared()
-                    ) {
-                        if swapViewModel.videoSelection == nil {
+                if mainViewModel.isOnFaceVideo {
+                    // MARK: VIDEO PICKER (Unchanged)
+                    ZStack {
+                        PhotosPicker(
+                            selection: $swapViewModel.videoSelection,
+                            matching: .videos,
+                            photoLibrary: .shared()
+                        ) {
+                            if swapViewModel.videoSelection == nil {
+                                VStack {
+                                    Image(.iconVideo)
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fill)
+                                        .frame(width: 36, height: 36)
+                                        .padding(.bottom, 18)
+                                    
+                                    Text("Choose Your Main Video")
+                                        .font(.system(size: 16))
+                                        .foregroundColor(.white)
+                                        .padding(.top, 5)
+                                }
+                                .frame(width: UIScreen.screenWidth - 192, height: UIScreen.screenWidth - 192)
+                            } else {
+                                ZStack {
+                                    VideoPlayer(player: player)
+                                        .frame(width: UIScreen.screenWidth - 120, height: UIScreen.screenWidth - 192)
+                                    VStack {
+                                        HStack {
+                                            Spacer()
+                                            Button {
+                                                withAnimation {
+                                                    swapViewModel.videoSelection = nil
+                                                }
+                                            } label: {
+                                                Image(.iconClose)
+                                                    .resizable()
+                                                    .frame(width: 22, height: 22)
+                                            }
+                                        }
+                                        Spacer()
+                                    }
+                                    .padding(24)
+                                }
+                            }
+                        }
+                        .onChange(of: swapViewModel.videoSelection) { newMedia in
+                            Task {
+                                guard let item = swapViewModel.videoSelection else { return }
+                                let config = VideoKit.Config(.presetMediumQuality,
+                                                             limitFPS: 23,
+                                                             limitBitrate: 2_500_000)
+                                item.loadTransferable(type: Movie.self) { result in
+                                    switch result {
+                                    case .success(let movie):
+                                        if let movie = movie {
+                                            VideoKit.mutate(videoUrl: movie.url, config: config) { result in
+                                                switch result {
+                                                case .success(let videoUrl):
+                                                    player = AVPlayer(url: videoUrl)
+                                                    player?.volume = 0.0
+                                                    player?.play()
+                                                    videoURL = videoUrl
+                                                    swapViewModel.videoUrl = videoUrl
+                                                case .error(let errorString):
+                                                    print(errorString)
+                                                }
+                                            }
+                                        }
+                                    case .failure(let failure):
+                                        print("Video load error: \(failure)")
+                                    }
+                                }
+                            }
+                        }
+                        .frame(width: UIScreen.screenWidth - 120, height: UIScreen.screenWidth - 192)
+                        .background(Color(hex: "#1B1B1E"))
+                        .cornerRadius(16)
+                        .padding(.top, 0)
+                        
+                    }
+                    
+                } else {
+                    Button {
+                        showPHPickerTarget = true
+                    } label: {
+                        if swapViewModel.targetImageSelected == nil {
                             VStack {
-                                Image(.iconVideo)
+                                Image(.iconFace)
                                     .resizable()
                                     .aspectRatio(contentMode: .fill)
                                     .frame(width: 36, height: 36)
                                     .padding(.bottom, 18)
                                 
-                                Text("Tap Here")
-                                    .font(.system(size: 18, weight: .medium))
-                                    .foregroundColor(.white)
-                                
-                                Text("to select the Video")
+                                Text("Choose Main Face Photo")
                                     .font(.system(size: 16))
                                     .foregroundColor(.white)
                                     .padding(.top, 5)
                             }
                             .frame(width: UIScreen.screenWidth - 192, height: UIScreen.screenWidth - 192)
                         } else {
+                            // show the selected target image here
                             ZStack {
-                                VideoPlayer(player: player)
+                                Image(uiImage: swapViewModel.targetImageSelected!)
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fit)
                                     .frame(width: UIScreen.screenWidth - 120, height: UIScreen.screenWidth - 192)
+                                    .cornerRadius(10)
+                                    .padding()
+                                
                                 VStack {
                                     HStack {
                                         Spacer()
                                         Button {
                                             withAnimation {
-                                                swapViewModel.videoSelection = nil
+                                                swapViewModel.targetImageSelected = nil
                                             }
                                         } label: {
                                             Image(.iconClose)
@@ -173,34 +267,11 @@ struct CustomScreen: View {
                             }
                         }
                     }
-                    .onChange(of: swapViewModel.videoSelection) { newMedia in
-                        Task {
-                            guard let item = swapViewModel.videoSelection else { return }
-                            let config = VideoKit.Config(.presetMediumQuality,
-                                                         limitFPS: 23,
-                                                         limitBitrate: 2_500_000)
-                            item.loadTransferable(type: Movie.self) { result in
-                                switch result {
-                                case .success(let movie):
-                                    if let movie = movie {
-                                        VideoKit.mutate(videoUrl: movie.url, config: config) { result in
-                                            switch result {
-                                            case .success(let videoUrl):
-                                                player = AVPlayer(url: videoUrl)
-                                                player?.volume = 0.0
-                                                player?.play()
-                                                videoURL = videoUrl
-                                                swapViewModel.videoUrl = videoUrl
-                                            case .error(let errorString):
-                                                print(errorString)
-                                            }
-                                        }
-                                    }
-                                case .failure(let failure):
-                                    print("Video load error: \(failure)")
-                                }
+                    .sheet(isPresented: $showPHPickerTarget) {
+                        PHPickerWrapper(selectedImage: $swapViewModel.targetImageSelected)
+                            .onDisappear {
+                                selectImage2()
                             }
-                        }
                     }
                     .frame(width: UIScreen.screenWidth - 120, height: UIScreen.screenWidth - 192)
                     .background(Color(hex: "#1B1B1E"))
@@ -208,49 +279,96 @@ struct CustomScreen: View {
                     .padding(.top, 0)
                 }
                 
+                
                 Spacer()
                 
                 // MARK: START SWAPPING BUTTON
                 Button {
-                    if swapViewModel.imageSelected != nil && swapViewModel.videoSelection != nil {
-                        Task {
-                            let duration = try? await self.player?.currentItem?.asset.load(.duration)
-                            let creditsNeeded = Int(duration?.seconds ?? 10)
-                            // use creditsNeeded here
-                            swapViewModel.creditsNeededForCustomSwap = creditsNeeded
-                            
-                        
-                            if creditsNeeded >= (mainViewModel.userModel?.totalCredits ?? 0) {
-                                swapViewModel.goLoadingWithoutCredits = true
+                    if mainViewModel.isOnFaceVideo {
+                        if swapViewModel.imageSelected != nil && swapViewModel.videoSelection != nil {
+                            Task {
+                                let duration = try? await self.player?.currentItem?.asset.load(.duration)
+                                let creditsNeeded = Int(duration?.seconds ?? 10)
+                                // use creditsNeeded here
                                 swapViewModel.creditsNeededForCustomSwap = creditsNeeded
-                                withAnimation {
-                                    mainViewModel.SCREEN_VIEW = .Loading
-                                }
-                            } else {
-                                if UserSettings.videoIsWorking {
-                                    swapViewModel.goLoadingWithoutCredits = false
-                                    withAnimation {
-                                        mainViewModel.SCREEN_VIEW = .Loading
+                                
+                            
+                                if creditsNeeded >= (mainViewModel.userModel?.totalCredits ?? 0) {
+                                    swapViewModel.goLoadingWithoutCredits = true
+                                    swapViewModel.creditsNeededForCustomSwap = creditsNeeded
+                                    if UserSettings.didShowTermsDialog == false {
+                                        showTermsDialog = true
+                                    } else {
+                                        withAnimation {
+                                            mainViewModel.SCREEN_VIEW = .Loading
+                                        }
                                     }
                                 } else {
-                                    withAnimation {
-                                        showErrorDialog = true
+                                    if UserSettings.videoIsWorking {
+                                        swapViewModel.goLoadingWithoutCredits = false
+                                        if UserSettings.didShowTermsDialog == false {
+                                            showTermsDialog = true
+                                        } else {
+                                            withAnimation {
+                                                mainViewModel.SCREEN_VIEW = .Loading
+                                            }
+                                        }
+                                    } else {
+                                        withAnimation {
+                                            showErrorDialog = true
+                                        }
                                     }
                                 }
                             }
                         }
+                    } else {
+                        creditsNeeded = 1
+                        swapViewModel.creditsNeededForCustomSwap = 1
+                        
+                    
+                        if creditsNeeded >= (mainViewModel.userModel?.totalCredits ?? 0) {
+                            swapViewModel.goLoadingWithoutCredits = true
+                            swapViewModel.creditsNeededForCustomSwap = creditsNeeded
+                            if UserSettings.didShowTermsDialog == false {
+                                showTermsDialog = true
+                            } else {
+                                withAnimation {
+                                    mainViewModel.SCREEN_VIEW = .Loading
+                                }
+                            }
+                        } else {
+                            if UserSettings.imageIsWorking {
+                                swapViewModel.goLoadingWithoutCredits = false
+                                if UserSettings.didShowTermsDialog == false {
+                                    showTermsDialog = true
+                                } else {
+                                    withAnimation {
+                                        mainViewModel.SCREEN_VIEW = .Loading
+                                    }
+                                }
+                            } else {
+                                withAnimation {
+                                    showErrorDialog = true
+                                }
+                            }
+                        }
                     }
+                    
                 } label: {
                     Text("Start Swapping")
                         .foregroundColor(.white)
-                        .opacity(swapViewModel.imageSelected != nil && swapViewModel.videoSelection != nil ? 1.0 : 0.3)
+                        .opacity(mainViewModel.isOnFaceVideo ? swapViewModel.imageSelected != nil && swapViewModel.videoSelection != nil ? 1.0 : 0.3 : swapViewModel.targetImageSelected != nil && swapViewModel.imageSelected != nil ? 1.0 : 0.3)
                         .font(.system(size: 20, weight: .medium))
                         .frame(width: UIScreen.screenWidth - 78, height: UIScreen.screenHeight / 17)
                         .background(
-                            swapViewModel.imageSelected != nil && swapViewModel.videoSelection != nil
+                            mainViewModel.isOnFaceVideo ? swapViewModel.imageSelected != nil && swapViewModel.videoSelection != nil
                             ? LinearGradient(colors: gradientColor, startPoint: .leading, endPoint: .trailing)
                             : LinearGradient(stops: [Gradient.Stop(color: Color.white.opacity(0.5), location: 0.0)],
-                                             startPoint: .leading, endPoint: .trailing)
+                                             startPoint: .leading, endPoint: .trailing) :
+                                swapViewModel.imageSelected != nil && swapViewModel.targetImageSelected != nil
+                                ? LinearGradient(colors: gradientColor, startPoint: .leading, endPoint: .trailing)
+                                : LinearGradient(stops: [Gradient.Stop(color: Color.white.opacity(0.5), location: 0.0)],
+                                                 startPoint: .leading, endPoint: .trailing)
                         )
                         .cornerRadius(10)
                 }
@@ -281,11 +399,31 @@ struct CustomScreen: View {
                 }
             }
         }
+        .alert("AI Processing & Privacy", isPresented: $showTermsDialog) {
+            Button("Cancel") {
+                
+            }
+            Button("Agree & Continue") {
+                UserSettings.didShowTermsDialog = true
+            }
+        } message: {
+            Text("To generate AI videos, the photos and videos you provide are securely sent to our servers for processing. \n\nYour content is used only to provide the AI features you request. We do not sell your personal data or uploaded content. \n\nYour content is processed to generate your requested result and is not retained longer than necessary to complete the processing, unless otherwise stated in our Privacy Policy. \n\nFor more information about how we collect, use, and protect your data, please review our Privacy Policy.")
+        }
+
     }
     
     // MARK: - Face Detection
     func selectImage() {
         if let sampleImage = swapViewModel.imageSelected {
+            withAnimation {
+                showNoFaceDetected = !hasFace(in: sampleImage)
+            }
+        }
+    }
+    
+    // MARK: - Face Detection
+    func selectImage2() {
+        if let sampleImage = swapViewModel.targetImageSelected {
             withAnimation {
                 showNoFaceDetected = !hasFace(in: sampleImage)
             }

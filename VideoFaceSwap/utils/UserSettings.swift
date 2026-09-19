@@ -71,6 +71,24 @@ class UserSettings : NSObject {
         }
     }
     
+    static var imageIsWorking : Bool{
+        get{
+            return UserSettings.defaults.bool(forKey: "videoIsWorking")
+        }
+        set{
+            UserSettings.defaults.set(newValue , forKey: "videoIsWorking")
+        }
+    }
+    
+    static var didShowTermsDialog : Bool{
+        get{
+            return UserSettings.defaults.bool(forKey: "didShowTermsDialog")
+        }
+        set{
+            UserSettings.defaults.set(newValue , forKey: "didShowTermsDialog")
+        }
+    }
+    
     static var didShowTemplateOnBoarding : Bool{
         get{
             return UserSettings.defaults.bool(forKey: "isShowTemplateOnBoarding")

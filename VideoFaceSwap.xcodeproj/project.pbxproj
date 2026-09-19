@@ -23,6 +23,7 @@
 		3F3186652CD80795001697F1 /* URL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F3186602CD80795001697F1 /* URL.swift */; };
 		3F3186662CD80795001697F1 /* VideoKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F3186612CD80795001697F1 /* VideoKit.swift */; };
 		3F346A03305F01ED004BB818 /* AiNoticeScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F346A02305F01ED004BB818 /* AiNoticeScreen.swift */; };
+		3F346A4C305F2987004BB818 /* ResultImageScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F346A4B305F2987004BB818 /* ResultImageScreen.swift */; };
 		3F4879602CDFD47900DA0E6B /* NoCreditsLeftDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F48795F2CDFD47900DA0E6B /* NoCreditsLeftDialog.swift */; };
 		3F4AEA882CE7278100BA1E82 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3F4AEA872CE7278100BA1E82 /* GoogleService-Info.plist */; };
 		3F4AEA8B2CE7289C00BA1E82 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 3F4AEA8A2CE7289C00BA1E82 /* FirebaseAnalytics */; };
@@ -130,6 +131,7 @@
 		3F3186602CD80795001697F1 /* URL.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URL.swift; sourceTree = "<group>"; };
 		3F3186612CD80795001697F1 /* VideoKit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoKit.swift; sourceTree = "<group>"; };
 		3F346A02305F01ED004BB818 /* AiNoticeScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AiNoticeScreen.swift; sourceTree = "<group>"; };
+		3F346A4B305F2987004BB818 /* ResultImageScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultImageScreen.swift; sourceTree = "<group>"; };
 		3F48795F2CDFD47900DA0E6B /* NoCreditsLeftDialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoCreditsLeftDialog.swift; sourceTree = "<group>"; };
 		3F4AEA872CE7278100BA1E82 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		3F539D882CF89473000FCEBB /* VideoFaceSwap.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = VideoFaceSwap.entitlements; sourceTree = "<group>"; };
@@ -251,6 +253,7 @@
 				3F05D1F52CD957FC00C027AC /* SettingsScreen.swift */,
 				3F05D1F72CD961A300C027AC /* LoadingScreen.swift */,
 				3F05D1F32CD9532900C027AC /* ResultScreen.swift */,
+				3F346A4B305F2987004BB818 /* ResultImageScreen.swift */,
 				3F8D25642ED3544000C1D77A /* OfferPurchaseScreen.swift */,
 				3F18FE512CE1228A00D2A741 /* PurchaseScreen.swift */,
 				3F8505BF2D4A864A00DBB6D0 /* HistoryScreen.swift */,
@@ -491,6 +494,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3F346A4C305F2987004BB818 /* ResultImageScreen.swift in Sources */,
 				3F05D1F82CD961A300C027AC /* LoadingScreen.swift in Sources */,
 				3F18FE542CE1249200D2A741 /* SubscriptionManager.swift in Sources */,
 				3F663DA02CD7ED56005DB1C6 /* VideoTabView.swift in Sources */,

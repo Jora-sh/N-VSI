@@ -28,6 +28,7 @@ class MainViewModel : ObservableObject {
     @Published var homeConfig : GetHomeResponseModel? = nil
     @Published var isHistoryLoading = false
     @Published var historyList : [CreationModel] = []
+    @Published var isOnFaceVideo = true
     
     // purchase
     @Published var purchaseBackstack : ScreenEnum? = nil
@@ -373,6 +374,7 @@ class MainViewModel : ObservableObject {
                         print(data ?? "")
                         
                         UserSettings.videoIsWorking = data?.homeConfig?.features?.videoWorking ?? false
+                        UserSettings.imageIsWorking = data?.homeConfig?.features?.videoWorking ?? false
                         print(data?.homeConfig?.features?.videoWorking ?? false)
                         self.homeConfig = data
                         self.weeklyCredits = self.homeConfig?.homeConfig?.creditSettings?.weeklySubscriptionCreditAmount ?? 15
@@ -709,10 +711,8 @@ struct ImageConfigModel : Codable {
 
 struct FeatureModel  :Codable {
     let videoWorking:Bool?
+    let imageWorking:Bool?
     let testFeature:Bool?
-    let textToVideoWorking:Bool?
-    let textToImageWorking:Bool?
-    let imageToVideoWorking:Bool?
 }
 
 

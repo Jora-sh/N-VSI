@@ -43,6 +43,8 @@ struct ContentView: View {
                 LoadingScreen()
             case .Result:
                 ResultScreen()
+            case .ResultImage:
+                ResultImageScreen()
             case .Splash:
                 SplashScreen()
             case .PurchaseHistory:
@@ -65,6 +67,7 @@ enum ScreenEnum {
     case Templates
     case Loading
     case Result
+    case ResultImage
     case AiNotice
     case Splash
 }
