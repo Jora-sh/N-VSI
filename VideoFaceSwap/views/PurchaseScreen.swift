@@ -289,16 +289,62 @@ struct PurchaseScreen: View {
     var purchaseTextCenter : some View {
         VStack {
             
-            Text("Get Full Access")
-                .font(.system(size: 28, weight: .heavy))
-                .foregroundStyle(.white)
+            
+            HStack(spacing: 0) {
+                Text("PRO ")
+                    .foregroundStyle(Color.init(hex: "#3ECCF8"))
+                
+                Text("Features")
+                    .foregroundStyle(.white)
+            }.font(.system(size: 28, weight: .heavy))
+            
             
             Spacer()
                 .frame(height: 16)
             
-            Text("Unlock All Features, Pro model access")
-                .font(.system(size: 14, weight: .regular))
-                .foregroundStyle(.white)
+            VStack(spacing: 8) {
+                
+                HStack(spacing: 8) {
+                    Image(.iconPurchaseCheck)
+                        .resizable()
+                        .frame(width: 24, height: 24)
+                    
+                    Text("Access Exclusive Video Templates")
+                        .font(.system(size: 12))
+                        .foregroundStyle(Color.white)
+                }
+                
+                HStack(spacing: 8) {
+                    Image(.iconPurchaseCheck)
+                        .resizable()
+                        .frame(width: 24, height: 24)
+                    
+                    Text("Personalized Face Swap Features")
+                        .font(.system(size: 12))
+                        .foregroundStyle(Color.white)
+                }
+                
+                HStack(spacing: 8) {
+                    Image(.iconPurchaseCheck)
+                        .resizable()
+                        .frame(width: 24, height: 24)
+                    
+                    Text("Create Stunning HD Media")
+                        .font(.system(size: 12))
+                        .foregroundStyle(Color.white)
+                }
+                
+                HStack(spacing: 8) {
+                    Image(.iconPurchaseCheck)
+                        .resizable()
+                        .frame(width: 24, height: 24)
+                    
+                    Text("Unlock Premium AI Model")
+                        .font(.system(size: 12))
+                        .foregroundStyle(Color.white)
+                }
+                
+            }
         }
     }
 
