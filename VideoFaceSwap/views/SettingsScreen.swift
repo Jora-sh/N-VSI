@@ -408,16 +408,25 @@ struct SettingsScreen: View {
         .alert("Copied!", isPresented: $showCopiedAlert) {
             Button("OK", role: .cancel) {}
         }
-        .alert("Clear All History?", isPresented: $showClearHistoryConfirm) {
+        .alert("Confirm Deletion?", isPresented: $showClearHistoryConfirm) {
             Button("Cancel", role: .cancel) {}
-            Button("Clear", role: .destructive) {
-                isClearingHistory = true
-                mainViewModel.clearAllSwapHistory { _ in
-                    isClearingHistory = false
+            if #available(iOS 26.0, *) {
+                Button("Yes, Delete it",role: .confirm) {
+                    isClearingHistory = true
+                    mainViewModel.clearAllSwapHistory { _ in
+                        isClearingHistory = false
+                    }
+                }
+            } else {
+                Button("Yes, Delete it") {
+                    isClearingHistory = true
+                    mainViewModel.clearAllSwapHistory { _ in
+                        isClearingHistory = false
+                    }
                 }
             }
         } message: {
-            Text("This will permanently delete all your swap history. This action cannot be undone.")
+            Text("Are you sure you want to delete All history?")
         }
         .sheet(isPresented: $showContactUsBottomSheet, content: {
             ContactUsView(showContactUsBottomSheet: $showContactUsBottomSheet)
