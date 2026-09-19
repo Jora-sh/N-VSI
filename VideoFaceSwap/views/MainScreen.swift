@@ -55,10 +55,10 @@ struct MainScreen: View {
             switch mainViewModel.mainBottomBar {
             case .Home:
                 HStack {
-                    Text("Video")
+                    Text("Face")
                         .gradientForeground(colors: [Color(hex: accentColorLight), Color(hex: accentColorDark)])
                         .font(.system(size: 20, weight: .heavy))
-                    Text("Face Swapper")
+                    Text("Templates")
                         .font(.system(size: 20, weight: .heavy))
                         .foregroundStyle(.white)
                 }
