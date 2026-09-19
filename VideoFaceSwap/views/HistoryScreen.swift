@@ -35,9 +35,22 @@ struct HistoryScreen: View {
                 
                 if homeBottomBarSelected == .Home {
                     Spacer()
-                        .frame(height: 54)
+                        .frame(height: 64)
                         
                 }
+                
+                Picker("", selection: $mainViewModel.isOnVideoHistory) {
+                    Text("Video")
+                        .bold()
+                        .foregroundStyle(mainViewModel.isOnFaceVideo ? Color.black : Color.white)
+                        .tag(true)
+                    Text("Photo")
+                        .bold()
+                        .foregroundStyle(!mainViewModel.isOnFaceVideo ? Color.black : Color.white)
+                        .tag(false)
+                }
+                .pickerStyle(.segmented)
+                .frame(width: UIScreen.screenWidth - 64)
                    
                 Spacer()
                     .frame(height: 16)
@@ -45,13 +58,26 @@ struct HistoryScreen: View {
                 if !mainViewModel.isHistoryLoading {
                     ScrollView(showsIndicators: false) {
                         LazyVGrid(columns: gridItems, content: {
-                            ForEach(mainViewModel.historyList, id: \.vidUrl) { item in
+                            ForEach(mainViewModel.isOnVideoHistory ? mainViewModel.historyList.filter({x in
+                                return x.message?.contains("video") == true
+                            }) : (mainViewModel.historyList.filter({x in
+                                return x.message?.contains("image") == true
+                            })), id: \.jobId) { item in
                                 
                                 Button {
-                                    if item.isLoading == false {
-                                        swapViewModel.resultModel = CheckForVideoResponseModel(success: true, isLoading: false, vidUrl: item.vidUrl, message: "",isContentRejected: false)
-                                        withAnimation {
-                                            mainViewModel.SCREEN_VIEW = .Result
+                                    if item.message?.contains("video") == true {
+                                        if item.isLoading == false {
+                                            swapViewModel.resultModel = CheckForVideoResponseModel(success: true, isLoading: false, vidUrl: item.vidUrl, message: "",isContentRejected: false)
+                                            withAnimation {
+                                                mainViewModel.SCREEN_VIEW = .Result
+                                            }
+                                        }
+                                    } else {
+                                        if item.isLoading == false {
+                                            swapViewModel.resultImageModel = FaceSwapImageResponseModel(success: true, imageUrl: item.imageUrl, downloadUrl: item.imageUrl, message: "image")
+                                            withAnimation {
+                                                mainViewModel.SCREEN_VIEW = .ResultImage
+                                            }
                                         }
                                     }
                                 } label: {
@@ -142,7 +168,7 @@ struct HistoryItemView: View {
     var body: some View {
         ZStack {
 
-            WebImage(url: URL(string: item.thumbnailUrl ?? "")) { img in
+            WebImage(url: URL(string: (item.message?.contains("video") == true ? item.thumbnailUrl ?? "" : item.imageUrl) ?? "")) { img in
                 img
                     .resizable()
                     .scaledToFill()
@@ -206,17 +232,17 @@ struct HistoryItemView: View {
     }
 
     func shareVideo() {
-        guard let vidUrlString = item.vidUrl,
-              let url = URL(string: vidUrlString) else {
-            return
-        }
+        
+        let isVideo : Bool = item.message?.contains("video") == true ? true : false
+        print("item is \(isVideo)")
+
 
         isSharing = true
 
         DispatchQueue.global(qos: .background).async {
-            if let urlData = NSData(contentsOf: url) {
+            if let urlData = NSData(contentsOf: URL(string: (isVideo ? item.vidUrl : item.imageUrl)!)!) {
                 let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
-                let fileURL = URL(fileURLWithPath: "\(documentsPath)/VideoFaceSwap.mp4")
+                let fileURL = URL(fileURLWithPath: "\(documentsPath)/VideoFaceSwap.\(isVideo ? "mp4" : "jpeg")")
                 urlData.write(to: fileURL, atomically: true)
                 DispatchQueue.main.async {
                     isSharing = false
@@ -280,14 +306,14 @@ struct NoHistoryDialog: View {
                     
                     VStack {
                         
-                        Text("No Videos Yet")
+                        Text("No Media Yet")
                             .foregroundStyle(.white)
                             .font(.system(size: 20, weight: .heavy))
                         
                         Spacer()
                             .frame(height: 12)
                         
-                        Text("You haven’t created any videos yet.")
+                        Text("You haven’t created any video/photo yet.")
                             .multilineTextAlignment(.center)
                             .bold()
                             .foregroundStyle(Color(hex: "#757575"))
@@ -312,7 +338,7 @@ struct NoHistoryDialog: View {
                                 Spacer()
                                     .frame(width: 8)
                                 
-                                Text("Make Your First Video")
+                                Text("Make Your First Swap")
                                     .font(.system(size: 18 , weight: .semibold))
                                     .foregroundColor(.white)
                             }

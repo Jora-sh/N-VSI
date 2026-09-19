@@ -84,9 +84,9 @@ struct ResultImageScreen: View {
                             print("\(swapViewModel.resultImageModel)")
                         }
                 } placeholder: {
-                    Image(.background)
+                    Image(.imgThumbnailResult)
                         .resizable()
-                        .scaledToFit()
+                        .scaledToFill()
                         .frame(width: (UIScreen.screenWidth - 32), height: UIScreen.screenHeight - 280)
                         .clipShape(RoundedRectangle(cornerRadius: 8))
                         .onAppear {

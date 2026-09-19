@@ -29,6 +29,7 @@ class MainViewModel : ObservableObject {
     @Published var isHistoryLoading = false
     @Published var historyList : [CreationModel] = []
     @Published var isOnFaceVideo = true
+    @Published var isOnVideoHistory = true
     
     // purchase
     @Published var purchaseBackstack : ScreenEnum? = nil
@@ -726,7 +727,9 @@ struct CreationModel : Codable {
     let vidUrl:String?
     let jobId:String?
     let videoName:String?
+    let imageUrl:String?
     let thumbnailUrl:String?
+    let message:String?
 }
 
 struct CreditHistoryResponseModel: Codable {

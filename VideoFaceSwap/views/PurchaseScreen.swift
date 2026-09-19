@@ -424,15 +424,15 @@ struct PurchaseScreen: View {
                 bottomButtons
             }
             
-//            Color.white
-//                .ignoresSafeArea()
-//                .onTapGesture {
-//                    
-//                }
-//                .overlay {
-//                    ProgressView()
-//                }
-//                .opacity(isLoading ? 0.6 : 0.0)
+            Color.white
+                .ignoresSafeArea()
+                .onTapGesture {
+                    
+                }
+                .overlay {
+                    ProgressView()
+                }
+                .opacity(isLoading ? 0.6 : 0.0)
             
         }
         .alert("Success!", isPresented: $showSuccessMessage) {
