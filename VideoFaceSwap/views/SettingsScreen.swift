@@ -331,6 +331,35 @@ struct SettingsScreen: View {
                     Spacer()
                         .frame(height: 6)
                     
+                    Button {
+                        withAnimation {
+                            mainViewModel.SCREEN_VIEW = .AiNotice
+                        }
+                    } label: {
+                        HStack {
+                            
+                            Image(.iconAi)
+                                .resizable()
+                                .frame(width: 32, height: 32)
+                            
+                            Text("  How AI Uses Your Data")
+                                .font(.system(size: 16, weight: .semibold))
+                                .foregroundStyle(Color(hex: textColor))
+                            
+                            Spacer()
+                            
+                            Image(.iconBack)
+                                .resizable()
+                                .rotationEffect(.degrees(180))
+                                .frame(width: 32, height: 32)
+                            
+                        }.frame(height: 48)
+                    }
+
+                    
+                    Spacer()
+                        .frame(height: 6)
+                    
                     Link(destination: URL(string: termsOfServiceLink)!, label: {
                         HStack {
                             

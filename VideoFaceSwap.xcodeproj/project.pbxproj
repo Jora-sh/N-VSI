@@ -22,6 +22,7 @@
 		3F3186642CD80795001697F1 /* AVAssetTrack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F31865F2CD80795001697F1 /* AVAssetTrack.swift */; };
 		3F3186652CD80795001697F1 /* URL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F3186602CD80795001697F1 /* URL.swift */; };
 		3F3186662CD80795001697F1 /* VideoKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F3186612CD80795001697F1 /* VideoKit.swift */; };
+		3F346A03305F01ED004BB818 /* AiNoticeScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F346A02305F01ED004BB818 /* AiNoticeScreen.swift */; };
 		3F4879602CDFD47900DA0E6B /* NoCreditsLeftDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F48795F2CDFD47900DA0E6B /* NoCreditsLeftDialog.swift */; };
 		3F4AEA882CE7278100BA1E82 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3F4AEA872CE7278100BA1E82 /* GoogleService-Info.plist */; };
 		3F4AEA8B2CE7289C00BA1E82 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 3F4AEA8A2CE7289C00BA1E82 /* FirebaseAnalytics */; };
@@ -128,6 +129,7 @@
 		3F31865F2CD80795001697F1 /* AVAssetTrack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AVAssetTrack.swift; sourceTree = "<group>"; };
 		3F3186602CD80795001697F1 /* URL.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URL.swift; sourceTree = "<group>"; };
 		3F3186612CD80795001697F1 /* VideoKit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoKit.swift; sourceTree = "<group>"; };
+		3F346A02305F01ED004BB818 /* AiNoticeScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AiNoticeScreen.swift; sourceTree = "<group>"; };
 		3F48795F2CDFD47900DA0E6B /* NoCreditsLeftDialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoCreditsLeftDialog.swift; sourceTree = "<group>"; };
 		3F4AEA872CE7278100BA1E82 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		3F539D882CF89473000FCEBB /* VideoFaceSwap.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = VideoFaceSwap.entitlements; sourceTree = "<group>"; };
@@ -252,6 +254,7 @@
 				3F8D25642ED3544000C1D77A /* OfferPurchaseScreen.swift */,
 				3F18FE512CE1228A00D2A741 /* PurchaseScreen.swift */,
 				3F8505BF2D4A864A00DBB6D0 /* HistoryScreen.swift */,
+				3F346A02305F01ED004BB818 /* AiNoticeScreen.swift */,
 			);
 			path = views;
 			sourceTree = "<group>";
@@ -516,6 +519,7 @@
 				3F31865A2CD803B2001697F1 /* SwapViewModel.swift in Sources */,
 				3F2D729E2ED35C6600F3F312 /* OfferPurchaseScreen.swift in Sources */,
 				3F663D9D2CD7E60E005DB1C6 /* CustomScreen.swift in Sources */,
+				3F346A03305F01ED004BB818 /* AiNoticeScreen.swift in Sources */,
 				3F3186622CD80795001697F1 /* Compressor.swift in Sources */,
 				3F3186582CD7FB6E001697F1 /* TemplateScreen.swift in Sources */,
 			);
@@ -714,7 +718,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 73;
 				DEVELOPMENT_ASSET_PATHS = "\"VideoFaceSwap/Preview Content\"";
-				DEVELOPMENT_TEAM = 87588AW22L;
+				DEVELOPMENT_TEAM = M2RP89S8N2;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = VideoFaceSwap/Info.plist;
@@ -755,7 +759,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 73;
 				DEVELOPMENT_ASSET_PATHS = "\"VideoFaceSwap/Preview Content\"";
-				DEVELOPMENT_TEAM = 87588AW22L;
+				DEVELOPMENT_TEAM = M2RP89S8N2;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = VideoFaceSwap/Info.plist;
