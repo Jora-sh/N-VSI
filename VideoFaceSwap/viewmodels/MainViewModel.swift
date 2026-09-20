@@ -375,7 +375,7 @@ class MainViewModel : ObservableObject {
                         print(data ?? "")
                         
                         UserSettings.videoIsWorking = data?.homeConfig?.features?.videoWorking ?? false
-                        UserSettings.imageIsWorking = data?.homeConfig?.features?.videoWorking ?? false
+                        UserSettings.imageIsWorking = data?.homeConfig?.features?.imageWorking ?? false
                         print(data?.homeConfig?.features?.videoWorking ?? false)
                         self.homeConfig = data
                         self.weeklyCredits = self.homeConfig?.homeConfig?.creditSettings?.weeklySubscriptionCreditAmount ?? 15
