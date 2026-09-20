@@ -39,6 +39,9 @@ struct HistoryScreen: View {
                         
                 }
                 
+                Spacer()
+                    .frame(height: 20)
+                
                 Picker("", selection: $mainViewModel.isOnVideoHistory) {
                     Text("Video")
                         .bold()

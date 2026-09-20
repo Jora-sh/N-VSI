@@ -33,6 +33,7 @@ struct CustomScreen: View {
             VStack {
                 
                 Spacer()
+                    .frame(height: 20)
                     .onAppear {
                         OneSignal.Notifications.requestPermission({ accepted in
                             print("User accepted notifications: \(accepted)")
@@ -56,9 +57,9 @@ struct CustomScreen: View {
                 //                } label: {
                 //                    TimerView()
                 //                }
-                
-                Spacer()
-                    .frame(height: 5)
+//                
+//                Spacer()
+//                    .frame(height: 5)
                 
                 Picker("", selection: $mainViewModel.isOnFaceVideo) {
                     Text("Video Swap")

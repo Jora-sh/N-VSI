@@ -12,6 +12,18 @@ struct ContentView: View {
     
     @EnvironmentObject var mainViewModel : MainViewModel
     
+    init() {
+        UISegmentedControl.appearance().setTitleTextAttributes(
+            [.foregroundColor: UIColor.black],
+            for: .selected
+        )
+        
+        UISegmentedControl.appearance().setTitleTextAttributes(
+            [.foregroundColor: UIColor.white],
+            for: .normal
+        )
+    }
+    
     var body: some View {
         ZStack {
             
