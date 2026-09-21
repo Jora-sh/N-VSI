@@ -97,6 +97,7 @@ struct ResultScreen: View {
                             .clipShape(RoundedRectangle(cornerRadius: 8))
                             .opacity((isVideoReady && !shouldHideVideoForCapture) ? 1 : 0)
                             .onAppear {
+                                mainViewModel.isOnVideoHistory = true
                                 loadVideo()
                                 isScreenBeingCaptured = UIScreen.main.isCaptured
                                 if !UserSettings.didRequestReview {

@@ -410,19 +410,10 @@ struct SettingsScreen: View {
         }
         .alert("Confirm Deletion?", isPresented: $showClearHistoryConfirm) {
             Button("Cancel", role: .cancel) {}
-            if #available(iOS 26.0, *) {
-                Button("Yes, Delete it",role: .confirm) {
-                    isClearingHistory = true
-                    mainViewModel.clearAllSwapHistory { _ in
-                        isClearingHistory = false
-                    }
-                }
-            } else {
-                Button("Yes, Delete it") {
-                    isClearingHistory = true
-                    mainViewModel.clearAllSwapHistory { _ in
-                        isClearingHistory = false
-                    }
+            Button("Yes, Delete it", role: .destructive) {
+                isClearingHistory = true
+                mainViewModel.clearAllSwapHistory { _ in
+                    isClearingHistory = false
                 }
             }
         } message: {

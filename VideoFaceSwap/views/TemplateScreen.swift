@@ -34,6 +34,8 @@ struct TemplateScreen: View {
     @State private var isOnboardingAnimating = false
     @State private var isShowingOnBoardingTemplate = true
     
+    @State var showTermsDialog: Bool = false
+    
     // MARK: - HEADER
     var header: some View {
         HStack {
@@ -157,6 +159,10 @@ struct TemplateScreen: View {
                 
                 // MARK: Choose Face Button
                 Button {
+                    if !UserSettings.didShowTermsDialog {
+                        showTermsDialog = true
+                        return
+                    }
                     showImagePicker = true
                 } label: {
                     HStack {
@@ -224,6 +230,17 @@ mainViewModel.SCREEN_VIEW = .Purchase
         .sheet(isPresented: $showContactUsBottomSheet) {
             ContactUsView(showContactUsBottomSheet: $showContactUsBottomSheet)
         }
+        .alert("AI Processing & Privacy", isPresented: $showTermsDialog) {
+            Button("Cancel") {
+                
+            }
+            Button("Agree & Continue") {
+                UserSettings.didShowTermsDialog = true
+            }
+        } message: {
+            Text("To generate AI videos, the photos and videos you provide are securely sent to our servers for processing. \n\nYour content is used only to provide the AI features you request. We do not sell your personal data or uploaded content. \n\nYour content is processed to generate your requested result and is not retained longer than necessary to complete the processing, unless otherwise stated in our Privacy Policy. \n\nFor more information about how we collect, use, and protect your data, please review our Privacy Policy.")
+        }
+
     }
     
     // MARK: - Handle Selected Image

@@ -100,7 +100,7 @@ struct HistoryScreen: View {
                             }, message: {
                                 Text("Video Successfully Saved! enjoy..")
                             })
-                            .alert("Delete Video?", isPresented: $showDialog, presenting: selectedItem) { item in
+                            .alert("Delete this item?", isPresented: $showDialog, presenting: selectedItem) { item in
                                 Button("Cancel", role: .cancel) {}
                                 Button("Delete", role: .destructive) {
                                     if let jobId = item.jobId, !jobId.isEmpty {
@@ -115,7 +115,7 @@ struct HistoryScreen: View {
                                     }
                                 }
                             } message: { _ in
-                                Text("This will permanently delete this video. This action cannot be undone.")
+                                Text("This will permanently delete this item. This action cannot be undone.")
                             }
                     }
                     

@@ -80,6 +80,7 @@ struct ResultImageScreen: View {
                         .frame(width: (UIScreen.screenWidth - 32), height: UIScreen.screenHeight - 280)
                         .clipShape(RoundedRectangle(cornerRadius: 8))
                         .onAppear {
+                            mainViewModel.isOnVideoHistory = false
                             print("\(swapViewModel.resultImageModel?.imageUrl ?? "")")
                             print("\(swapViewModel.resultImageModel)")
                         }
