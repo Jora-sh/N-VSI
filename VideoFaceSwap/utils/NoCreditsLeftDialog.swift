@@ -59,7 +59,7 @@ struct NoCreditsLeftDialog: View {
                                 Group {
                                     Text("Your")
                                         .foregroundStyle(Color(hex: "#34A5F2"))
-                                    Text("Video Credit :")
+                                    Text("Credit :")
                                         .foregroundStyle(.white)
                                 }.bold()
                                     .font(.system(size: 16))
@@ -93,7 +93,7 @@ struct NoCreditsLeftDialog: View {
                                 Group {
                                     Text("Required")
                                         .foregroundStyle(Color(hex: "#D32F2F"))
-                                    Text("Video Credit :")
+                                    Text("Credit :")
                                         .foregroundStyle(.white)
                                 }.bold()
                                     .font(.system(size: 16))
@@ -165,7 +165,7 @@ struct NoCreditsLeftDialog: View {
                                     .resizable()
                                     .frame(width: 24, height: 24)
                                 
-                                Text("Get More Video Credit")
+                                Text("Get More Credit")
                                     .font(.system(size: 18 , weight: .semibold))
                                     .foregroundColor(.white)
                             }
@@ -255,7 +255,7 @@ struct NoFreeCreditDialog: View {
                                     .resizable()
                                     .frame(width: 24, height: 24)
                                 
-                                Text("Get Video Credit")
+                                Text("Get Credit")
                                     .font(.system(size: 18 , weight: .semibold))
                                     .foregroundColor(.white)
                             }
@@ -345,7 +345,7 @@ struct NoFreeCreditsLeftDialog: View {
                                     .resizable()
                                     .frame(width: 24, height: 24)
                                 
-                                Text("Get More Video Credit")
+                                Text("Get More Credit")
                                     .font(.system(size: 18 , weight: .semibold))
                                     .foregroundColor(.white)
                             }

@@ -67,7 +67,7 @@ struct MainScreen: View {
                     Text("Custom")
                         .foregroundStyle(.white)
                         .font(.system(size: 20, weight: .heavy))
-                    Text("Video Swap")
+                    Text("Swap")
                         .font(.system(size: 20, weight: .heavy))
                         .gradientForeground(colors: [Color(hex: accentColorLight), Color(hex: accentColorDark)])
                         
@@ -142,7 +142,7 @@ struct MainScreen: View {
                 VStack {
                     Image(mainViewModel.mainBottomBar == .Upload ? .iconCustomSelected : .iconCustomUnselected)
                     
-                    Text("Upload Video")
+                    Text("Custom Swap")
                         .font(.system(size:12))
                         .gradientForeground(colors: mainViewModel.mainBottomBar == .Upload ? gradientColor : [.white])
                 }.frame(width: 120, height: 64)
