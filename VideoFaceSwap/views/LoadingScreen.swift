@@ -250,6 +250,9 @@ struct LoadingScreen: View {
         }.sheet(isPresented: $showContactUsBottomSheet, content: {
             ContactUsView(showContactUsBottomSheet: $showContactUsBottomSheet)
         })
+        .swipeBack {
+            showCancelDialog = true
+        }
 
     }
 }

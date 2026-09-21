@@ -92,6 +92,13 @@ struct AiNoticeScreen: View {
             Spacer()
             
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .contentShape(Rectangle())
+        .swipeBack {
+            withAnimation {
+                mainViewModel.SCREEN_VIEW = .Settings
+            }
+        }
     }
     
     let noticeText = "To generate AI videos, the photos and videos you provide are securely sent to our servers for processing.\nYour uploaded content is used only to provide the AI features and generate the results you request. We do not sell your personal data or uploaded photos and videos.\nYour content may be temporarily processed and stored as needed to complete your request. We do not retain your uploaded content longer than necessary to provide the requested service, unless otherwise stated in our Privacy Policy.\nWe take reasonable measures to protect your content during transmission and processing. Access to your content is limited to what is necessary to provide the AI features.\nFor more information about how we collect, use, store, and protect your data, please review our Privacy Policy."

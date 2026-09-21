@@ -422,6 +422,13 @@ struct SettingsScreen: View {
         .sheet(isPresented: $showContactUsBottomSheet, content: {
             ContactUsView(showContactUsBottomSheet: $showContactUsBottomSheet)
         })
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .contentShape(Rectangle())
+        .swipeBack {
+            withAnimation {
+                mainViewModel.SCREEN_VIEW = .Main
+            }
+        }
     }
 }
 

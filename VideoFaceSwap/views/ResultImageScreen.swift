@@ -192,6 +192,13 @@ struct ResultImageScreen: View {
                     }
                 }
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .contentShape(Rectangle())
+        .swipeBack {
+            withAnimation {
+                mainViewModel.SCREEN_VIEW = .Main
+            }
+        }
     }
     
     func getSaveStateText() -> String {

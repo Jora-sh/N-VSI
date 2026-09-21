@@ -173,6 +173,13 @@ struct CreditHistory: View {
             }
             
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .contentShape(Rectangle())
+        .swipeBack {
+            withAnimation {
+                mainViewModel.SCREEN_VIEW = mainViewModel.CreditDetailsBackstack ?? .Settings
+            }
+        }
     }
 }
 

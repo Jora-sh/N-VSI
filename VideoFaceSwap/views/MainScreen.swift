@@ -246,4 +246,22 @@ extension View {
             .overlay(RoundedCorner(radius: radius, corners: corners)
                 .stroke(borderColor, lineWidth: lineWidth))
     }
+
+    // Left-edge swipe to trigger the screen's back action.
+    // Gated to drags that start within `edgeInset` of the left edge so it
+    // won't fight VTabView / TabView / horizontal ScrollViews in the body.
+    func swipeBack(edgeInset: CGFloat = 32,
+                   threshold: CGFloat = 60,
+                   perform action: @escaping () -> Void) -> some View {
+        self.simultaneousGesture(
+            DragGesture(minimumDistance: 20)
+                .onEnded { value in
+                    let dx = value.translation.width
+                    let dy = value.translation.height
+                    guard value.startLocation.x < edgeInset else { return }
+                    guard dx > threshold, abs(dx) > abs(dy) else { return }
+                    action()
+                }
+        )
+    }
 }

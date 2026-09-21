@@ -202,6 +202,11 @@ struct TemplateScreen: View {
                 Spacer().frame(height: 16)
             }
         }
+        .swipeBack {
+            withAnimation {
+                mainViewModel.SCREEN_VIEW = .Main
+            }
+        }
         
         // MARK: - Overlays
         ErrorDialog(errorType: .Sorry, showDialog: $showErrorDialog) {}

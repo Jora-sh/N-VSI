@@ -458,6 +458,11 @@ struct PurchaseScreen: View {
         } message: {
             Text(restoreMessage ? "You have been successfully resotred! Enjoy.." : "No Active subscription available for you.")
         }
+        .swipeBack {
+            withAnimation {
+                mainViewModel.SCREEN_VIEW = mainViewModel.purchaseBackstack ?? .Main
+            }
+        }
     }
     
     
