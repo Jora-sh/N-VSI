@@ -113,8 +113,6 @@ struct NoCreditsLeftDialog: View {
                                                 style: StrokeStyle(lineWidth: 1, dash: [10])
                                             )
                                     )
-                                    
-                                
                             }
                             .frame(width: UIScreen.screenWidth - 116, height: 50)
                             .roundedCornerWithBorder(lineWidth: 1, borderColor: Color(hex: "#D32F2F"), radius: 5, corners: .allCorners)
@@ -133,7 +131,7 @@ struct NoCreditsLeftDialog: View {
                                 
                                 HStack {
                                     
-                                    Image(.iconDiamond)
+                                    Image(.iconSettingsCreditHistory)
                                         .resizable()
                                         .frame(width: 24, height: 24)
                                     
