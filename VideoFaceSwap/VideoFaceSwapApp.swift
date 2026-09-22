@@ -10,8 +10,6 @@ import FirebaseCore
 import FirebaseAnalytics
 import OneSignalFramework
 import SDWebImageWebPCoder
-import AppTrackingTransparency
-import AdSupport
 import AVFoundation
 
 class AppDelegate: NSObject, UIApplicationDelegate {
@@ -71,7 +69,6 @@ struct VideoFaceSwapApp: App {
                 }
                 .onChange(of: scenePhase) { newPhase in
                     if newPhase == .active {
-                        requestTrackingAuthorization()
                         Task {
                             await purchaseManager.processUnfinishedTransactions()
                             await subsubscriptionManager.processUnfinishedTransactions()
@@ -79,12 +76,5 @@ struct VideoFaceSwapApp: App {
                     }
                 }
         }
-    }
-
-    /// Asks for App Tracking Transparency permission. Must run while the app is
-    /// active, so it's triggered on the `.active` scene phase. The system only
-    /// shows the prompt once; later calls just return the cached status.
-    private func requestTrackingAuthorization() {
-        // Small delay so the window is fully active before the prompt is shown.
     }
 }

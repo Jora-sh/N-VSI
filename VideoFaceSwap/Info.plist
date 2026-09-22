@@ -17,8 +17,6 @@
 	<array>
 		<string>remote-notification</string>
 	</array>
-	<key>NSUserTrackingUsageDescription</key>
-	<string>This identifier will be used to measure ad performance and deliver a better, more personalized experience.</string>
 	<key>FIREBASE_ANALYTICS_COLLECTION_ENABLED</key>
 	<true/>
 	<key>SKAdNetworkItems</key>
