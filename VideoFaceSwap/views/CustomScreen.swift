@@ -404,11 +404,16 @@ struct CustomScreen: View {
             Button("Cancel") {
                 
             }
+            Button("Privacy & Policy") {
+                if let url = URL(string: privacyPolicyLink) {
+                    UIApplication.shared.open(url)
+                }
+            }
             Button("Agree & Continue") {
                 UserSettings.didShowTermsDialog = true
             }
         } message: {
-            Text("To generate AI videos, the photos and videos you provide are securely sent to our servers for processing. \n\nYour content is used only to provide the AI features you request. We do not sell your personal data or uploaded content. \n\nYour content is processed to generate your requested result and is not retained longer than necessary to complete the processing, unless otherwise stated in our Privacy Policy. \n\nFor more information about how we collect, use, and protect your data, please review our Privacy Policy.")
+            Text("To create your face swap, the photos and videos you provide are securely sent to our servers for AI processing. \nYour content is used only to create the result you request. We do not sell or share your personal data or uploaded content, and we never use it to train AI models. \nYour uploads are deleted automatically from our servers once processing is complete. Your results are saved only in History on your device, and you can delete them at any time. \nFor more details, please review our Privacy Policy.")
         }
 
     }

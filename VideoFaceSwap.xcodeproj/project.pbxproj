@@ -726,7 +726,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = VideoFaceSwap/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "Video Face Swap";
+				INFOPLIST_KEY_CFBundleDisplayName = "FaceSwap AI";
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "We need this permission to save video.";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "This app requires access to your photo library.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -767,7 +767,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = VideoFaceSwap/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "Video Face Swap";
+				INFOPLIST_KEY_CFBundleDisplayName = "FaceSwap AI";
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "We need this permission to save video.";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "This app requires access to your photo library.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
